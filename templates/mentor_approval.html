@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Approval</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            padding-top: 2rem;
+            align-items: flex-start;
+        }
+        .login-container {
+            max-width: 700px;
+            margin-top: 2rem;
+        }
+        .disclaimer {
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        .disclaimer-box {
+            background-color: #fef3c7;
+            border: 1px solid #fde68a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        /* Style for the confirmation input */
+        #mentor_name_confirm {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            text-transform: uppercase; /* Auto-caps the input */
+        }
+        /* Style for the checkbox label */
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            color: #92400e;
+        }
+        /* Make disabled elements look correct */
+        input:disabled, button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <h2>Mentor Approval (Batch {{ shared_request.batch_id }})</h2>
+        <p>Please review the following component request batch from your student, <strong>{{ shared_request.student_name }}</strong>.</p>
+
+        <div class="table-container" style="margin: 1.5rem 0;">
+             <table>
+                <tr>
+                    <th>Student</th>
+                    <td>{{ shared_request.student_name }} ({{ shared_request.student_dept }})</td>
+                </tr>
+                <tr>
+                    <th>Project</th>
+                    <td>{{ shared_request.project_description }}</td>
+                </tr>
+                <tr>
+                    <th>Due Date</th>
+                    <td>{{ shared_request.due_date }}</td>
+                </tr>
+                <tr>
+                    <th>Components</th>
+                    <td>
+                        <ul style="padding-left: 15px; margin: 0;">
+                        {% for item in batch_requests %}
+                            <li>{{ item.component_name }} (Qty: {{ item.quantity }})</li>
+                        {% endfor %}
+                        </ul>
+                        </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="disclaimer-box">
+            <strong>Responsibility Disclaimer:</strong>
+            <p style="margin: 0.5rem 0 0 0;">By approving this request, you (the Mentor) and the student acknowledge that you are jointly responsible for the proper handling, timely return, and any loss or damage to the requested components.</p>
+
+            <label class="checkbox-label" for="disclaimer_checkbox">
+                <input type="checkbox" id="disclaimer_checkbox" name="disclaimer_checkbox" value="on">
+                I acknowledge this responsibility.
+            </label>
+        </div>
+        <form method="POST" class="request-form">
+            <div class="form-group">
+                <label for="mentor_remarks">Remarks (Optional):</label>
+                <textarea id="mentor_remarks" name="mentor_remarks" rows="3" placeholder="Add any comments..."></textarea>
+            </div>
+
+            <p>Do you approve this entire batch of requests?</p>
+
+            <div class="admin-action-form" style="gap: 1rem;">
+                <button type="submit" name="new_status" value="Approved"
+                        id="approve-btn" class="admin-btn approve"
+                        style="padding: 0.75rem 1.5rem; font-size: 1rem;" disabled>
+                    Approve Batch
+                </button>
+                <button type="submit" name="new_status" value="Rejected"
+                        id="reject-btn" class="admin-btn reject"
+                        style="padding: 0.75rem 1.5rem; font-size: 1rem;">
+                    Reject Batch
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <script>
+        const checkbox = document.getElementById('disclaimer_checkbox');
+        const approveBtn = document.getElementById('approve-btn');
+
+        // Listen for changes to the checkbox
+        checkbox.addEventListener('change', function() {
+            if (checkbox.checked) {
+                // If checked, enable the approve button
+                approveBtn.disabled = false;
+            } else {
+                // If unchecked, disable the approve button
+                approveBtn.disabled = true;
+            }
+        });
+    </script>
+    </body>
+</html>

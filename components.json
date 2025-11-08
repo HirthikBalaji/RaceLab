@@ -1,0 +1,50 @@
+[
+    {
+        "id": "RPI4",
+        "name": "Raspberry Pi 4",
+        "total_quantity": 20,
+        "working_quantity": 20,
+        "not_working_quantity": 0,
+        "issued_quantity": 2
+    },
+    {
+        "id": "UNO",
+        "name": "Arduino Uno",
+        "total_quantity": 30,
+        "working_quantity": 30,
+        "not_working_quantity": 0,
+        "issued_quantity": 4
+    },
+    {
+        "id": "SG90",
+        "name": "Servo Motor (SG90)",
+        "total_quantity": 50,
+        "working_quantity": 50,
+        "not_working_quantity": 0,
+        "issued_quantity": 31
+    },
+    {
+        "id": "HCSR04",
+        "name": "Ultrasonic Sensor",
+        "total_quantity": 40,
+        "working_quantity": 40,
+        "not_working_quantity": 0,
+        "issued_quantity": 0
+    },
+    {
+        "id": "BB830",
+        "name": "Breadboard",
+        "total_quantity": 100,
+        "working_quantity": 100,
+        "not_working_quantity": 0,
+        "issued_quantity": 0
+    },
+    {
+        "id": "ESP32",
+        "name": "ESP32 -S3",
+        "total_quantity": 20,
+        "working_quantity": 20,
+        "not_working_quantity": 0,
+        "issued_quantity": 0
+    }
+]

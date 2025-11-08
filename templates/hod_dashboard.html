@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="{{ url_for('static', filename='bannerlogo.jpg') }}" alt="Logo" class="navbar-logo">
+            RACE Lab - HOD
+        </div>
+        <div class="navbar-user">
+            Logged in as: <strong>{{ user.name }}</strong>
+            <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+        </div>
+    </nav>
+
+    <div class="student-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}{% for category, message in messages %}
+            <div class="flash-{{ category }}">{{ message }}</div>
+            {% endfor %}{% endif %}
+        {% endwith %}
+
+        <div class="tab-container">
+            <div class="tab-nav">
+                <button class="tab-link active" onclick="openTab(event, 'pending')">Pending HOD Approval ({{ grouped_requests|length }})</button>
+                <button class="tab-link" onclick="openTab(event, 'history')">Request History</button>
+                <button class="tab-link" onclick="openTab(event, 'availability')">Component Availability</button>
+                <button class="tab-link" onclick="openTab(event, 'reports')">Reports</button>
+            </div>
+
+            <div id="pending" class="tab-content" style="display: block;">
+                <h3>Mentor-Approved Requests</h3>
+                <div class="table-container wide-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Batch ID</th>
+                                <th>Student</th>
+                                <th>Components</th>
+                                <th>Purpose</th>
+                                <th>Mentor (Approved On)</th>
+                                <th>Mentor Remarks</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if not grouped_requests %}
+                                <tr><td colspan="7">There are no requests awaiting HOD approval.</td></tr>
+                            {% else %}
+                                {% for batch_id, requests in grouped_requests.items() %}
+                                    {% set req = requests[0] %}
+                                    <tr>
+                                        <td><small>{{ batch_id }}</small></td>
+                                        <td>{{ req.student_name }}<br><small>{{ req.student_dept }}</small></td>
+                                        <td>
+                                            <ul style="padding-left: 15px; margin: 0;">
+                                                {% for item in requests %}
+                                                    <li>{{ item.component_name }} (Qty: {{ item.quantity }})</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                        <td>{{ req.project_description }}</td>
+                                        <td>{{ req.mentor_name }}<br><small>{{ req.mentor_approval_timestamp }}</small></td>
+                                        <td><small>{{ req.get('mentor_remarks', '-') }}</small></td>
+                                        <td>
+                                            <form action="{{ url_for('hod_update_request') }}" method="POST" class="admin-action-form" style="flex-direction: column; align-items: flex-start;">
+                                                <input type="hidden" name="batch_id" value="{{ batch_id }}">
+                                                <div class="form-group" style="width: 100%; margin-bottom: 5px;">
+                                                    <textarea name="hod_remarks" rows="2" placeholder="Add remarks (optional)..." style="width: 100%; font-size: 0.9rem; padding: 0.4rem;"></textarea>
+                                                </div>
+                                                <div style="display: flex; gap: 5px;">
+                                                    <button type="submit" name="new_status" value="Approved" class="admin-btn approve">Approve All</button>
+                                                    <button type="submit" name="new_status" value="Rejected" class="admin-btn reject">Reject All</button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="history" class="tab-content">
+                <h3>Request History (All Other Requests)</h3>
+                <div class="table-container wide-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Req ID</th>
+                                <th>Batch ID</th>
+                                <th>Student</th>
+                                <th>Component</th>
+                                <th>Qty</th>
+                                <th>Status</th>
+                                <th>Timestamps</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if not other_requests %}
+                                <tr><td colspan="7">There are no other requests in the history.</td></tr>
+                            {% else %}
+                                {% for req in other_requests %}
+                                <tr>
+                                    <td>{{ req.id }}</td>
+                                    <td><small>{{ req.get('batch_id', 'N/A') }}</small></td>
+                                    <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
+                                    <td>{{ req.component_name }}</td>
+                                    <td>{{ req.quantity }}</td>
+                                    {% set status_text = req.status | replace('-', ' ') | title %}
+                                    <td><span class="status status-{{ req.status | lower | replace(' ', '-') }}">{{ status_text }}</span></td>
+                                    <td>
+                                        {% if req.status == 'Rejected' %}
+                                            <small>Rej: {{ req.approval_timestamp or req.hod_approval_timestamp or req.mentor_approval_timestamp }}</Tsmall>
+                                        {% elif req.status == 'Dispatched' %}
+                                            <small>D: {{ req.dispatch_timestamp }}</small>
+                                        {% elif req.status == 'Returned' %}
+                                            <small>R: {{ req.actual_return_timestamp }}</small>
+                                        {% else %}
+                                            <small>-</small>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="availability" class="tab-content">
+                <h3>Component Availability</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Total Qty</th>
+                                <th>Working Qty</th>
+                                <th>Not Working Qty</th>
+                                <th>Issued Qty</th>
+                                <th>Available for Issue</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for component in components %}
+                            <tr>
+                                <td>{{ component.name }}</td>
+                                <td>{{ component.total_quantity }}</td>
+                                <td>{{ component.working_quantity }}</td>
+                                <td>{{ component.not_working_quantity }}</td>
+                                <td>{{ component.issued_quantity }}</td>
+                                <td><strong>{{ component.available_for_issue }}</strong></td>
+                                <td>
+                                    {% if component.available_for_issue <= 0 %}
+                                        <span class="status out-of-stock">Out of Stock</span>
+                                    {% elif component.available_for_issue < 10 %}
+                                        <span class="status low-stock">Low Stock</span>
+                                    {% else %}
+                                        <span class="status in-stock">In Stock</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="reports" class="tab-content">
+                <h3>Reports & Auditing</h3>
+                <h4>Student Request Report</h4>
+                <p>Download a complete history of all student requests in CSV format.</p>
+                <div class="admin-actions">
+                    <a href="{{ url_for('admin_download_report') }}" class="admin-btn download">
+                        Download Request Report (CSV)
+                    </a>
+                </div>
+                <h4>Inventory Audit Log</h4>
+                <p>Download a structured CSV log of all inventory changes (approvals, returns, manual updates).</p>
+                <div class="admin-actions">
+                    <a href="{{ url_for('admin_download_audit_log') }}" class="admin-btn download">
+                        Download Audit Log (CSV)
+                    </a>
+                </div>
+            </div>
+        </div>
+        <script>
+            function openTab(evt, tabName) {
+                var i, tabContent, tabLinks;
+                tabContent = document.getElementsByClassName("tab-content");
+                for (i = 0; i < tabContent.length; i++) tabContent[i].style.display = "none";
+                tabLinks = document.getElementsByClassName("tab-link");
+                for (i = 0; i < tabLinks.length; i++) tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+                document.getElementById(tabName).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+        </script>
+    </div>
+</body>
+</html>

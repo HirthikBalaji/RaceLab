@@ -1,0 +1,54 @@
+2025-11-07 21:58:03,366 - APPROVAL by hirthikbalaji2006@gmail.com: Req #1. Stock Raspberry Pi 4 14 -> 13
+2025-11-07 21:58:11,549 - APPROVAL by hirthikbalaji2006@gmail.com: Req #5. Stock Raspberry Pi 4 13 -> 8
+2025-11-07 21:58:17,175 - APPROVAL by hirthikbalaji2006@gmail.com: Req #2. Stock Arduino Uno 10 -> 9
+2025-11-07 21:58:31,271 - APPROVAL by hirthikbalaji2006@gmail.com: Req #6. Stock Servo Motor (SG90) 45 -> 37
+2025-11-07 21:58:56,553 - APPROVAL by hirthikbalaji2006@gmail.com: Req #3. Stock ESP32 -S3 20 -> 19
+2025-11-07 21:59:04,807 - APPROVAL by hirthikbalaji2006@gmail.com: Req #4. Stock Breadboard 80 -> 79
+2025-11-07 23:00:04,497 - MANUAL UPDATE by lab_tecnician@ch.amrita.edu: "Raspberry Pi 4". Total: 20->20, Avail: 8->0
+2025-11-07 23:04:18,335 - MANUAL UPDATE by lab_tecnician@ch.amrita.edu: "Raspberry Pi 4". Total: 20->20, Avail: 0->1
+2025-11-07 23:09:02,439 - APPROVAL by hirthikbalaji2006@gmail.com: Req #13. Stock Arduino Uno 9 -> 4
+2025-11-07 23:29:35,587 - APPROVAL by hirthikbalaji2006@gmail.com: Req #16. Stock Raspberry Pi 4 1 -> 0
+2025-11-07 23:29:49,652 - APPROVAL by hirthikbalaji2006@gmail.com: Req #15. Stock Arduino Uno 4 -> 3
+2025-11-07 23:29:52,411 - APPROVAL by hirthikbalaji2006@gmail.com: Req #14. Stock Arduino Uno 3 -> 2
+2025-11-07 23:50:52,996 - APPROVAL by hirthikbalaji2006@gmail.com: Req #23. Stock Arduino Uno 2 -> 0
+2025-11-07 23:51:08,491 - APPROVAL by hirthikbalaji2006@gmail.com: Req #25. Stock Servo Motor (SG90) 37 -> 35
+2025-11-07 23:51:08,491 - APPROVAL by hirthikbalaji2006@gmail.com: Req #26. Stock Breadboard 79 -> 76
+2025-11-07 23:52:38,599 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #26. Stock Breadboard 76 -> 79
+2025-11-07 23:52:44,435 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #16. Stock Raspberry Pi 4 0 -> 1
+2025-11-07 23:52:50,139 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #6. Stock Servo Motor (SG90) 35 -> 43
+2025-11-07 23:52:53,492 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #1. Stock Raspberry Pi 4 1 -> 2
+2025-11-07 23:52:56,642 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #2. Stock Arduino Uno 0 -> 1
+2025-11-07 23:52:59,644 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #4. Stock Breadboard 79 -> 80
+2025-11-07 23:53:02,442 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #13. Stock Arduino Uno 1 -> 6
+2025-11-07 23:53:05,444 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #5. Stock Raspberry Pi 4 2 -> 7
+2025-11-07 23:53:08,259 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #14. Stock Arduino Uno 6 -> 7
+2025-11-07 23:53:11,171 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #3. Stock ESP32 -S3 19 -> 20
+2025-11-07 23:53:13,735 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #15. Stock Arduino Uno 7 -> 8
+2025-11-07 23:53:16,227 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #23. Stock Arduino Uno 8 -> 10
+2025-11-07 23:53:18,492 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #25. Stock Servo Motor (SG90) 43 -> 45
+2025-11-08 09:06:39,408 - APPROVAL by hirthikbalaji2006@gmail.com: Req #29. Stock Raspberry Pi 4 7 -> 6
+2025-11-08 09:06:39,408 - APPROVAL by hirthikbalaji2006@gmail.com: Req #30. Stock ESP32 -S3 20 -> 19
+2025-11-08 09:06:39,408 - APPROVAL by hirthikbalaji2006@gmail.com: Req #31. Stock Arduino Uno 10 -> 9
+2025-11-08 09:06:39,408 - APPROVAL by hirthikbalaji2006@gmail.com: Req #32. Stock Servo Motor (SG90) 45 -> 38
+2025-11-08 09:13:53,567 - APPROVAL by hirthikbalaji2006@gmail.com: Req #28. Stock Arduino Uno 9 -> 8
+2025-11-08 09:17:10,762 - APPROVAL by hirthikbalaji2006@gmail.com: Req #27. Stock Raspberry Pi 4 6 -> 5
+2025-11-08 09:18:49,871 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #28. Stock Arduino Uno 8 -> 9
+2025-11-08 09:18:53,713 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #29. Stock Raspberry Pi 4 5 -> 6
+2025-11-08 09:18:56,993 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #30. Stock ESP32 -S3 19 -> 20
+2025-11-08 09:18:59,918 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #31. Stock Arduino Uno 9 -> 10
+2025-11-08 09:19:03,546 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #32. Stock Servo Motor (SG90) 38 -> 45
+2025-11-08 09:45:37,177 - MANUAL UPDATE by lab_tecnician@ch.amrita.edu: "Raspberry Pi 4". Total: 20->20, Avail: 6->7
+2025-11-08 09:49:51,525 - APPROVAL by hirthikbalaji2006@gmail.com: Req #33. Stock Servo Motor (SG90) 45 -> 40
+2025-11-08 09:49:51,526 - APPROVAL by hirthikbalaji2006@gmail.com: Req #34. Stock Raspberry Pi 4 7 -> 6
+2025-11-08 09:50:31,497 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #34. Stock Raspberry Pi 4 6 -> 7
+2025-11-08 09:56:12,608 - MANUAL UPDATE by lab_tecnician@ch.amrita.edu: "Raspberry Pi 4". Total: 20->21, Avail: 7->8
+2025-11-08 09:56:45,646 - NEW COMPONENT by lab_tecnician@ch.amrita.edu: "Reaspberry pi 5" (ID: RASP5). Stock set to 20/20
+2025-11-08 10:20:54,675 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #27. Stock Raspberry Pi 4 8 -> 8 (0 working returned)
+2025-11-08 12:11:30,500 - APPROVAL by hirthikbalaji2006@gmail.com: Req #35. Item Arduino Uno issued.
+2025-11-08 12:11:30,501 - APPROVAL by hirthikbalaji2006@gmail.com: Req #36. Item Servo Motor (SG90) issued.
+2025-11-08 12:11:30,501 - APPROVAL by hirthikbalaji2006@gmail.com: Req #35. Item Arduino Uno issued.
+2025-11-08 12:11:30,501 - APPROVAL by hirthikbalaji2006@gmail.com: Req #36. Item Servo Motor (SG90) issued.
+2025-11-08 14:56:16,023 - APPROVAL by hirthikbalaji2006@gmail.com: Req #37. Item Raspberry Pi 4 issued.
+2025-11-08 14:56:16,024 - APPROVAL by hirthikbalaji2006@gmail.com: Req #38. Item Servo Motor (SG90) issued.
+2025-11-08 14:56:16,024 - APPROVAL by hirthikbalaji2006@gmail.com: Req #37. Item Raspberry Pi 4 issued.
+2025-11-08 14:56:16,024 - APPROVAL by hirthikbalaji2006@gmail.com: Req #38. Item Servo Motor (SG90) issued.

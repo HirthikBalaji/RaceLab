@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Assistant Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='bannerlogo.jpg') }}" alt="Logo" class="navbar-logo">
+        RACE Lab - LAB ASSISTANT </div>
+        <div class="navbar-user">
+            Logged in as: <strong>{{ user.name }}</strong>
+            <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+        </div>
+    </nav>
+    <div class="student-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}{% for category, message in messages %}
+            <div class="flash-{{ category }}">{{ message }}</div>
+            {% endfor %}{% endif %}
+        {% endwith %}
+
+        <div class="tab-container">
+            <div class="tab-nav">
+                <button class="tab-link active" onclick="openTab(event, 'dispatch')">Pending ISSUE ({{ approved_requests|length }})</button>
+                <button class="tab-link" onclick="openTab(event, 'collect')">Pending Collection ({{ dispatched_requests|length }})</button>
+                <button class="tab-link" onclick="openTab(event, 'inventory')">Modify Inventory</button>
+            </div>
+
+            <div id="dispatch" class="tab-content" style="display: block;">
+                <h3>Pending ISSUE (Incharge Approved)</h3>
+                <div class="table-container wide-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Component</th>
+                                <th>Qty</th>
+                                <th>Due Date</th>
+                                <th>Approved by</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if not approved_requests %}
+                                <tr><td colspan="6">No items are pending Issue.</td></tr>
+                            {% endif %}
+                            {% for req in approved_requests %}
+                                <tr>
+                                    <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
+                                    <td>{{ req.component_id }} ({{ req.component_name }})</td>
+                                    <td>{{ req.quantity }}</td>
+                                    <td>{{ req.due_date }}</td>
+                                    <td><small>{{ req.approver_email }} at {{ req.approval_timestamp }}</small></td>
+                                    <td>
+                                        <form action="{{ url_for('tech_dispatch_item') }}" method="POST">
+                                            <input type="hidden" name="request_id" value="{{ req.id }}">
+                                            <button type="submit" class="admin-btn approve">ISSUE Item</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="collect" class="tab-content">
+                <h3>Pending Collection (Out with Students)</h3>
+                <div class="table-container wide-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Component</th>
+                                <th>Qty</th>
+                                <th>Due Date</th>
+                                <th>ISSUED at</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if not dispatched_requests %}
+                                <tr><td colspan="6">No items are pending collection.</td></tr>
+                            {% endif %}
+
+                            {% for req in dispatched_requests %}
+                                <tr>
+                                    <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
+                                    <td>{{ req.component_id }} ({{ req.component_name }})</td>
+                                    <td>{{ req.quantity }}</td>
+                                    <td>{{ req.due_date }}</td>
+                                    <td><small>{{ req.dispatch_timestamp }}</small></td>
+                                    <td>
+                                        <a href="{{ url_for('tech_collect_item_form', request_id=req.id) }}" class="admin-btn collect" style="text-decoration: none;">
+                                            Collect Item
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="inventory" class="tab-content">
+
+                <h3>Update Existing Inventory</h3>
+                <p>Use this form to set the new **Total** and **Working** counts for an item. The "Not Working" count will be auto-calculated (`Total - Working`). The "Issued" count is not affected.</p>
+
+                <form action="{{ url_for('tech_update_inventory') }}" method="POST" class="request-form">
+                    <div class="form-row">
+                        <div class="form-group" style="flex-grow: 2;">
+                            <label for="component_name">Select Component:</label>
+                            <select id="component_name" name="component_name" required>
+                                {% for component in components %}
+                                    <option value="{{ component.name }}">
+                                        {{ component.name }} (Current T:{{component.total_quantity}} W:{{component.working_quantity}} I:{{component.issued_quantity}})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="new_total">New Total Count:</label>
+                            <input type="number" id="new_total" name="new_total" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new_working">New Working Count:</label>
+                            <input type="number" id="new_working" name="new_working" min="0" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-button">Update Component</button>
+                </form>
+
+                <hr style="margin: 2.5rem 0;"> <h3>Add New Component</h3>
+                <p>Use this form to add a brand new component. The "Not Working" and "Issued" counts will be set to 0.</p>
+
+                <form action="{{ url_for('tech_add_inventory') }}" method="POST" class="request-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new_component_id">New Component ID:</label>
+                            <input type="text" id="new_component_id" name="new_component_id" placeholder="e.g., ESP32-WROOM" required>
+                        </div>
+                        <div class="form-group" style="flex-grow: 2;">
+                            <label for="new_component_name">New Component Name:</label>
+                            <input type="text" id="new_component_name" name="new_component_name" placeholder="e.g., ESP32 WiFi Module" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new_total">Total Quantity:</label>
+                            <input type="number" id="new_total1" name="new_total" min="0" placeholder="e.g., 25" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new_working">Working Quantity:</label>
+                            <input type="number" id="new_available1" name="new_working" min="0" placeholder="e.g., 25" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="admin-btn approve">Add New Component</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabContent, tabLinks;
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) tabContent[i].style.display = "none";
+            tabLinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tabLinks.length; i++) tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</body>
+</html>

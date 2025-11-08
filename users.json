@@ -1,0 +1,26 @@
+[
+    {
+        "email": "hirthikbalaji2006@gmail.com",
+        "password": "adminpass",
+        "role": "admin",
+        "name": "Dr. Piyush Pratap Singh (Incharge)",
+        "department": "Admin",
+        "year": null
+    },
+    {
+        "email": "lab_tecnician@ch.amrita.edu",
+        "password": "techpass",
+        "role": "technician",
+        "name": "Ms. Dhivya (Lab Assistant)",
+        "department": "Lab Staff",
+        "year": null
+    },
+    {
+        "email": "hod@ch.amrita.edu",
+        "password": "hodpass",
+        "role": "hod",
+        "name": "Dr. HOD Name",
+        "department": "HOD",
+        "year": null
+    }
+]

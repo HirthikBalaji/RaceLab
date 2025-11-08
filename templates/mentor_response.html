@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            padding-top: 2rem;
+            align-items: flex-start;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container" style="margin-top: 2rem;">
+        <h2>{{ title }}</h2>
+        <p>{{ message }}</p>
+        <br>
+        <p><small>You may now close this window.</small></p>
+    </div>
+</body>
+</html>

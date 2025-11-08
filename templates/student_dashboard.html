@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RACE Lab Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .component-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        .component-row .form-group { margin-bottom: 0; }
+        .component-row .form-group:first-child { flex-grow: 3; }
+        .component-row .form-group:nth-child(2) { flex-grow: 1; }
+        .remove-row-btn {
+            background-color: var(--color-red);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            height: 40px;
+            margin-top: 1.1rem;
+        }
+        .remove-row-btn:hover { background-color: var(--color-red-hover); }
+        #add-component-btn {
+            background-color: var(--color-grey);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="{{ url_for('static', filename='bannerlogo.jpg') }}" alt="Logo" class="navbar-logo">
+            RACE Lab - PORTAL
+        </div>
+        <div class="navbar-user">
+            Logged in as: <strong>{{ user.name }} ({{ user.department }})</strong>
+            <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+        </div>
+    </nav>
+
+    <div class="student-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}{% for category, message in messages %}
+            <div class="flash-{{ category }}">{{ message }}</div>
+            {% endfor %}{% endif %}
+        {% endwith %}
+
+        <h3>Component Availability</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for component in components %}
+                    <tr>
+                        <td>{{ component.name }}</td>
+                        <td>
+                            {% if component.available == 0 %}<span class="status out-of-stock">Out of Stock</span>
+                            {% elif component.available < 10 %}<span class="status low-stock">Low Stock</span>
+                            {% else %}<span class="status in-stock">In Stock</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Request Components</h3>
+        <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
+
+            <datalist id="component-datalist">
+                {% for component in available_components %}
+                <option value="{{ component.name }}"></option>
+                {% endfor %}
+            </datalist>
+
+            <h4>Components</h4>
+            <div id="component-list">
+                <div class="component-row">
+                    <div class="form-group">
+                        <label for="component_1">Component Name:</label>
+                        <input type="text" list="component-datalist" id="component_1" name="component[]" class="component-search" placeholder="Type or select component" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity_1">Quantity:</label>
+                        <input type="number" id="quantity_1" name="quantity[]" min="1" max="10" value="1" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="add-component-btn">+ Add Another Component</button>
+            <hr style="margin: 1.5rem 0;">
+            <h4>Request Details</h4>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="mentor_name">Mentor Name:</label>
+                    <input type="text" id="mentor_name" name="mentor_name" placeholder="Full name of your mentor" required>
+                </div>
+                <div class="form-group">
+                    <label for="mentor_email">Mentor Email:</label>
+                    <input type="email" id="mentor_email" name="mentor_email" placeholder="Mentor's official email" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="return_date">Expected Return Date (for all items):</label>
+                    <input type="date" id="return_date" name="return_date" min="{{ today }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="project_description">Project / Curricular Activity:</label>
+                <textarea id="project_description" name="project_description" rows="3" placeholder="Briefly describe your project..." required></textarea>
+            </div>
+            <button type="submit" class="submit-button">Submit Batch Request</button>
+        </form>
+        <h3>My Request History</h3>
+        <div class="table-container wide-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Req ID</th>
+                        <th>Component</th>
+                        <th>Qty</th>
+                        <th>Status</th>
+                        <th>Batch / Mentor</th>
+                        <th>HOD Remarks</th>
+                        <th>Incharge Remarks</th>
+                        <th>Mentor Link</th>
+                        </tr>
+                </thead>
+                <tbody>
+                    {% set rendered_batches = [] %}
+
+                    {% if not my_requests %}
+                        <tr><td colspan="8">You have not made any requests.</td></tr>
+                    {% else %}
+                        {% for req in my_requests | reverse %}
+                        <tr>
+                            <td>{{ req.id }}</td>
+                            <td>{{ req.component_name }}</td>
+                            <td>{{ req.quantity }}</td>
+                            <td>
+                                {% set status_text = req.status | replace('-', ' ') | title %}
+                                <span class="status status-{{ req.status | lower | replace(' ', '-') }}">{{ status_text }}</span>
+                            </td>
+                            <td>
+                                <small>B: {{ req.get('batch_id', 'N/A') }}</small><br>
+                                {{ req.get('mentor_name', '-') }}
+                            </td>
+
+                            <td><small>{{ req.get('hod_remarks', '-') }}</small></td>
+                            <td><small>{{ req.get('incharge_remarks', '-') }}</small></td>
+                            <td>
+                                {% set batch_id = req.get('batch_id') %}
+                                {% if batch_id and req.status == 'Pending Mentor' and req.mentor_approval_token and batch_id not in rendered_batches %}
+                                    <a href="{{ url_for('mentor_approval', token=req.mentor_approval_token) }}" target="_blank">Get Link</a>
+                                    {% if rendered_batches.append(batch_id) %}{% endif %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <template id="component-row-template">
+        <div class="component-row">
+            <div class="form-group">
+                <label>Component Name:</label>
+                <input type="text" list="component-datalist" name="component[]" class="component-search" placeholder="Type or select component" required>
+            </div>
+            <div class="form-group">
+                <label>Quantity:</label>
+                <input type="number" name="quantity[]" min="1" max="10" value="1" required>
+            </div>
+            <button type="button" class="remove-row-btn">X</button>
+        </div>
+    </template>
+
+    <script>
+        document.getElementById('add-component-btn').addEventListener('click', function() {
+            const template = document.getElementById('component-row-template');
+            const clone = template.content.cloneNode(true);
+            const componentList = document.getElementById('component-list');
+            clone.querySelector('.remove-row-btn').addEventListener('click', function(e) {
+                e.target.closest('.component-row').remove();
+            });
+            componentList.appendChild(clone);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collect Item - {{ request.id }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="{{ url_for('static', filename='bannerlogo.jpg') }}" alt="Logo" class="navbar-logo">
+            RACE Lab - LAB ASSISTANT
+        </div>
+        <div class="navbar-user">
+            Logged in as: <strong>{{ user.name }}</strong>
+            <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+        </div>
+    </nav>
+
+    <div class="student-container" style="max-width: 700px;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}{% for category, message in messages %}
+            <div class="flash-{{ category }}">{{ message }}</div>
+            {% endfor %}{% endif %}
+        {% endwith %}
+
+        <h3>Collect Component (Req ID: {{ request.id }})</h3>
+
+        <div class="table-container" style="margin-bottom: 2rem;">
+            <table>
+                <tr>
+                    <th>Student Name</th>
+                    <td>{{ request.student_name }}</td>
+                </tr>
+                <tr>
+                    <th>Student Email</th>
+                    <td>{{ request.student_email }}</td>
+                </tr>
+                <tr>
+                    <th>Component</th>
+                    <td>{{ request.component_name }}</td>
+                </tr>
+                <tr>
+                    <th>Quantity Issued</th>
+                    <td><strong>{{ request.quantity }}</strong></td>
+                </tr>
+                <tr>
+                    <th>Project</th>
+                    <td>{{ request.project_description }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <form method="POST" class="request-form">
+
+            <h4>Return Details</h4>
+            <p>Please account for all <strong>{{ request.quantity }}</strong> item(s) issued.</p>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="working_count">No. of Components Working:</label>
+                    <input type="number" id="working_count" name="working_count" min="0" max="{{ request.quantity }}" value="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="not_working_count">No. of Components Not Working / Damaged:</label>
+                    <input type="number" id="not_working_count" name="not_working_count" min="0" max="{{ request.quantity }}" value="0" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="tech_remarks">Technician Remarks (e.g., "pin bent", "lost", etc.):</label>
+                <textarea id="tech_remarks" name="tech_remarks" rows="3" placeholder="Add remarks..."></textarea>
+            </div>
+
+            <button type="submit" class="admin-btn approve" style="padding: 0.75rem 1.5rem; font-size: 1rem;">
+                Submit Collection
+            </button>
+            <a href="{{ url_for('tech_dashboard') }}" style="margin-left: 1rem; color: var(--color-grey);">Cancel</a>
+        </form>
+
+        <script>
+            // Simple client-side validation to help the technician
+            const issuedQty = {{ request.quantity }};
+            const workingInput = document.getElementById('working_count');
+            const notWorkingInput = document.getElementById('not_working_count');
+
+            function validateCounts() {
+                let working = parseInt(workingInput.value) || 0;
+                let notWorking = parseInt(notWorkingInput.value) || 0;
+
+                if (working + notWorking > issuedQty) {
+                    workingInput.style.borderColor = 'var(--color-red)';
+                    notWorkingInput.style.borderColor = 'var(--color-red)';
+                } else {
+                    workingInput.style.borderColor = '#d1d5db';
+                    notWorkingInput.style.borderColor = '#d1d5db';
+                }
+            }
+
+            workingInput.addEventListener('input', validateCounts);
+            notWorkingInput.addEventListener('input', validateCounts);
+        </script>
+
+    </div>
+</body>
+</html>

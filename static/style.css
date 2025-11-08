@@ -1,0 +1,403 @@
+/* --- 1. Root Variables (Our New "Ultra Realistic" Palette) --- */
+:root {
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    --color-primary: #0052d4;
+    --color-primary-hover: #0041a8;
+
+    --color-green: #16a34a;
+    --color-green-hover: #15803d;
+
+    --color-red: #dc2626;
+    --color-red-hover: #b91c1c;
+
+    --color-yellow: #d97706;
+    --color-yellow-hover: #b45309;
+
+    --color-grey: #6b7280;
+    --color-text-dark: #1f2937;
+    --color-text-light: #4b5563;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* --- 2. Global Styles (The "Fluid" Background) --- */
+body {
+    font-family: var(--font-main);
+    background-color: #f8f9fa; /* Fallback */
+
+    /* The magic background */
+    background-image: radial-gradient(circle at 10% 20%, rgb(210, 223, 237) 0%, rgb(246, 248, 250) 90%);
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top */
+    min-height: 100vh;
+    margin: 0;
+    padding: 2rem 0; /* Add padding for scroll */
+    color: var(--color-text-light);
+}
+
+h2, h3 {
+    color: var(--color-text-dark);
+}
+
+/* --- 3. Glassmorphism Containers --- */
+.login-container,
+.student-container {
+    width: 100%;
+    max-width: 900px; /* Default wide container */
+    margin: 2rem 1rem;
+    padding: 2.5rem;
+
+    /* The Glass Effect */
+    background: rgba(255, 255, 255, 0.65); /* Semi-transparent fallback */
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Login container should be narrower */
+.login-container {
+    max-width: 420px;
+    margin-top: 6rem; /* Push login box down */
+}
+
+/* --- 4. Navbar Styles --- */
+.navbar {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    color: var(--color-text-dark);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed; /* Stick to top */
+    top: 0;
+    left: 0;
+    z-index: 100;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-md);
+}
+
+/* Re-adjust body for fixed navbar */
+body {
+    padding-top: 80px; /* Navbar height + space */
+}
+/* But NOT for the login page */
+body:has(.login-container) {
+    padding-top: 2rem;
+    align-items: flex-start;
+}
+/* Login page doesn't have a navbar, so don't apply fixed-nav styles */
+body:has(.login-container) .navbar {
+    display: none;
+}
+
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+.navbar-logo {
+    height: 32px; /* 32px height */
+    width: auto;
+}
+.navbar-user {
+    font-size: 0.9rem;
+}
+
+/* --- 5. Form & Button Styles (Fluid Transitions) --- */
+.input-group {
+    margin-bottom: 1.25rem;
+}
+.input-group label,
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-dark);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.input-group input,
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db; /* Light grey border */
+    border-radius: 8px; /* Softer radius */
+    box-sizing: border-box;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
+}
+
+.input-group input:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: 2px solid var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 82, 212, 0.2);
+    background: #fff;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+.form-row .form-group {
+    flex: 1;
+}
+
+/* Base button style */
+.login-button,
+.logout-button,
+.submit-button,
+.admin-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    color: #fff;
+    transition: all 0.2s ease;
+}
+
+.login-button {
+    width: 100%;
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+}
+.login-button:hover {
+    background-color: var(--color-primary-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.logout-button {
+    background-color: var(--color-red);
+    padding: 0.4rem 0.8rem;
+    margin-left: 1rem;
+}
+.logout-button:hover {
+    background-color: var(--color-red-hover);
+    box-shadow: var(--shadow-md);
+}
+
+.submit-button,
+.admin-btn.approve {
+    background-color: var(--color-green);
+}
+.submit-button:hover,
+.admin-btn.approve:hover {
+    background-color: var(--color-green-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.admin-btn.reject { background-color: var(--color-red); }
+.admin-btn.reject:hover { background-color: var(--color-red-hover); }
+
+.admin-btn.collect { background-color: var(--color-yellow); color: var(--color-text-dark); }
+.admin-btn.collect:hover { background-color: var(--color-yellow-hover); }
+
+.admin-btn.download { background-color: var(--color-primary); }
+.admin-btn.download:hover { background-color: var(--color-primary-hover); }
+
+.admin-action-form {
+    display: flex;
+    gap: 5px;
+}
+.admin-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+/* --- 6. Table Styles --- */
+.table-container {
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    background: #fff;
+}
+.table-container.wide-table { min-width: 900px; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+th {
+    background-color: #f9fafb;
+    color: var(--color-text-light);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+tr:last-child td {
+    border-bottom: none;
+}
+tr:hover {
+    background-color: #f9fafb;
+}
+table td small { display: block; color: #9ca3af; }
+
+/* --- 7. Tab Interface Styles --- */
+.tab-nav {
+    overflow: hidden;
+    border-bottom: 1px solid #d1d5db;
+    margin-bottom: 1.5rem;
+}
+.tab-nav button {
+    background-color: transparent;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 18px;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-light);
+    border-bottom: 3px solid transparent;
+}
+.tab-nav button:hover {
+    background-color: #f9fafb;
+    color: var(--color-text-dark);
+}
+.tab-nav button.active {
+    color: var(--color-primary);
+    border-bottom: 3px solid var(--color-primary);
+    font-weight: 600;
+}
+.tab-content {
+    display: none;
+}
+
+/* --- 8. Status & Utility --- */
+.logo { /* Login page logo */
+    display: block;
+    margin: 0 auto 1.5rem;
+    width: 100px;
+    height: auto;
+}
+.footer-links {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+.footer-links a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+/* Flash Messages */
+.flash-success, .flash-error, .flash-warning {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 500;
+}
+.flash-success { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
+.flash-error   { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; }
+.flash-warning { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
+
+/* Status Tags */
+.status {
+    padding: 0.25rem 0.6rem;
+    border-radius: 99px; /* Pill shape */
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.status.in-stock, .status.status-approved, .status.status-returned {
+    background-color: #d1fae5; color: #065f46;
+}
+.status.low-stock, .status.status-pending {
+    background-color: #fef3c7; color: #92400e;
+}
+.status.out-of-stock, .status.status-rejected {
+    background-color: #fee2e2; color: #991b1b;
+}
+.status.status-issued {
+    background-color: #dbeafe; color: #1e40af;
+}
+/* --- Add to the end of your style.css --- */
+
+/* Styles for the new item list in tables */
+ul.item-list {
+    margin: 0;
+    padding-left: 1.2rem;
+    font-size: 0.9rem;
+}
+
+ul.item-list li {
+    margin-bottom: 0.25rem;
+}
+
+ul.item-list li:last-child {
+    margin-bottom: 0;
+}
+/* --- Add to the end of your style.css --- */
+
+/* Styles for the new dynamic request rows */
+.dynamic-request-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end; /* Aligns labels and inputs nicely */
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    background: #f9fafb;
+}
+
+.dynamic-request-row .form-group {
+    margin-bottom: 0; /* Remove default bottom margin */
+}
+/* --- Add to end of style.css --- */
+
+/* New Statuses for Mentor/HOD Flow */
+.status.status-pending-mentor {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+.status.status-pending-hod {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+.status.status-pending-incharge {
+    background-color: #fef3c7;
+    color: #92400e;
+}
