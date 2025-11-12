@@ -7,52 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        /* --- START: New Request Form Styles --- */
-        .request-type-selector {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #d1d5db;
-            padding-bottom: 1.5rem;
-        }
-        .request-type-selector button {
-            flex: 1;
-            padding: 1rem;
-            font-size: 1.1rem;
-            background-color: #f9fafb;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--color-text-light);
-            transition: all 0.2s ease;
-        }
-        .request-type-selector button:hover {
-            background-color: #f3f4f6;
-            border-color: #9ca3af;
-        }
-        .request-type-selector button.active {
-            background-color: #eef2ff;
-            color: var(--color-primary);
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 2px rgba(0, 82, 212, 0.2);
-        }
-        .request-form-container {
-            display: none; /* Hidden by default */
-        }
-        .request-form-container.active {
-            display: block; /* Shown when active */
-        }
-        .form-info-box {
-            background-color: #f3f4f6;
-            border: 1px solid #e5e7eb;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-        .form-info-box h4 { margin-top: 0; }
-        /* --- END: New Request Form Styles --- */
-
         .component-row {
             display: flex;
             gap: 1rem;
@@ -73,15 +27,182 @@
             margin-top: 1.1rem;
         }
         .remove-row-btn:hover { background-color: var(--color-red-hover); }
-        #add-component-btn, #add-component-btn-intra, #add-component-btn-comp {
-            background-color: var(--color-grey);
+
+        /* --- START: New/Modified Styles for Neatness --- */
+
+        /* Add icons to tab buttons */
+        .tab-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+        .tab-link svg {
+            width: 1.1em;
+            height: 1.1em;
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+        .tab-link.active svg {
+            opacity: 1;
+        }
+
+        /* Better spacing for headings */
+        .main-tab-content h3 {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .main-tab-content > p {
+            font-size: 1rem;
+            color: var(--color-text-light);
+            margin-bottom: 2rem;
+        }
+
+        /* Tweak info box */
+        .form-info-box {
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid var(--color-primary); /* Add a highlight */
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        .form-info-box h4 { margin-top: 0; }
+        .form-info-box p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Tweak add component button */
+        .add-component-btn {
+            background-color: #f9fafb;
+            color: var(--color-text-dark);
+            border: 1px dashed var(--color-grey);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .add-component-btn:hover {
+            background-color: #f3f4f6;
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        /* More spacing between forms */
+        .request-form-container {
+            /* Now hidden by default by JS */
+            display: none;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+        .request-form-container:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+
+        /* Clean up history table actions */
+        .history-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px; /* Give it space */
+        }
+        .history-actions .admin-btn, .history-actions a {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        /* --- NEW STYLES FOR SELECTION CARDS --- */
+        #request-form-screen {
+            display: none; /* Hide form screen by default */
+        }
+
+        .request-options-container {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: space-between;
+        }
+        .request-option-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        .request-option-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #d1d5db;
+        }
+        .request-option-card-icon {
+            width: 48px;
+            height: 48px;
+            padding: 10px;
+            border-radius: 50%;
+            background-color: #eef2ff;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+        .request-option-card h4 {
+            font-size: 1.25rem;
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: var(--color-text-dark);
+        }
+        .request-option-card-rules {
+            font-size: 0.9rem;
+            padding-left: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-text-light);
+            flex-grow: 1; /* Pushes button to bottom */
+        }
+        .request-option-card-rules li {
+            margin-bottom: 0.5rem;
+        }
+        .start-request-btn {
+            width: 100%;
+            background-color: var(--color-primary);
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            margin-bottom: 1rem;
+            transition: all 0.2s ease;
         }
+        .start-request-btn:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        #back-to-selection-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            border: none;
+            color: var(--color-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            padding: 0.25rem 0;
+        }
+        #back-to-selection-btn:hover {
+            text-decoration: underline;
+        }
+        /* --- END: New/Modified Styles --- */
     </style>
 </head>
 <body>
@@ -105,218 +226,257 @@
 
         <!-- --- START: Main Tab Navigation --- -->
         <div class="tab-container">
+            <!-- RE-ADDED the tab navigation -->
             <div class="tab-nav">
-                <button class="tab-link active" onclick="openMainTab(event, 'request')">Request Components</button>
-                <button class="tab-link" onclick="openMainTab(event, 'history')">My Request History</button>
-                <button class="tab-link" onclick="openMainTab(event, 'availability')">Component Availability</button>
+                <button class="tab-link active" onclick="openMainTab(event, 'request')">
+                    <!-- Icon: Plus Circle -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                    Request Components
+                </button>
+                <button class="tab-link" onclick="openMainTab(event, 'history')">
+                    <!-- Icon: Clock -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                    My Request History
+                </button>
             </div>
-            <!-- --- END: Main Tab Navigation --- -->
 
-            <!-- --- START: Tab 1 - Component Availability --- -->
-            <div id="availability" class="main-tab-content">
-                <h3>Component Availability</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Component</th>
-                                <th>Total Qty</th>
-                                <th>Working Qty</th>
-                                <th>Not Working Qty</th>
-                                <th>Issued Qty</th>
-                                <th>Available for Issue</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for component in components %}
-                            <tr>
-                                <td>{{ component.name }}</td>
-                                <td>{{ component.total_quantity }}</td>
-                                <td>{{ component.working_quantity }}</td>
-                                <td>{{ component.not_working_quantity }}</td>
-                                <td>{{ component.issued_quantity }}</td>
-                                <td><strong>{{ component.available }}</strong></td>
-                                <td>
-                                    {% if component.available <= 0 %}<span class="status out-of-stock">Out of Stock</span>
-                                    {% elif component.available < 10 %}<span class="status low-stock">Low Stock</span>
-                                    {% else %}<span class="status in-stock">In Stock</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- --- END: Tab 1 --- -->
-
-            <!-- --- START: Tab 2 - Request Components (NEW STRUCTURE) --- -->
+            <!-- --- START: Tab 1 - Request Components (NEW STRUCTURE) --- -->
             <div id="request" class="main-tab-content" style="display: block;">
-                <h3>New Component Request</h3>
-                <p>Please select the purpose of your request to see the correct form.</p>
 
-                <!-- Request Type Buttons -->
-                <div class="request-type-selector">
-                    <button id="btn-intra-day" class="request-type-btn active" onclick="openRequestForm(event, 'form-intra-day')">1. Intra-Day Activities</button>
-                    <button id="btn-project" class="request-type-btn" onclick="openRequestForm(event, 'form-project')">2. Project Work (Inside Lab)</button>
-                    <button id="btn-comp" class="request-type-btn" onclick="openRequestForm(event, 'form-competition')">3. Competitions</button>
+                <!-- STEP 1: Selection Screen (Visible by default) -->
+                <div id="request-selection-screen">
+                    <h3>New Component Request</h3>
+                    <p>First, select the purpose of your request. Each type has different rules.</p>
+
+                    <div class="request-options-container">
+                        <!-- Card 1: Intra-Day -->
+                        <div class="request-option-card">
+                            <div class="request-option-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-6.364-.386 1.591-1.591M3 12H5.25m.386-6.364 1.591 1.591M12 12a2.25 2.25 0 0 0-2.25 2.25v.01c0 .317.031.63.09.934a2.25 2.25 0 0 0 .16.906 2.25 2.25 0 0 0 .584 1.433 2.25 2.25 0 0 0 1.416.584c.304.059.617.09.934.09v-.01a2.25 2.25 0 0 0 2.25-2.25 2.25 2.25 0 0 0-2.25-2.25Zm0 0A2.25 2.25 0 0 1 14.25 12v.01c0 .317-.031.63-.09.934a2.25 2.25 0 0 1-.16.906 2.25 2.25 0 0 1-.584 1.433 2.25 2.25 0 0 1-1.416.584c-.304-.059-.617-.09-.934-.09v.01A2.25 2.25 0 0 1 9.75 12a2.25 2.25 0 0 1 2.25-2.25Z" /></svg>
+                            </div>
+                            <h4>1. Intra-Day Activities</h4>
+                            <ul class="request-option-card-rules">
+                                <li>for Lab work , Practice , Skill Enhancement</li>
+                                <li>Must be returned same day 3 PM.</li>
+                                <li><strong>Approval:</strong> Lab Technician only.</li>
+                            </ul>
+                            <button class="start-request-btn" data-form-id="form-intra-day">Start Intra-Day Request</button>
+                        </div>
+
+                        <!-- Card 2: Project Work -->
+                        <div class="request-option-card">
+                            <div class="request-option-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.075c0 .621-.504 1.125-1.125 1.125H4.875c-.621 0-1.125-.504-1.125-1.125V14.15M21 13.5v-1.5c0-.621-.504-1.125-1.125-1.125H4.125C3.504 10.875 3 11.379 3 12v1.5m18 0v-1.5a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 12v1.5m18 0v-1.5A2.25 2.25 0 0 0 18.75 9.75h-1.5A2.25 2.25 0 0 0 15 12v1.5m-6 0v-1.5A2.25 2.25 0 0 0 6.75 9.75H5.25A2.25 2.25 0 0 0 3 12v1.5m18-3.35v.001c0 .621-.504 1.125-1.125 1.125H4.125c-.621 0-1.125-.504-1.125-1.125v-.001M15 9.75v-4.5a3 3 0 0 0-3-3h-3a3 3 0 0 0-3 3v4.5" /></svg>
+                            </div>
+                            <h4>2. Project Work (Inside Lab)</h4>
+                            <ul class="request-option-card-rules">
+                                <li>For long-term approved projects.</li>
+                                <li>Max 30-day borrow period.</li>
+                                <li><strong>Approval:</strong> Lab Incharge → Lab Technician.</li>
+                            </ul>
+                            <button class="start-request-btn" data-form-id="form-project">Start Project Request</button>
+                        </div>
+
+                        <!-- Card 3: Competitions -->
+                        <div class="request-option-card">
+                            <div class="request-option-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-6.75c-.622 0-1.125.504-1.125 1.125v3.375m9 0h-9m9 0h1.125m-11.25 0H4.875M16.5 18.75v-3.375a3.375 3.375 0 0 0-3.375-3.375h-3.75a3.375 3.375 0 0 0-3.375 3.375v3.375m9 0h-9" /></svg>
+                            </div>
+                            <h4>3. Competitions</h4>
+                            <ul class="request-option-card-rules">
+                                <li>For official competitions only.</li>
+                                <li>Max 30-day borrow period.</li>
+                                <li><strong>Approval:</strong> Mentor → Lab Incharge.</li>
+                            </ul>
+                            <button class="start-request-btn" data-form-id="form-competition">Start Competition Request</button>
+                        </div>
+                    </div>
                 </div>
 
-                <datalist id="component-datalist">
-                    {% for component in available_components %}
-                    <option value="{{ component.name }}"></option>
-                    {% endfor %}
-                </datalist>
+                <!-- STEP 2: Form Screen (Hidden by default) -->
+                <div id="request-form-screen">
+                    <button id="back-to-selection-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:1em; height:1em;"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
+                        Back to Options
+                    </button>
 
-                <!-- Form 1: Intra-Day Activities -->
-                <div id="form-intra-day" class="request-form-container active">
-                    <div class="form-info-box">
-                        <h4>Intra-Day Activity Request</h4>
-                        <p style="margin: 0;">For short-term lab work. Requests are sent directly to the **Lab Technician** for issue. No mentor approval is needed.</p>
+                    <!-- Availability Table is now HERE -->
+                    <h3 style="margin-top: 1rem;">Component Availability</h3>
+                    <p>Check stock before you request. You can only request items that are "In Stock" or "Low Stock".</p>
+                    <div class="table-container" style="margin-bottom: 2rem;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Total Qty</th>
+                                    <th>Working Qty</th>
+                                    <th>Not Working Qty</th>
+                                    <th>Issued Qty</th>
+                                    <th>Available for Issue</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for component in components %}
+                                <tr>
+                                    <td>{{ component.name }}</td>
+                                    <td>{{ component.total_quantity }}</td>
+                                    <td>{{ component.working_quantity }}</td>
+                                    <td>{{ component.not_working_quantity }}</td>
+                                    <td>{{ component.issued_quantity }}</td>
+                                    <td><strong>{{ component.available }}</strong></td>
+                                    <td>
+                                        {% if component.available <= 0 %}<span class="status out-of-stock">Out of Stock</span>
+                                        {% elif component.available < 10 %}<span class="status low-stock">Low Stock</span>
+                                        {% else %}<span class="status in-stock">In Stock</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-                    <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
-                        <input type="hidden" name="project_type" value="Intra-Day">
+                    <!-- End Availability Table -->
 
-                        <h4>Components</h4>
-                        <div id="component-list-intra">
-                            <div class="component-row">
-                                <div class="form-group">
-                                    <label for="component_1_intra">Component Name:</label>
-                                    <input type="text" list="component-datalist" id="component_1_intra" name="component[]" class="component-search" placeholder="Type or select component" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="quantity_1_intra">Quantity:</label>
-                                    <input type="number" id="quantity_1_intra" name="quantity[]" min="1" max="10" value="1" required>
+                    <datalist id="component-datalist">
+                        {% for component in available_components %}
+                        <option value="{{ component.name }}"></option>
+                        {% endfor %}
+                    </datalist>
+
+                    <!-- Form 1: Intra-Day Activities -->
+                    <div id="form-intra-day" class="request-form-container">
+                        <div class="form-info-box">
+                            <h4>Intra-Day Activity Request</h4>
+                            <p style="margin: 0;"><strong>Rules:</strong> Technician approval only. Must be returned same day 3 PM.</p>
+                        </div>
+                        <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
+                            <input type="hidden" name="project_type" value="Intra-Day">
+                            <h4>Components</h4>
+                            <div id="component-list-intra">
+                                <div class="component-row">
+                                    <div class="form-group">
+                                        <label for="component_1_intra">Component Name:</label>
+                                        <input type="text" list="component-datalist" id="component_1_intra" name="component[]" class="component-search" placeholder="Type or select component" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quantity_1_intra">Quantity:</label>
+                                        <input type="number" id="quantity_1_intra" name="quantity[]" min="1" max="10" value="1" required>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <button type="button" id="add-component-btn-intra" class="add-component-btn">+ Add Another Component</button>
-
-                        <hr style="margin: 1.5rem 0;">
-                        <h4>Request Details</h4>
-                        <div class="form-row">
+                            <button type="button" class="add-component-btn">+ Add Another Component</button>
+                            <hr style="margin: 1.5rem 0;">
+                            <h4>Request Details</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="return_date_intra">Expected Return Date (Must be today)</label>
+                                    <input type="date" id="return_date_intra" name="return_date" value="{{ today }}" readonly required>
+                                </div>
+                            </div>
                             <div class="form-group">
-                                <label for="return_date_intra">Expected Return Date (Must be today)</label>
-                                <input type="date" id="return_date_intra" name="return_date" value="{{ today }}" readonly required>
+                                <label for="project_description_intra">Activity / Purpose:</label>
+                                <textarea id="project_description_intra" name="project_description" rows="3" placeholder="e.g., Testing sensor for mini-project..." required></textarea>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="project_description_intra">Activity / Purpose:</label>
-                            <textarea id="project_description_intra" name="project_description" rows="3" placeholder="e.g., Testing sensor for mini-project..." required></textarea>
-                        </div>
-                        <!-- Hidden/Not-required mentor fields for this form -->
-                        <input type="hidden" name="mentor_name" value="N/A (Intra-Day)">
-                        <input type="hidden" name="mentor_email" value="N/A">
-
-                        <button type="submit" class="submit-button">Submit Intra-Day Request</button>
-                    </form>
-                </div>
-
-                <!-- Form 2: Project Work (Inside Lab) -->
-                <div id="form-project" class="request-form-container">
-                    <div class="form-info-box">
-                        <h4>Project Work Request</h4>
-                        <!-- MODIFIED TEXT -->
-                        <p style="margin: 0;">For long-term approved projects. This request is sent directly to the **Lab Incharge** for approval (mentor approval is bypassed).</p>
-                        <p style="margin-top: 0.5rem; margin-bottom: 0;">Students working on approved projects will have an assigned **cabin** for storing their components and materials. Drawer allocation and management are handled by the **Lab Incharge** and **Technician**.</p>
+                            <input type="hidden" name="mentor_name" value="N/A (Intra-Day)">
+                            <input type="hidden" name="mentor_email" value="N/A">
+                            <button type="submit" class="submit-button">Submit Intra-Day Request</button>
+                        </form>
                     </div>
-                    <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
-                        <input type="hidden" name="project_type" value="Project Work">
 
-                        <h4>Components</h4>
-                        <div id="component-list-project">
-                            <div class="component-row">
-                                <div class="form-group">
-                                    <label for="component_1_proj">Component Name:</label>
-                                    <input type="text" list="component-datalist" id="component_1_proj" name="component[]" class="component-search" placeholder="Type or select component" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="quantity_1_proj">Quantity:</label>
-                                    <input type="number" id="quantity_1_proj" name="quantity[]" min="1" max="10" value="1" required>
+                    <!-- Form 2: Project Work (Inside Lab) -->
+                    <div id="form-project" class="request-form-container">
+                        <div class="form-info-box">
+                            <h4>Project Work Request</h4>
+                            <p style="margin: 0;"><strong>Rules:</strong> Lab Incharge → Lab Technician approval. Max 30-day borrow.</p>
+                        </div>
+                        <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
+                            <input type="hidden" name="project_type" value="Project Work">
+                            <h4>Components</h4>
+                            <div id="component-list-project">
+                                <div class="component-row">
+                                    <div class="form-group">
+                                        <label for="component_1_proj">Component Name:</label>
+                                        <input type="text" list="component-datalist" id="component_1_proj" name="component[]" class="component-search" placeholder="Type or select component" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quantity_1_proj">Quantity:</label>
+                                        <input type="number" id="quantity_1_proj" name="quantity[]" min="1" max="10" value="1" required>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <button type="button" id="add-component-btn-project" class="add-component-btn">+ Add Another Component</button>
-
-                        <hr style="margin: 1.5rem 0;">
-                        <h4>Request Details</h4>
-
-                        <!-- REMOVED MENTOR FIELDS -->
-
-                        <div class="form-row">
+                            <button type="button" class="add-component-btn">+ Add Another Component</button>
+                            <hr style="margin: 1.5rem 0;">
+                            <h4>Request Details</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="return_date">Expected Return Date (Max 30 days):</label>
+                                    <input type="date" id="return_date" name="return_date" min="{{ today }}" max="{{ max_date }}" required>
+                                </div>
+                            </div>
                             <div class="form-group">
-                                <label for="return_date">Expected Return Date (Max 30 days):</label>
-                                <input type="date" id="return_date" name="return_date" min="{{ today }}" max="{{ max_date }}" required>
+                                <label for="project_description">Project Title / Description:</label>
+                                <textarea id="project_description" name="project_description" rows="3" placeholder="Briefly describe your project..." required></textarea>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="project_description">Project Title / Description:</label>
-                            <textarea id="project_description" name="project_description" rows="3" placeholder="Briefly describe your project..." required></textarea>
-                        </div>
-
-                        <!-- ADDED HIDDEN MENTOR FIELDS -->
-                        <input type="hidden" name="mentor_name" value="N/A (Project Work)">
-                        <input type="hidden" name="mentor_email" value="N/A">
-
-                        <button type="submit" class="submit-button">Submit Project Request</button>
-                    </form>
-                </div>
-
-                <!-- Form 3: Competitions -->
-                <div id="form-competition" class="request-form-container">
-                    <div class="form-info-box">
-                        <h4>Competition Request</h4>
-                        <p style="margin: 0;">For official competitions. This request follows the standard workflow: **Mentor Approval** → **Incharge Approval**.</p>
+                            <input type="hidden" name="mentor_name" value="N/A (Project Work)">
+                            <input type="hidden" name="mentor_email" value="N/A">
+                            <button type="submit" class="submit-button">Submit Project Request</button>
+                        </form>
                     </div>
-                    <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
-                        <input type="hidden" name="project_type" value="Competition">
 
-                        <h4>Components</h4>
-                        <div id="component-list-comp">
-                            <div class="component-row">
+                    <!-- Form 3: Competitions -->
+                    <div id="form-competition" class="request-form-container">
+                        <div class="form-info-box">
+                            <h4>Competition Request</h4>
+                            <p style="margin: 0;"><strong>Rules:</strong> Mentor approval → Incharge approval. Max 30-day borrow.</p>
+                        </div>
+                        <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
+                            <input type="hidden" name="project_type" value="Competition">
+                            <h4>Components</h4>
+                            <div id="component-list-comp">
+                                <div class="component-row">
+                                    <div class="form-group">
+                                        <label for="component_1_comp">Component Name:</label>
+                                        <input type="text" list="component-datalist" id="component_1_comp" name="component[]" class="component-search" placeholder="Type or select component" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quantity_1_comp">Quantity:</label>
+                                        <input type="number" id="quantity_1_comp" name="quantity[]" min="1" max="10" value="1" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="add-component-btn">+ Add Another Component</button>
+                            <hr style="margin: 1.5rem 0;">
+                            <h4>Request Details</h4>
+                            <div class="form-row">
                                 <div class="form-group">
-                                    <label for="component_1_comp">Component Name:</label>
-                                    <input type="text" list="component-datalist" id="component_1_comp" name="component[]" class="component-search" placeholder="Type or select component" required>
+                                    <label for="mentor_name_comp">Mentor Name:</label>
+                                    <input type="text" id="mentor_name_comp" name="mentor_name" placeholder="Full name of your mentor" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="quantity_1_comp">Quantity:</label>
-                                    <input type="number" id="quantity_1_comp" name="quantity[]" min="1" max="10" value="1" required>
+                                    <label for="mentor_email_comp">Mentor Email:</label>
+                                    <input type="email" id="mentor_email_comp" name="mentor_email" placeholder="Mentor's official email" required>
                                 </div>
                             </div>
-                        </div>
-                        <button type="button" id="add-component-btn-comp" class="add-component-btn">+ Add Another Component</button>
-
-                        <hr style="margin: 1.5rem 0;">
-                        <h4>Request Details</h4>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="mentor_name_comp">Mentor Name:</label>
-                                <input type="text" id="mentor_name_comp" name="mentor_name" placeholder="Full name of your mentor" required>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="return_date_comp">Expected Return Date (Max 30 days):</label>
+                                    <input type="date" id="return_date_comp" name="return_date" min="{{ today }}" max="{{ max_date }}" required>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="mentor_email_comp">Mentor Email:</label>
-                                <input type="email" id="mentor_email_comp" name="mentor_email" placeholder="Mentor's official email" required>
+                                <label for="project_description_comp">Competition Name & Description:</label>
+                                <textarea id="project_description_comp" name="project_description" rows="3" placeholder="e.g., e-Yantra 2025 - Theme..." required></textarea>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="return_date_comp">Expected Return Date (Max 30 days):</label>
-                                <input type="date" id="return_date_comp" name="return_date" min="{{ today }}" max="{{ max_date }}" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="project_description_comp">Competition Name & Description:</label>
-                            <textarea id="project_description_comp" name="project_description" rows="3" placeholder="e.g., e-Yantra 2025 - Theme..." required></textarea>
-                        </div>
-                        <button type="submit" class="submit-button">Submit Competition Request</button>
-                    </form>
+                            <button type="submit" class="submit-button">Submit Competition Request</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             <!-- --- END: Tab 2 --- -->
 
-            <!-- --- START: Tab 3 - My Request History --- -->
-            <div id="history" class="main-tab-content">
+            <!-- RE-ADDED the "history" div block -->
+            <div id="history" class="main-tab-content" style="display: none;">
                 <h3>My Request History</h3>
                 <div class="table-container wide-table">
                     <table>
@@ -335,7 +495,6 @@
                         </thead>
                         <tbody>
                             {% set rendered_batches = [] %}
-
                             {% if not my_requests %}
                                 <tr><td colspan="9">You have not made any requests.</td></tr>
                             {% else %}
@@ -343,7 +502,7 @@
                                 <tr>
                                     <td>{{ req.id }}</td>
                                     <td>
-                                        <span class="status status-issued" style="background-color: #eee; color: #555;">
+                                        <span class="status status-issued" style="background-color: #eee; color: #555; font-size: 0.75rem; padding: 0.2rem 0.4rem;">
                                             {{ req.get('project_type', 'N/A') }}
                                         </span>
                                     </td>
@@ -358,7 +517,7 @@
                                         {{ req.get('mentor_name', '-') }}
                                     </td>
                                     <td><small>{{ req.get('incharge_remarks', '-') }}</small></td>
-                                    <td>
+                                    <td class="history-actions">
                                         {% set batch_id = req.get('batch_id') %}
                                         {% if batch_id and req.status == 'Pending Mentor' and req.mentor_approval_token and batch_id not in rendered_batches %}
                                             <a href="{{ url_for('mentor_approval', token=req.mentor_approval_token) }}" target="_blank">Get Link</a>
@@ -367,13 +526,11 @@
                                             -
                                         {% endif %}
                                     </td>
-                                    <td>
-                                        <!-- This button now launches the modal -->
+                                    <td class="history-actions">
                                         {% set cancellable_statuses = ['Pending Mentor', 'Pending Incharge', 'Approved'] %}
                                         {% if req.status in cancellable_statuses %}
                                         <button type="button"
                                                 class="admin-btn reject cancel-btn-modal"
-                                                style="padding: 0.2rem 0.5rem; font-size: 0.75rem;"
                                                 data-request-id="{{ req.id }}"
                                                 data-request-name="{{ req.component_name }}">
                                             Cancel
@@ -390,6 +547,7 @@
                 </div>
             </div>
             <!-- --- END: Tab 3 --- -->
+
         </div><!-- End Tab Container -->
     </div><!-- End Student Container -->
 
@@ -433,7 +591,7 @@
     </template>
 
     <script>
-        // --- Main Tab Switching ---
+        // --- RE-ADDED Main Tab Switching ---
         function openMainTab(evt, tabName) {
             var i, tabContent, tabLinks;
             tabContent = document.getElementsByClassName("main-tab-content");
@@ -444,20 +602,43 @@
             evt.currentTarget.className += " active";
         }
 
-        // --- Request Form Switching ---
-        function openRequestForm(evt, formId) {
-            var i, formContainers, formButtons;
-            formContainers = document.getElementsByClassName("request-form-container");
-            for (i = 0; i < formContainers.length; i++) formContainers[i].style.display = "none";
-            formButtons = document.getElementsByClassName("request-type-btn");
-            for (i = 0; i < formButtons.length; i++) formButtons[i].className = formButtons[i].className.replace(" active", "");
-            document.getElementById(formId).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
+        // --- NEW SCRIPT for Selection/Form Screen Switching ---
+        const selectionScreen = document.getElementById('request-selection-screen');
+        const formScreen = document.getElementById('request-form-screen');
+        const backBtn = document.getElementById('back-to-selection-btn');
+        const startBtns = document.querySelectorAll('.start-request-btn');
+        const allForms = document.querySelectorAll('.request-form-container');
+
+        startBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const formId = this.getAttribute('data-form-id');
+
+                // Hide selection screen, show form screen
+                selectionScreen.style.display = 'none';
+                formScreen.style.display = 'block';
+
+                // Hide all forms first
+                allForms.forEach(f => f.style.display = 'none');
+
+                // Show the specific form that was clicked
+                document.getElementById(formId).style.display = 'block';
+            });
+        });
+
+        backBtn.addEventListener('click', function() {
+            // Hide form screen, show selection screen
+            formScreen.style.display = 'none';
+            selectionScreen.style.display = 'block';
+
+            // Hide all forms
+            allForms.forEach(f => f.style.display = 'none');
+        });
+        // --- END NEW SCRIPT ---
 
         // --- Dynamic Component Row Logic ---
-        function setupAddButton(buttonId, listId) {
-            document.getElementById(buttonId).addEventListener('click', function() {
+        document.querySelectorAll('.add-component-btn').forEach(button => {
+            const listId = button.previousElementSibling.id;
+            button.addEventListener('click', function() {
                 const template = document.getElementById('component-row-template');
                 const clone = template.content.cloneNode(true);
                 const componentList = document.getElementById(listId);
@@ -466,10 +647,7 @@
                 });
                 componentList.appendChild(clone);
             });
-        }
-        setupAddButton('add-component-btn-intra', 'component-list-intra');
-        setupAddButton('add-component-btn-project', 'component-list-project');
-        setupAddButton('add-component-btn-comp', 'component-list-comp');
+        });
 
         // --- Cancellation Modal JS (from previous step) ---
         const cancelModal = document.getElementById('cancel-modal');
