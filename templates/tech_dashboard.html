@@ -7,6 +7,105 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* --- START: Copied from Admin Dashboard for Card UI --- */
+        /* Add icons to tab buttons */
+        .tab-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+        .tab-link svg {
+            width: 1.1em;
+            height: 1.1em;
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+        .tab-link.active svg {
+            opacity: 1;
+        }
+
+        .request-options-container {
+            display: grid; /* Use Grid for better responsiveness */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .request-option-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        .request-option-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #d1d5db;
+        }
+        .request-option-card-icon {
+            width: 48px;
+            height: 48px;
+            padding: 10px;
+            border-radius: 50%;
+            background-color: #eef2ff;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .request-option-card h4 {
+            font-size: 1.25rem;
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: var(--color-text-dark);
+        }
+
+        .request-option-card-desc {
+            font-size: 0.95rem;
+            color: var(--color-text-light);
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .start-request-btn {
+            width: 100%;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .start-request-btn:hover {
+            background-color: var(--color-primary-hover);
+        }
+        /* --- END: Copied from Admin Dashboard --- */
+
+        /* Custom styles for Admin Card */
+        .card-count {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin: 0.5rem 0;
+        }
+
+        /* Wrapper for hidden tables */
+        .table-wrapper {
+            display: none; /* Hide by default */
+            margin-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 2rem;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -27,115 +126,160 @@
 
         <div class="tab-container">
             <div class="tab-nav">
-                <button class="tab-link active" onclick="openTab(event, 'dispatch')">Pending ISSUE ({{ approved_requests|length }})</button>
-                <button class="tab-link" onclick="openTab(event, 'collect')">Pending Collection ({{ dispatched_requests|length }})</button>
-                <button class="tab-link" onclick="openTab(event, 'inventory')">Modify Inventory</button>
-                <button class="tab-link" onclick="openTab(event, 'availability')">Availability</button>
+                <!-- UPDATED TAB 1 -->
+                <button class="tab-link active" onclick="openTab(event, 'dispatch')">
+                    <!-- Icon: Truck -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125V14.25m-17.25 4.5h10.5m-10.5-4.5h10.5m-10.5-4.5h10.5V9.75a3.375 3.375 0 0 0-3.375-3.375H7.875a3.375 3.375 0 0 0-3.375 3.375v3.375Z" /></svg>
+                    Dispatch Management
+                </button>
+                <!-- UPDATED TAB 2 -->
+                <button class="tab-link" onclick="openTab(event, 'inventory')">
+                    <!-- Icon: Wrench Screwdriver -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-2.138a1.125 1.125 0 0 1 .865-.501h3.423c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" /></svg>
+                    Modify Inventory
+                </button>
+                <!-- UPDATED TAB 3 -->
+                <button class="tab-link" onclick="openTab(event, 'availability')">
+                    <!-- Icon: Clipboard List -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h.01M15 12h.01M10.33 16.5h3.34M16.5 19.5h-9a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v10.5a3 3 0 0 1-3 3Z" /></svg>
+                    Availability
+                </button>
             </div>
 
             <div id="dispatch" class="tab-content" style="display: block;">
-                <h3>Pending ISSUE (Incharge Approved)</h3>
-                <div class="table-container wide-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Student</th>
-                                <th>Project Type</th> <!-- NEW COLUMN -->
-                                <th>Component</th>
-                                <th>Qty</th>
-                                <th>Due Date</th>
-                                <th>Approved by</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if not approved_requests %}
-                                <tr><td colspan="7">No items are pending Issue.</td></tr>
-                            {% endif %}
-                            {% for req in approved_requests %}
-                                <tr>
-                                    <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
-                                    <td> <!-- NEW COLUMN -->
-                                        <span class="status status-issued" style="background-color: #eee; color: #555; font-size: 0.75rem; padding: 0.2rem 0.4rem;">
-                                            {{ req.get('project_type', 'N/A') }}
-                                        </span>
-                                    </td>
-                                    <td>{{ req.component_id }} ({{ req.component_name }})</td>
-                                    <td>{{ req.quantity }}</td>
-                                    <td>{{ req.due_date }}</td>
-                                    <td><small>{{ req.approver_email }} at {{ req.approval_timestamp }}</small></td>
-                                    <td>
-                                        <div style="display: flex; gap: 5px;">
-                                            <form action="{{ url_for('tech_dispatch_item') }}" method="POST" style="margin: 0;">
-                                                <input type="hidden" name="request_id" value="{{ req.id }}">
-                                                <button type="submit" class="admin-btn approve">ISSUE</button>
-                                            </form>
-                                            <!-- Button to trigger modal -->
-                                            <button type="button"
-                                                    class="admin-btn reject cancel-btn-modal"
-                                                    style="padding: 0.2rem 0.5rem; font-size: 0.75rem;"
-                                                    data-request-id="{{ req.id }}"
-                                                    data-request-name="{{ req.component_name }}">
-                                                Cancel
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <!-- STEP 1: Card Selection -->
+                <div class="request-options-container" id="card-container">
+                    <!-- Card 1: Pending ISSUE -->
+                    <div class="request-option-card">
+                        <div class="request-option-card-icon" style="background-color: #d1fae5; color: #065f46;">
+                            <!-- Icon: Arrow Up Tray -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" /></svg>
+                        </div>
+                        <h4>Pending ISSUE</h4>
+                        <div class="card-count">{{ approved_requests|length }}</div>
+                        <p class="request-option-card-desc">Requests approved by Incharge, ready to be issued to students.</p>
+                        <button class="start-request-btn" onclick="showTable('table-dispatch')">View Requests</button>
+                    </div>
+
+                    <!-- Card 2: Pending Collection -->
+                    <div class="request-option-card">
+                        <div class="request-option-card-icon" style="background-color: #dbeafe; color: #1e40af;">
+                            <!-- Icon: Arrow Down Tray -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                        </div>
+                        <h4>Pending Collection</h4>
+                        <div class="card-count">{{ dispatched_requests|length }}</div>
+                        <p class="request-option-card-desc">Items currently issued to students and awaiting return.</p>
+                        <button class="start-request-btn" onclick="showTable('table-collect')">View Items</button>
+                    </div>
                 </div>
-            </div>
 
-            <div id="collect" class="tab-content">
-                <h3>Pending Collection (Out with Students)</h3>
-                <div class="table-container wide-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Student</th>
-                                <th>Project Type</th> <!-- NEW COLUMN -->
-                                <th>Component</th>
-                                <th>Qty</th>
-                                <th>Due Date</th>
-                                <th>ISSUED at</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if not dispatched_requests %}
-                                <tr><td colspan="7">No items are pending collection.</td></tr>
-                            {% endif %}
+                <!-- STEP 2: Hidden Tables -->
 
-                            {% for req in dispatched_requests %}
+                <!-- Table 1: Pending ISSUE -->
+                <div id="table-dispatch" class="table-wrapper">
+                    <h3>Pending ISSUE (Incharge Approved)</h3>
+                    <button class="admin-btn reject" onclick="hideAllTables()" style="margin-bottom: 1rem;">&larr; Back to Cards</button>
+                    <div class="table-container wide-table">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
-                                    <td> <!-- NEW COLUMN -->
-                                        <span class="status status-issued" style="background-color: #eee; color: #555; font-size: 0.75rem; padding: 0.2rem 0.4rem;">
-                                            {{ req.get('project_type', 'N/A') }}
-                                        </span>
-                                    </td>
-                                    <td>{{ req.component_id }} ({{ req.component_name }})</td>
-                                    <td>{{ req.quantity }}</td>
-                                    <td>{{ req.due_date }}</td>
-                                    <td><small>{{ req.issue_timestamp }}</small></td>
-                                    <td>
-                                        <a href="{{ url_for('tech_collect_item_form', request_id=req.id) }}" class="admin-btn collect" style="text-decoration: none;">
-                                            Collect Item
-                                        </a>
-                                    </td>
+                                    <th>Student</th>
+                                    <th>Project Type</th>
+                                    <th>Component</th>
+                                    <th>Qty</th>
+                                    <th>Due Date</th>
+                                    <th>Approved by</th>
+                                    <th>Action</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {% if not approved_requests %}
+                                    <tr><td colspan="7">No items are pending Issue.</td></tr>
+                                {% endif %}
+                                {% for req in approved_requests %}
+                                    <tr>
+                                        <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
+                                        <td>
+                                            <span class="status status-issued" style="background-color: #eee; color: #555; font-size: 0.75rem; padding: 0.2rem 0.4rem;">
+                                                {{ req.get('project_type', 'N/A') }}
+                                            </span>
+                                        </td>
+                                        <td>{{ req.component_id }} ({{ req.component_name }})</td>
+                                        <td>{{ req.quantity }}</td>
+                                        <td>{{ req.due_date }}</td>
+                                        <td><small>{{ req.approver_email }} at {{ req.approval_timestamp }}</small></td>
+                                        <td>
+                                            <div style="display: flex; gap: 5px;">
+                                                <form action="{{ url_for('tech_dispatch_item') }}" method="POST" style="margin: 0;">
+                                                    <input type="hidden" name="request_id" value="{{ req.id }}">
+                                                    <button type="submit" class="admin-btn approve">ISSUE</button>
+                                                </form>
+                                                <button type="button"
+                                                        class="admin-btn reject cancel-btn-modal"
+                                                        style="padding: 0.2rem 0.5rem; font-size: 0.75rem;"
+                                                        data-request-id="{{ req.id }}"
+                                                        data-request-name="{{ req.component_name }}">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Table 2: Pending Collection -->
+                <div id="table-collect" class="table-wrapper">
+                    <h3>Pending Collection (Out with Students)</h3>
+                    <button class="admin-btn reject" onclick="hideAllTables()" style="margin-bottom: 1rem;">&larr; Back to Cards</button>
+                    <div class="table-container wide-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Project Type</th>
+                                    <th>Component</th>
+                                    <th>Qty</th>
+                                    <th>Due Date</th>
+                                    <th>ISSUED at</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if not dispatched_requests %}
+                                    <tr><td colspan="7">No items are pending collection.</td></tr>
+                                {% endif %}
+                                {% for req in dispatched_requests %}
+                                    <tr>
+                                        <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
+                                        <td>
+                                            <span class="status status-issued" style="background-color: #eee; color: #555; font-size: 0.75rem; padding: 0.2rem 0.4rem;">
+                                                {{ req.get('project_type', 'N/A') }}
+                                            </span>
+                                        </td>
+                                        <td>{{ req.component_id }} ({{ req.component_name }})</td>
+                                        <td>{{ req.quantity }}</td>
+                                        <td>{{ req.due_date }}</td>
+                                        <td><small>{{ req.issue_timestamp }}</small></td>
+                                        <td>
+                                            <a href="{{ url_for('tech_collect_item_form', request_id=req.id) }}" class="admin-btn collect" style="text-decoration: none;">
+                                                Collect Item
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <div id="inventory" class="tab-content">
-
                 <h3>Update Existing Inventory</h3>
                 <p>Use this form to set the new **Total** and **Working** counts for an item. The "Not Working" count will be auto-calculated (`Total - Working`). The "Issued" count is not affected.</p>
-
                 <form action="{{ url_for('tech_update_inventory') }}" method="POST" class="request-form">
                     <div class="form-row">
                         <div class="form-group" style="flex-grow: 2;">
@@ -160,9 +304,10 @@
                     <button type="submit" class="submit-button">Update Component</button>
                 </form>
 
-                <hr style="margin: 2.5rem 0;"> <h3>Add New Component</h3>
-                <p>Use this form to add a brand new component. The "Not Working" and "Issued" counts will be set to 0.</p>
+                <hr style="margin: 2.5rem 0;">
 
+                <h3>Add New Component</h3>
+                <p>Use this form to add a brand new component. The "Not Working" and "Issued" counts will be set to 0.</p>
                 <form action="{{ url_for('tech_add_inventory') }}" method="POST" class="request-form">
                     <div class="form-row">
                         <div class="form-group">
@@ -176,17 +321,18 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="new_total">Total Quantity:</label>
+                            <label for="new_total1">Total Quantity:</label>
                             <input type="number" id="new_total1" name="new_total" min="0" placeholder="e.g., 25" required>
                         </div>
                         <div class="form-group">
-                            <label for="new_working">Working Quantity:</label>
+                            <label for="new_available1">Working Quantity:</label>
                             <input type="number" id="new_available1" name="new_working" min="0" placeholder="e.g., 25" required>
                         </div>
                     </div>
                     <button type="submit" class="admin-btn approve">Add New Component</button>
                 </form>
             </div>
+
             <div id="availability" class="tab-content">
                 <h3>Component Availability</h3>
                 <p>This table shows the current live stock. This is the same view seen by Admins and HODs.</p>
@@ -227,6 +373,7 @@
                     </table>
                 </div>
             </div>
+
             <!-- START: Cancellation Modal -->
             <div id="cancel-modal" class="modal-backdrop" hidden>
                 <div class="modal-content">
@@ -263,7 +410,47 @@
             evt.currentTarget.className += " active";
         }
 
-        // --- START: New Modal Script (from previous step) ---
+        // --- NEW SCRIPT for showing/hiding tables (from Admin) ---
+        const allTables = document.querySelectorAll('.table-wrapper');
+        const cardContainer = document.getElementById('card-container');
+
+        function showTable(tableId) {
+            // Hide all tables
+            allTables.forEach(t => {
+                t.style.display = 'none';
+            });
+            // Show the specific table
+            const tableToShow = document.getElementById(tableId);
+            if (tableToShow) {
+                tableToShow.style.display = 'block';
+            }
+            // Hide the card container
+            if (cardContainer) {
+                cardContainer.style.display = 'none';
+            }
+        }
+
+        function hideAllTables() {
+            // Hide all tables
+            allTables.forEach(t => {
+                t.style.display = 'none';
+            });
+            // Show the card container
+            if (cardContainer) {
+                cardContainer.style.display = 'grid'; // Use grid to match original style
+            }
+        }
+
+        // Default state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!window.location.hash) {
+                 hideAllTables(); // Ensures all tables are hidden and cards are shown on load
+            }
+        });
+        // --- END NEW SCRIPT ---
+
+
+        // --- START: Modal Script (Unchanged) ---
         const cancelModal = document.getElementById('cancel-modal');
         const cancelModalForm = document.getElementById('cancel-modal-form');
         const cancelModalComponentName = document.getElementById('cancel-modal-component-name');
@@ -293,7 +480,7 @@
                 cancelModal.hidden = true;
             }
         });
-        // --- END: New Modal Script ---
+        // --- END: Modal Script ---
     </script>
 </body>
 </html>

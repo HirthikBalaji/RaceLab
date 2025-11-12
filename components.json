@@ -3,10 +3,10 @@
         "id": "RPI4",
         "name": "Raspberry Pi 4",
         "total_quantity": 20,
-        "working_quantity": 19,
-        "not_working_quantity": 1,
-        "issued_quantity": 1,
-        "available_for_issue": 19
+        "working_quantity": 20,
+        "not_working_quantity": 0,
+        "issued_quantity": 2,
+        "available_for_issue": 20
     },
     {
         "id": "UNO",
@@ -14,25 +14,25 @@
         "total_quantity": 30,
         "working_quantity": 30,
         "not_working_quantity": 0,
-        "issued_quantity": 0,
+        "issued_quantity": 4,
         "available_for_issue": 30
     },
     {
         "id": "SG90",
         "name": "Servo Motor (SG90)",
         "total_quantity": 50,
-        "working_quantity": 49,
-        "not_working_quantity": 1,
-        "issued_quantity": 0,
+        "working_quantity": 48,
+        "not_working_quantity": 2,
+        "issued_quantity": 15,
         "available_for_issue": 50
     },
     {
         "id": "HCSR04",
         "name": "Ultrasonic Sensor",
         "total_quantity": 40,
-        "working_quantity": 40,
-        "not_working_quantity": 0,
-        "issued_quantity": 0,
+        "working_quantity": 39,
+        "not_working_quantity": 1,
+        "issued_quantity": 16,
         "available_for_issue": 40
     },
     {
@@ -41,7 +41,7 @@
         "total_quantity": 100,
         "working_quantity": 100,
         "not_working_quantity": 0,
-        "issued_quantity": 0,
+        "issued_quantity": 6,
         "available_for_issue": 100
     },
     {
@@ -50,7 +50,7 @@
         "total_quantity": 20,
         "working_quantity": 20,
         "not_working_quantity": 0,
-        "issued_quantity": 0,
+        "issued_quantity": 4,
         "available_for_issue": 20
     }
 ]

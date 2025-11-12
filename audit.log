@@ -126,3 +126,50 @@
 2025-11-12 16:56:34,184 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #66. 1 working, 0 not working.
 2025-11-12 16:56:42,061 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #69. 1 working, 0 not working.
 2025-11-12 16:56:49,048 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #68. 1 working, 0 not working.
+2025-11-12 19:02:50,506 - ISSUE by lab_tecnician@ch.amrita.edu: Req #1. Stock Raspberry Pi 4 issued 0 -> 1
+2025-11-12 21:59:37,666 - APPROVAL by lab_incharge@ch.amrita.edu: Req #3. Item Raspberry Pi 4 approved for issue.
+2025-11-12 21:59:37,667 - APPROVAL by lab_incharge@ch.amrita.edu: Req #4. Item Ultrasonic Sensor approved for issue.
+2025-11-12 21:59:37,667 - APPROVAL by lab_incharge@ch.amrita.edu: Req #5. Item Breadboard approved for issue.
+2025-11-12 21:59:42,446 - APPROVAL by lab_incharge@ch.amrita.edu: Req #6. Item Ultrasonic Sensor approved for issue.
+2025-11-12 21:59:42,446 - APPROVAL by lab_incharge@ch.amrita.edu: Req #7. Item Servo Motor (SG90) approved for issue.
+2025-11-12 21:59:42,446 - APPROVAL by lab_incharge@ch.amrita.edu: Req #8. Item ESP32 -S3 approved for issue.
+2025-11-12 21:59:42,446 - APPROVAL by lab_incharge@ch.amrita.edu: Req #9. Item Breadboard approved for issue.
+2025-11-12 21:59:46,141 - APPROVAL by lab_incharge@ch.amrita.edu: Req #10. Item Raspberry Pi 4 approved for issue.
+2025-11-12 21:59:46,141 - APPROVAL by lab_incharge@ch.amrita.edu: Req #11. Item Arduino Uno approved for issue.
+2025-11-12 22:10:37,347 - APPROVAL by lab_incharge@ch.amrita.edu: Req #5. Item Raspberry Pi 4 approved for issue.
+2025-11-12 22:10:37,347 - APPROVAL by lab_incharge@ch.amrita.edu: Req #6. Item Breadboard approved for issue.
+2025-11-12 22:10:37,347 - APPROVAL by lab_incharge@ch.amrita.edu: Req #7. Item Arduino Uno approved for issue.
+2025-11-12 22:10:37,347 - APPROVAL by lab_incharge@ch.amrita.edu: Req #8. Item Servo Motor (SG90) approved for issue.
+2025-11-12 22:10:37,347 - APPROVAL by lab_incharge@ch.amrita.edu: Req #9. Item Ultrasonic Sensor approved for issue.
+2025-11-12 22:10:53,428 - APPROVAL by lab_incharge@ch.amrita.edu: Req #10. Item Raspberry Pi 4 approved for issue.
+2025-11-12 22:10:53,428 - APPROVAL by lab_incharge@ch.amrita.edu: Req #11. Item Servo Motor (SG90) approved for issue.
+2025-11-12 22:10:53,428 - APPROVAL by lab_incharge@ch.amrita.edu: Req #12. Item Ultrasonic Sensor approved for issue.
+2025-11-12 22:10:53,428 - APPROVAL by lab_incharge@ch.amrita.edu: Req #13. Item Breadboard approved for issue.
+2025-11-12 22:10:53,429 - APPROVAL by lab_incharge@ch.amrita.edu: Req #14. Item ESP32 -S3 approved for issue.
+2025-11-12 22:10:53,429 - APPROVAL by lab_incharge@ch.amrita.edu: Req #15. Item Arduino Uno approved for issue.
+2025-11-12 22:11:14,802 - ISSUE by lab_tecnician@ch.amrita.edu: Req #1. Stock ESP32 -S3 issued 0 -> 1
+2025-11-12 22:11:19,811 - ISSUE by lab_tecnician@ch.amrita.edu: Req #2. Stock Breadboard issued 0 -> 1
+2025-11-12 22:11:23,464 - ISSUE by lab_tecnician@ch.amrita.edu: Req #3. Stock Servo Motor (SG90) issued 0 -> 4
+2025-11-12 22:11:27,006 - ISSUE by lab_tecnician@ch.amrita.edu: Req #4. Stock Ultrasonic Sensor issued 0 -> 4
+2025-11-12 22:11:31,454 - ISSUE by lab_tecnician@ch.amrita.edu: Req #5. Stock Raspberry Pi 4 issued 0 -> 1
+2025-11-12 22:11:35,544 - ISSUE by lab_tecnician@ch.amrita.edu: Req #6. Stock Breadboard issued 1 -> 2
+2025-11-12 22:11:40,141 - ISSUE by lab_tecnician@ch.amrita.edu: Req #7. Stock Arduino Uno issued 0 -> 4
+2025-11-12 22:11:43,616 - ISSUE by lab_tecnician@ch.amrita.edu: Req #8. Stock Servo Motor (SG90) issued 4 -> 9
+2025-11-12 22:11:47,301 - ISSUE by lab_tecnician@ch.amrita.edu: Req #9. Stock Ultrasonic Sensor issued 4 -> 8
+2025-11-12 22:11:50,895 - ISSUE by lab_tecnician@ch.amrita.edu: Req #10. Stock Raspberry Pi 4 issued 1 -> 3
+2025-11-12 22:11:54,725 - ISSUE by lab_tecnician@ch.amrita.edu: Req #11. Stock Servo Motor (SG90) issued 9 -> 19
+2025-11-12 22:11:59,549 - ISSUE by lab_tecnician@ch.amrita.edu: Req #12. Stock Ultrasonic Sensor issued 8 -> 15
+2025-11-12 22:12:03,276 - ISSUE by lab_tecnician@ch.amrita.edu: Req #13. Stock Breadboard issued 2 -> 4
+2025-11-12 22:12:06,966 - ISSUE by lab_tecnician@ch.amrita.edu: Req #14. Stock ESP32 -S3 issued 1 -> 4
+2025-11-12 22:12:10,816 - ISSUE by lab_tecnician@ch.amrita.edu: Req #15. Stock Arduino Uno issued 4 -> 8
+2025-11-12 22:15:13,486 - APPROVAL by lab_incharge@ch.amrita.edu: Req #16. Item Raspberry Pi 4 approved for issue.
+2025-11-12 22:15:13,486 - APPROVAL by lab_incharge@ch.amrita.edu: Req #17. Item Breadboard approved for issue.
+2025-11-12 22:15:13,486 - APPROVAL by lab_incharge@ch.amrita.edu: Req #18. Item Ultrasonic Sensor approved for issue.
+2025-11-12 22:15:29,820 - PURCHASE by lab_incharge@ch.amrita.edu: Req #19 (Raspberry Pico) marked as Purchased.
+2025-11-12 22:16:00,576 - ISSUE by lab_tecnician@ch.amrita.edu: Req #16. Stock Raspberry Pi 4 issued 3 -> 4
+2025-11-12 22:16:04,841 - ISSUE by lab_tecnician@ch.amrita.edu: Req #17. Stock Breadboard issued 4 -> 6
+2025-11-12 22:16:08,697 - ISSUE by lab_tecnician@ch.amrita.edu: Req #18. Stock Ultrasonic Sensor issued 15 -> 20
+2025-11-12 22:16:26,491 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #3. 2 working, 2 not working.
+2025-11-12 22:16:48,833 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #4. 3 working, 1 not working.
+2025-11-12 22:16:59,965 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #7. 4 working, 0 not working.
+2025-11-12 22:17:09,690 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #10. 2 working, 0 not working.

@@ -4,9 +4,9 @@ import os
 import datetime
 import csv
 import io
+from functools import wraps
 import re
 from flask import send_file, Flask, request, render_template, redirect, url_for, session, flash, Response
-from functools import wraps
 # ... in main.py, at the top ...
 from flask import send_file, Flask, request, render_template, redirect, url_for, session, flash, Response, abort,send_from_directory
 # ...
@@ -732,6 +732,9 @@ def faculty_request():
         purchase_quantity = int(request.form.get('purchase_quantity'))
         purchase_project = request.form.get('purchase_project').strip()
         purchase_link = request.form.get('purchase_link', '').strip()
+        # --- MODIFICATION: Get new price field ---
+        purchase_price_str = request.form.get('purchase_price_per_unit', 'N/A')
+        # --- END MODIFICATION ---
 
         if not purchase_comp_name or purchase_quantity <= 0 or not purchase_project:
             flash('Error: All fields are required for a purchase request.', 'error')
@@ -742,9 +745,9 @@ def faculty_request():
             "batch_id": batch_id,
             "request_type": "purchase",
             "project_type": "Faculty Purchase",  # --- NEW FIELD ---
-            "status": "Pending Incharge",
+            "status": "Pending Incharge", # MODIFIED: Was "Pending HOD", now "Pending Incharge"
             "request_timestamp": request_date.strftime("%Y-%m-%d %H:%M"),
-            "hod_remarks": None,
+            "hod_remarks": None, # Was "HOD Approval Required"
             "incharge_remarks": None,
             "student_email": user['email'],
             "student_name": user['name'],
@@ -761,7 +764,7 @@ def faculty_request():
             "mentor_approval_token": None,
             "mentor_remarks": "Faculty Purchase Request",
             "mentor_approval_timestamp": approval_time,
-            "hod_approval_timestamp": approval_time,
+            "hod_approval_timestamp": approval_time, # Bypassing HOD
             "approver_email": None,
             "approval_timestamp": None,
             "issue_timestamp": None,
@@ -769,7 +772,8 @@ def faculty_request():
             "working_count": None,
             "not_working_count": None,
             "tech_remarks": None,
-            "purchase_link": purchase_link if purchase_link else None
+            "purchase_link": purchase_link if purchase_link else None,
+            "est_price_per_unit": purchase_price_str  # --- MODIFICATION: Save new field ---
         }
 
         all_requests.append(new_purchase_request)
@@ -796,41 +800,69 @@ def hod_dashboard():
 
 
 # --- Admin (Incharge) Routes ---
+# --- START: MODIFIED ADMIN DASHBOARD ROUTE ---
 @app.route('/admin')
 @role_required('admin')
 def admin_dashboard():
     all_requests = load_requests()
     components = get_augmented_components()
 
-    pending_incharge_borrow = []
-    pending_incharge_purchases = []
+    # --- START: New Sorting Logic ---
+    pending_purchases = []
+    pending_faculty_borrow = []
+    pending_student_intra_day = []
+    pending_student_project = [] # Project Work + Competition
     other_requests = []
 
     for req in all_requests:
         if req['status'] == 'Pending Incharge':
             if req.get('request_type') == 'purchase':
-                pending_incharge_purchases.append(req)
+                pending_purchases.append(req)
+            # Check for Faculty (by dept or project type)
+            elif req.get('student_dept') == 'Faculty' or 'Faculty' in req.get('project_type', ''):
+                pending_faculty_borrow.append(req)
+            elif req.get('project_type') == 'Intra-Day':
+                pending_student_intra_day.append(req)
+            elif req.get('project_type') in ['Project Work', 'Competition']:
+                pending_student_project.append(req)
             else:
-                pending_incharge_borrow.append(req)
+                # Fallback for any other pending borrow requests (e.g., old ones)
+                pending_student_project.append(req)
         else:
             other_requests.append(req)
 
-    grouped_pending_borrow = {}
-    for req in pending_incharge_borrow:
-        batch_id = req.get('batch_id', f"req-{req['id']}")
-        if batch_id not in grouped_pending_borrow:
-            grouped_pending_borrow[batch_id] = []
-        grouped_pending_borrow[batch_id].append(req)
+    # Helper function to group by batch_id
+    def group_by_batch(request_list):
+        grouped = {}
+        for req in request_list:
+            # Use batch_id if available, otherwise group individual reqs
+            batch_id = req.get('batch_id', f"req-{req['id']}")
+            if batch_id not in grouped:
+                grouped[batch_id] = []
+            grouped[batch_id].append(req)
+        return grouped
+
+    # Group all the new lists
+    grouped_faculty_borrow = group_by_batch(pending_faculty_borrow)
+    grouped_student_intra_day = group_by_batch(pending_student_intra_day)
+    grouped_student_project = group_by_batch(pending_student_project)
+    # --- END: New Sorting Logic ---
 
     other_requests.sort(key=lambda x: x['request_timestamp'], reverse=True)
-    pending_incharge_purchases.sort(key=lambda x: x['request_timestamp'], reverse=True)
+    pending_purchases.sort(key=lambda x: x['request_timestamp'], reverse=True) # Keep this one as a list, its table is simple
 
     return render_template('admin_dashboard.html',
                            user=session['user'],
-                           grouped_pending_requests=grouped_pending_borrow,
-                           pending_purchases=pending_incharge_purchases,
+
+                           # NEW: Pass the 4 categories
+                           pending_purchases=pending_purchases, # This is a list
+                           grouped_faculty_borrow=grouped_faculty_borrow, # This is a dict
+                           grouped_student_intra_day=grouped_student_intra_day, # This is a dict
+                           grouped_student_project=grouped_student_project, # This is a dict
+
                            other_requests=other_requests,
                            components=components)
+# --- END: MODIFIED ADMIN DASHBOARD ROUTE ---
 
 
 @app.route('/admin/update_request', methods=['POST'])

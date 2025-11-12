@@ -28,16 +28,172 @@
             margin-top: 1.1rem;
         }
         .remove-row-btn:hover { background-color: var(--color-red-hover); }
-        #add-component-btn {
-            background-color: var(--color-grey);
+
+        /* --- START: Copied from Student Dashboard --- */
+
+        /* Add icons to tab buttons */
+        .tab-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+        .tab-link svg {
+            width: 1.1em;
+            height: 1.1em;
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+        .tab-link.active svg {
+            opacity: 1;
+        }
+
+        /* Better spacing for headings */
+        .tab-content h3 {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .tab-content > p {
+            font-size: 1rem;
+            color: var(--color-text-light);
+            margin-bottom: 2rem;
+        }
+
+        /* Tweak info box */
+        .form-info-box {
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid var(--color-primary); /* Add a highlight */
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        .form-info-box h4 { margin-top: 0; }
+        .form-info-box p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Tweak add component button */
+        .add-component-btn {
+            background-color: #f9fafb;
+            color: var(--color-text-dark);
+            border: 1px dashed var(--color-grey);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .add-component-btn:hover {
+            background-color: #f3f4f6;
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        /* More spacing between forms */
+        .request-form-container {
+            /* Now hidden by default by JS */
+            display: none;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+        .request-form-container:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+
+        /* --- NEW STYLES FOR SELECTION CARDS --- */
+        #request-form-screen {
+            display: none; /* Hide form screen by default */
+        }
+
+        .request-options-container {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: space-between;
+        }
+        .request-option-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        .request-option-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #d1d5db;
+        }
+        .request-option-card-icon {
+            width: 48px;
+            height: 48px;
+            padding: 10px;
+            border-radius: 50%;
+            background-color: #eef2ff;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+        .request-option-card h4 {
+            font-size: 1.25rem;
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: var(--color-text-dark);
+        }
+        .request-option-card-rules {
+            font-size: 0.9rem;
+            padding-left: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-text-light);
+            flex-grow: 1; /* Pushes button to bottom */
+        }
+        .request-option-card-rules li {
+            margin-bottom: 0.5rem;
+        }
+        .start-request-btn {
+            width: 100%;
+            background-color: var(--color-primary);
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            margin-bottom: 1rem;
+            transition: all 0.2s ease;
         }
-                .disclaimer-box {
+        .start-request-btn:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        #back-to-selection-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            border: none;
+            color: var(--color-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            padding: 0.25rem 0;
+        }
+        #back-to-selection-btn:hover {
+            text-decoration: underline;
+        }
+        /* --- END: Copied from Student Dashboard --- */
+
+        /* Disclaimer box from original faculty file */
+        .disclaimer-box {
             background-color: #fef3c7;
             border: 1px solid #fde68a;
             padding: 1rem;
@@ -78,105 +234,156 @@
 
         <div class="tab-container">
             <div class="tab-nav">
-                <button class="tab-link active" onclick="openTab(event, 'new_request')">New Request</button>
-                <button class="tab-link" onclick="openTab(event, 'availability')">Component Availability</button>
-                <button class="tab-link" onclick="openTab(event, 'history')">My Request History</button>
+                <button class="tab-link active" onclick="openTab(event, 'new_request')">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                    New Request
+                </button>
+                <button class="tab-link" onclick="openTab(event, 'availability')">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h.01M15 12h.01M10.33 16.5h3.34M16.5 19.5h-9a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v10.5a3 3 0 0 1-3 3Z" /></svg>
+                    Component Availability
+                </button>
+                <button class="tab-link" onclick="openTab(event, 'history')">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                    My Request History
+                </button>
             </div>
 
-            <!-- TAB: New Request -->
             <div id="new_request" class="tab-content" style="display: block;">
 
-                <!-- Form 1: Request Existing Component -->
-                <h3>Request Existing Component (Borrow)</h3>
-                <p>Request components that are already available in the lab. This request will be sent directly to the Lab Incharge for approval.</p>
-                <form action="{{ url_for('faculty_request') }}" method="POST" class="request-form">
-                    <input type="hidden" name="request_type" value="borrow">
-                    <datalist id="component-datalist">
-                        {% for component in available_components %}
-                        <option value="{{ component.name }}"></option>
-                        {% endfor %}
-                    </datalist>
+                <div id="request-selection-screen">
+                    <h3>New Request</h3>
+                    <p>Select the type of request you want to make.</p>
 
-                    <h4>Components</h4>
-                    <div id="component-list">
-                        <div class="component-row">
-                            <div class="form-group">
-                                <label for="component_1">Component Name:</label>
-                                <input type="text" list="component-datalist" id="component_1" name="component[]" class="component-search" placeholder="Type or select component" required>
+                    <div class="request-options-container">
+                        <div class="request-option-card">
+                            <div class="request-option-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.075c0 .621-.504 1.125-1.125 1.125H4.875c-.621 0-1.125-.504-1.125-1.125V14.15M21 13.5v-1.5c0-.621-.504-1.125-1.125-1.125H4.125C3.504 10.875 3 11.379 3 12v1.5m18 0v-1.5a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 12v1.5m18 0v-1.5A2.25 2.25 0 0 0 18.75 9.75h-1.5A2.25 2.25 0 0 0 15 12v1.5m-6 0v-1.5A2.25 2.25 0 0 0 6.75 9.75H5.25A2.25 2.25 0 0 0 3 12v1.5m18-3.35v.001c0 .621-.504 1.125-1.125 1.125H4.125c-.621 0-1.125-.504-1.125-1.125v-.001M15 9.75v-4.5a3 3 0 0 0-3-3h-3a3 3 0 0 0-3 3v4.5" /></svg>
+                            </div>
+                            <h4>1. Borrow Existing Component</h4>
+                            <ul class="request-option-card-rules">
+                                <li>For components that are already available in the lab.</li>
+                                <li>Request will be sent directly to the Lab Incharge for approval.</li>
+                            </ul>
+                            <button class="start-request-btn" data-form-id="form-borrow">Start Borrow Request</button>
+                        </div>
+
+                        <div class="request-option-card">
+                            <div class="request-option-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-6.75c-.622 0-1.125.504-1.125 1.125v3.375m9 0h-9m9 0h1.125m-11.25 0H4.875M16.5 18.75v-3.375a3.375 3.375 0 0 0-3.375-3.375h-3.75a3.375 3.375 0 0 0-3.375 3.375v3.375m9 0h-9" /></svg>
+                            </div>
+                            <h4>2. Request New Purchase</h4>
+                            <ul class="request-option-card-rules">
+                                <li>For components that are <strong>not</strong> currently in the lab inventory.</li>
+                                <li>This request will be sent to the HOD for approval.</li>
+                            </ul>
+                            <button class="start-request-btn" data-form-id="form-purchase">Start Purchase Request</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="request-form-screen">
+                    <button id="back-to-selection-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:1em; height:1em;"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
+                        Back to Options
+                    </button>
+
+                    <div id="form-borrow" class="request-form-container">
+                        <div class="form-info-box">
+                            <h4>Borrow Existing Component</h4>
+                            <p>Request components already in the lab. Sent to Lab Incharge for approval.</p>
+                        </div>
+                        <form action="{{ url_for('faculty_request') }}" method="POST" class="request-form">
+                            <input type="hidden" name="request_type" value="borrow">
+                            <datalist id="component-datalist">
+                                {% for component in available_components %}
+                                <option value="{{ component.name }}"></option>
+                                {% endfor %}
+                            </datalist>
+
+                            <h4>Components</h4>
+                            <div id="component-list">
+                                <div class="component-row">
+                                    <div class="form-group">
+                                        <label for="component_1">Component Name:</label>
+                                        <input type="text" list="component-datalist" id="component_1" name="component[]" class="component-search" placeholder="Type or select component" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quantity_1">Quantity:</label>
+                                        <input type="number" id="quantity_1" name="quantity[]" min="1" max="10" value="1" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="add-component-btn">+ Add Another Component</button>
+                            <hr style="margin: 1.5rem 0;">
+                            <h4>Request Details</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="return_date">Expected Return Date (for all items):</label>
+                                    <input type="date" id="return_date" name="return_date" min="{{ today }}" required>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="quantity_1">Quantity:</label>
-                                <input type="number" id="quantity_1" name="quantity[]" min="1" max="10" value="1" required>
+                                <label for="project_description">Project / Purpose:</label>
+                                <textarea id="project_description" name="project_description" rows="3" placeholder="Briefly describe your project or purpose..." required></textarea>
                             </div>
+                            <div class="disclaimer-box">
+                                <strong>Responsibility Disclaimer:</strong>
+                                <p style="margin: 0.5rem 0 0 0;">By submitting this request, you (the Faculty Member) acknowledge that you are responsible for the proper handling, timely return, and any loss or damage to the requested components.</p>
+                                <label class="checkbox-label" for="disclaimer_checkbox_borrow">
+                                    <input type="checkbox" id="disclaimer_checkbox_borrow">
+                                    I acknowledge this responsibility.
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submit_btn_borrow" disabled>Submit Borrow Request</button>
+                        </form>
+                    </div>
+
+
+                    <div id="form-purchase" class="request-form-container">
+                        <div class="form-info-box">
+                            <h4>Request New Component Purchase</h4>
+                            <p>Request a component not in inventory. Sent to the HOD for approval.</p>
                         </div>
-                    </div>
+                        <form action="{{ url_for('faculty_request') }}" method="POST" class="request-form">
+                            <input type="hidden" name="request_type" value="purchase">
+                            <div class="form-row">
+                                <div class="form-group" style="flex-grow: 2;">
+                                    <label for="purchase_component_name">Component Name:</label>
+                                    <input type="text" id="purchase_component_name" name="purchase_component_name" placeholder="e.g., Raspberry Pi 5 8GB" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="purchase_quantity">No. of Units:</label>
+                                    <input type="number" id="purchase_quantity" name="purchase_quantity" min="1" value="1" required>
+                                </div>
+                            </div>
 
-                    <button type="button" id="add-component-btn">+ Add Another Component</button>
-                    <hr style="margin: 1.5rem 0;">
-                    <h4>Request Details</h4>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="return_date">Expected Return Date (for all items):</label>
-                            <input type="date" id="return_date" name="return_date" min="{{ today }}" required>
-                        </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="purchase_price_per_unit">Est. Price per Unit (₹):</label>
+                                    <input type="number" id="purchase_price_per_unit" name="purchase_price_per_unit" placeholder="e.g., 1500" min="0" step="0.01">
+                                </div>
+                                <div class="form-group" style="flex-grow: 2;">
+                                    <label for="purchase_link">Web Link of Component (Optional):</label>
+                                    <input type="url" id="purchase_link" name="purchase_link" placeholder="https://www.vendor.com/product-link">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="purchase_project">Justification for Requirement:</label>
+                                <textarea id="purchase_project" name="purchase_project" rows="3" placeholder="Briefly describe why this component is needed..." required></textarea>
+                            </div>
+                            <div class="disclaimer-box">
+                                <strong>Responsibility Disclaimer:</strong>
+                                <p style="margin: 0.5rem 0 0 0;">By submitting this purchase request, you acknowledge that this is for official academic or project use and has been properly justified.</p>
+                                <label class="checkbox-label" for="disclaimer_checkbox_purchase">
+                                    <input type="checkbox" id="disclaimer_checkbox_purchase">
+                                    I acknowledge this.
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submit_btn_purchase" disabled>Submit Purchase Request</button>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="project_description">Project / Purpose:</label>
-                        <textarea id="project_description" name="project_description" rows="3" placeholder="Briefly describe your project or purpose..." required></textarea>
-                    </div>
-                    <!-- START: Added Disclaimer for Borrow -->
-                    <div class="disclaimer-box">
-                        <strong>Responsibility Disclaimer:</strong>
-                        <p style="margin: 0.5rem 0 0 0;">By submitting this request, you (the Faculty Member) acknowledge that you are responsible for the proper handling, timely return, and any loss or damage to the requested components.</p>
-                        <label class="checkbox-label" for="disclaimer_checkbox_borrow">
-                            <input type="checkbox" id="disclaimer_checkbox_borrow">
-                            I acknowledge this responsibility.
-                        </label>
-                    </div>
-                    <button type="submit" class="submit-button" id="submit_btn_borrow" disabled>Submit Borrow Request</button>
-                </form>
-
-                <hr style="margin: 3rem 0;">
-
-                <!-- Form 2: Request New Component Purchase -->
-                <h3>Request New Component Purchase</h3>
-                <p>Request a component that is not currently in the lab inventory. This request will be sent to the HOD for approval.</p>
-                <form action="{{ url_for('faculty_request') }}" method="POST" class="request-form">
-                    <input type="hidden" name="request_type" value="purchase">
-                    <div class="form-row">
-                        <div class="form-group" style="flex-grow: 2;">
-                            <label for="purchase_component_name">Component Name:</label>
-                            <input type="text" id="purchase_component_name" name="purchase_component_name" placeholder="e.g., Raspberry Pi 5 8GB" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="purchase_quantity">Quantity:</label>
-                            <input type="number" id="purchase_quantity" name="purchase_quantity" min="1" value="1" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="purchase_link">Purchase Link (Optional):</label>
-                        <input type="url" id="purchase_link" name="purchase_link" placeholder="https://www.vendor.com/product-link">
-                    </div>
-                    <div class="form-group">
-                        <label for="purchase_project">Justification / Project:</label>
-                        <textarea id="purchase_project" name="purchase_project" rows="3" placeholder="Briefly describe why this component is needed..." required></textarea>
-                    </div>
-                    <div class="disclaimer-box">
-                        <strong>Responsibility Disclaimer:</strong>
-                        <p style="margin: 0.5rem 0 0 0;">By submitting this purchase request, you acknowledge that this is for official academic or project use and has been properly justified.</p>
-                        <label class="checkbox-label" for="disclaimer_checkbox_purchase">
-                            <input type="checkbox" id="disclaimer_checkbox_purchase">
-                            I acknowledge this.
-                        </label>
-                    </div>
-                    <!-- END: Added Disclaimer -->
-
-                    <button type="submit" class="admin-btn approve" id="submit_btn_purchase" disabled>Submit Purchase Request</button>
-                </form>
-            </div>
-
-            <!-- TAB: Component Availability -->
-            <div id="availability" class="tab-content">
+                </div> </div> <div id="availability" class="tab-content">
                 <h3>Component Availability</h3>
                 <div class="table-container">
                     <table>
@@ -199,10 +406,10 @@
                                 <td>{{ component.working_quantity }}</td>
                                 <td>{{ component.not_working_quantity }}</td>
                                 <td>{{ component.issued_quantity }}</td>
-                                <td><strong>{{ component.available_for_issue }}</strong></td>
+                                <td><strong>{{ component.available }}</strong></td>
                                 <td>
-                                    {% if component.available_for_issue == 0 %}<span class="status out-of-stock">Out of Stock</span>
-                                    {% elif component.available_for_issue < 10 %}<span class="status low-stock">Low Stock</span>
+                                    {% if component.available <= 0 %}<span class="status out-of-stock">Out of Stock</span>
+                                    {% elif component.available < 10 %}<span class="status low-stock">Low Stock</span>
                                     {% else %}<span class="status in-stock">In Stock</span>
                                     {% endif %}
                                 </td>
@@ -213,7 +420,6 @@
                 </div>
             </div>
 
-            <!-- TAB: Request History -->
             <div id="history" class="tab-content">
                 <h3>My Request History</h3>
                 <div class="table-container wide-table">
@@ -227,11 +433,12 @@
                                 <th>Status</th>
                                 <th>HOD Remarks</th>
                                 <th>Incharge Remarks</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% if not my_requests %}
-                                <tr><td colspan="7">You have not made any requests.</td></tr>
+                                <tr><td colspan="8">You have not made any requests.</td></tr>
                             {% else %}
                                 {% for req in my_requests %}
                                 <tr>
@@ -275,7 +482,6 @@
         </div>
     </div>
 
-    <!-- Template for dynamic component rows -->
     <template id="component-row-template">
         <div class="component-row">
             <div class="form-group">
@@ -289,6 +495,7 @@
             <button type="button" class="remove-row-btn">X</button>
         </div>
     </template>
+
     <div id="cancel-modal" class="modal-backdrop" hidden>
         <div class="modal-content">
             <form id="cancel-modal-form" method="POST">
@@ -311,7 +518,7 @@
         </div>
     </div>
     <script>
-        // Tab switching logic
+        // Tab switching logic (Unchanged)
         function openTab(evt, tabName) {
             var i, tabContent, tabLinks;
             tabContent = document.getElementsByClassName("tab-content");
@@ -322,17 +529,58 @@
             evt.currentTarget.className += " active";
         }
 
-        // Dynamic row logic
-        document.getElementById('add-component-btn').addEventListener('click', function() {
-            const template = document.getElementById('component-row-template');
-            const clone = template.content.cloneNode(true);
-            const componentList = document.getElementById('component-list');
-            clone.querySelector('.remove-row-btn').addEventListener('click', function(e) {
-                e.target.closest('.component-row').remove();
+        // --- NEW SCRIPT for Selection/Form Screen Switching (Copied from Student) ---
+        const selectionScreen = document.getElementById('request-selection-screen');
+        const formScreen = document.getElementById('request-form-screen');
+        const backBtn = document.getElementById('back-to-selection-btn');
+        const startBtns = document.querySelectorAll('.start-request-btn');
+        const allForms = document.querySelectorAll('.request-form-container');
+
+        startBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const formId = this.getAttribute('data-form-id');
+
+                // Hide selection screen, show form screen
+                selectionScreen.style.display = 'none';
+                formScreen.style.display = 'block';
+
+                // Hide all forms first
+                allForms.forEach(f => f.style.display = 'none');
+
+                // Show the specific form that was clicked
+                document.getElementById(formId).style.display = 'block';
             });
-            componentList.appendChild(clone);
         });
-        // --- START: New Modal Script ---
+
+        backBtn.addEventListener('click', function() {
+            // Hide form screen, show selection screen
+            formScreen.style.display = 'none';
+            selectionScreen.style.display = 'block';
+
+            // Hide all forms
+            allForms.forEach(f => f.style.display = 'none');
+        });
+        // --- END NEW SCRIPT ---
+
+        // Dynamic row logic (MODIFIED to use class)
+        document.querySelectorAll('.add-component-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const template = document.getElementById('component-row-template');
+                const clone = template.content.cloneNode(true);
+                // Find the component list (div#component-list) that is the button's previous sibling
+                const componentList = this.previousElementSibling;
+                if (componentList && componentList.id === 'component-list') {
+                     clone.querySelector('.remove-row-btn').addEventListener('click', function(e) {
+                        e.target.closest('.component-row').remove();
+                    });
+                    componentList.appendChild(clone);
+                } else {
+                    console.error("Could not find component-list for", this);
+                }
+            });
+        });
+
+        // --- START: New Modal Script (Unchanged) ---
         const cancelModal = document.getElementById('cancel-modal');
         const cancelModalForm = document.getElementById('cancel-modal-form');
         const cancelModalComponentName = document.getElementById('cancel-modal-component-name');
@@ -343,15 +591,10 @@
             button.addEventListener('click', function() {
                 const reqId = this.getAttribute('data-request-id');
                 const reqName = this.getAttribute('data-request-name');
-
-                // Set form action
                 cancelModalForm.action = `/cancel_request/${reqId}`;
-                // Set modal text
                 cancelModalComponentName.textContent = reqName;
                 cancelModalTitle.textContent = `Cancel Request #${reqId}`;
-                // Reset textarea
                 cancelModalForm.querySelector('textarea').value = '';
-                // Show modal
                 cancelModal.hidden = false;
             });
         });
@@ -362,12 +605,14 @@
                 cancelModal.hidden = true;
             });
         });
-        // Also close by clicking backdrop
         cancelModal.addEventListener('click', function(e) {
             if (e.target === cancelModal) {
                 cancelModal.hidden = true;
             }
         });
+        // --- END: New Modal Script ---
+
+        // Disclaimer Checkbox Logic (Unchanged)
         function setupDisclaimer(checkboxId, buttonId) {
             const checkbox = document.getElementById(checkboxId);
             const button = document.getElementById(buttonId);
@@ -383,7 +628,6 @@
         setupDisclaimer('disclaimer_checkbox_purchase', 'submit_btn_purchase');
         // --- END: Added Disclaimer Checkbox Logic ---
 
-        // --- END: New Modal Script ---
     </script>
 </body>
 </html>

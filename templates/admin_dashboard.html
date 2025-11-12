@@ -7,6 +7,105 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* --- START: Copied from Student Dashboard for Card UI --- */
+        /* Add icons to tab buttons */
+        .tab-link {
+            display: flex;
+            align: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+        .tab-link svg {
+            width: 1.1em;
+            height: 1.1em;
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+        .tab-link.active svg {
+            opacity: 1;
+        }
+
+        .request-options-container {
+            display: grid; /* Use Grid for better responsiveness */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .request-option-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        .request-option-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #d1d5db;
+        }
+        .request-option-card-icon {
+            width: 48px;
+            height: 48px;
+            padding: 10px;
+            border-radius: 50%;
+            background-color: #eef2ff;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .request-option-card h4 {
+            font-size: 1.25rem;
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: var(--color-text-dark);
+        }
+
+        .request-option-card-desc {
+            font-size: 0.95rem;
+            color: var(--color-text-light);
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .start-request-btn {
+            width: 100%;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .start-request-btn:hover {
+            background-color: var(--color-primary-hover);
+        }
+        /* --- END: Copied from Student Dashboard --- */
+
+        /* Custom styles for Admin Card */
+        .card-count {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin: 0.5rem 0;
+        }
+
+        /* Wrapper for hidden tables */
+        .table-wrapper {
+            display: none; /* Hide by default */
+            margin-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 2rem;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -27,132 +126,228 @@
             {% endfor %}{% endif %}
         {% endwith %}
 
+        <!-- This is a Jinja2 macro. It's like a reusable template function. -->
+        <!-- We define it once and use it 3 times to avoid repeating code. -->
+        {% macro render_borrow_table(requests_dict, no_data_message) %}
+        <div class="table-container wide-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Batch ID</th>
+                        <th>User</th>
+                        <th>Project Type</th>
+                        <th>Components</th>
+                        <th>Purpose</th>
+                        <th>Mentor Approved</th>
+                        <th>Mentor Remarks</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if not requests_dict %}
+                        <tr><td colspan="8">{{ no_data_message }}</td></tr>
+                    {% else %}
+                        {% for batch_id, requests in requests_dict.items() %}
+                            {% set req = requests[0] %} <tr>
+                                <td><small>{{ batch_id }}</small></td>
+                                <td>{{ req.student_name }}<br><small>{{ req.student_dept }}</small></td>
+                                <td>
+                                    <span class="status status-issued" style="background-color: #eee; color: #555;">
+                                        {{ req.get('project_type', 'Borrow') }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <ul style="padding-left: 15px; margin: 0;">
+                                        {% for item in requests %}
+                                            <li>{{ item.component_name }} (Qty: {{ item.quantity }})</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td>{{ req.project_description }}</td>
+                                <td>
+                                    <small>{{ req.mentor_approval_timestamp }}</small>
+                                </td>
+                                <td><small>{{ req.get('mentor_remarks', '-') }}</small></td>
+                                <td>
+                                <form action="{{ url_for('admin_update_request') }}" method="POST" class="admin-action-form" style="flex-direction: column; align-items: flex-start;">
+                                    <input type="hidden" name="batch_id" value="{{ batch_id }}">
+                                    <div class="form-group" style="width: 100%; margin-bottom: 5px;">
+                                        <textarea name="incharge_remarks" rows="2" placeholder="Add remarks (optional)..." style="width: 100%; font-size: 0.9rem; padding: 0.4rem;"></textarea>
+                                    </div>
+                                    <div style="display: flex; gap: 5px;">
+                                        <button type="submit" name="new_status" value="Approved" class="admin-btn approve">Approve (Partial)</button>
+                                        <button type="submit" name="new_status" value="Rejected" class="admin-btn reject">Reject All</button>
+                                    </div>
+                                </form>
+                            </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        {% endmacro %}
+        <!-- End of macro definition -->
+
+
         <div class="tab-container">
             <div class="tab-nav">
-                <button class="tab-link active" onclick="openTab(event, 'requests')">Request Management ({{ grouped_pending_requests|length + pending_purchases|length }} Pending)</button>
-                <button class="tab-link" onclick="openTab(event, 'availability')">Component Availability</button>
-                <button class="tab-link" onclick="openTab(event, 'reports')">Reports</button>
+                <!-- Calculate total pending -->
+                {% set total_pending = pending_purchases|length + grouped_faculty_borrow|length + grouped_student_project|length %}
+                <button class="tab-link active" onclick="openTab(event, 'requests')">
+                    <!-- Icon: Bell -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a_sql_text" /></svg>
+                    Request Management ({{ total_pending }} Pending)
+                </button>
+                <!-- *** NEW HISTORY TAB *** -->
+                <button class="tab-link" onclick="openTab(event, 'history')">
+                    <!-- Icon: Archive Box -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10.5 11.25h3M12 15h.008m-3.75 0h7.5" /></svg>
+                    Request History
+                </button>
+                <button class="tab-link" onclick="openTab(event, 'availability')">
+                    <!-- Icon: Clipboard List -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h.01M15 12h.01M10.33 16.5h3.34M16.5 19.5h-9a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v10.5a3 3 0 0 1-3 3Z" /></svg>
+                    Component Availability
+                </button>
+                <button class="tab-link" onclick="openTab(event, 'reports')">
+                    <!-- Icon: Document Text -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125V6c0-1.121-.904-2.025-2.025-2.025h-3.975a2.025 2.025 0 0 0-2.025 2.025v1.125c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 0 0 3.375 3.375V16.5c0 1.121.904 2.025 2.025 2.025h3.975a2.025 2.025 0 0 0 2.025-2.025v-1.125c0-.621-.504-1.125-1.125-1.125h-1.5Z" /></svg>
+                    Reports
+                </button>
             </div>
 
             <div id="requests" class="tab-content" style="display: block;">
 
-                <!-- NEW: Purchase Requests -->
-                <h3>HOD-Approved Purchase Requests</h3>
-                <div class="table-container wide-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Faculty</th>
-                                <th>Component</th>
-                                <th>Qty</th>
-                                <th>Justification</th>
-                                <th>HOD Remarks</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if not pending_purchases %}
-                                <tr><td colspan="6">No purchase requests are awaiting your action.</td></tr>
-                            {% else %}
-                                {% for req in pending_purchases %}
-                                    <tr>
-                                        <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
-                                        <td>{{ req.component_name }}<br>
-                                            {% if req.purchase_link %}
-                                                <small><a href="{{ req.purchase_link }}" target="_blank">View Link</a></small>
-                                            {% endif %}
-                                        </td>
-                                        <td>{{ req.quantity }}</td>
-                                        <td>{{ req.project_description }}</td>
-                                        <td><small>{{ req.get('hod_remarks', '-') }}</small></td>
-                                        <td>
-                                            <form action="{{ url_for('admin_update_purchase_request') }}" method="POST" class="admin-action-form" style="flex-direction: column; align-items: flex-start;">
-                                                <input type="hidden" name="request_id" value="{{ req.id }}">
-                                                <div class="form-group" style="width: 100%; margin-bottom: 5px;">
-                                                    <textarea name="incharge_remarks" rows="2" placeholder="Add remarks (optional)..." style="width: 100%; font-size: 0.9rem; padding: 0.4rem;"></textarea>
-                                                </div>
-                                                <div style="display: flex; gap: 5px;">
-                                                    <button type="submit" name="new_status" value="Purchased" class="admin-btn approve">Mark as Purchased</button>
-                                                    <button type="submit" name="new_status" value="Rejected" class="admin-btn reject">Reject</button>
-                                                </div>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-                <hr style="margin: 2.5rem 0;">
+                <!-- STEP 1: Card Selection -->
+                <div class="request-options-container" id="card-container">
+                    <!-- Card 1: Purchase Requests -->
+                    <div class="request-option-card">
+                        <div class="request-option-card-icon" style="background-color: #fef3c7; color: #92400e;">
+                            <!-- Icon: Shopping Cart -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm11.25 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" /></svg>
+                        </div>
+                        <h4>Purchase Requests</h4>
+                        <div class="card-count">{{ pending_purchases|length }}</div>
+                        <p class="request-option-card-desc">Faculty requests for new components not in the inventory.</p>
+                        <button class="start-request-btn" onclick="showTable('table-purchase')">View Requests</button>
+                    </div>
 
-                <!-- EXISTING: Borrow Requests -->
-                <h3>Student & Faculty Borrow Requests</h3>
-                <div class="table-container wide-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Batch ID</th>
-                                <th>User</th>
-                                <th>Project Type</th> <!-- NEW COLUMN -->
-                                <th>Components</th>
-                                <th>Purpose</th>
-                                <th>Mentor Approved</th>
-                                <th>Mentor Remarks</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if not grouped_pending_requests %}
-                                <tr><td colspan="8">No borrow batches are awaiting your approval.</td></tr>
-                            {% else %}
-                                {% for batch_id, requests in grouped_pending_requests.items() %}
-                                    {% set req = requests[0] %} <tr>
-                                        <td><small>{{ batch_id }}</small></td>
-                                        <td>{{ req.student_name }}<br><small>{{ req.student_dept }}</small></td>
-                                        <td> <!-- NEW COLUMN -->
-                                            <span class="status status-issued" style="background-color: #eee; color: #555;">
-                                                {{ req.get('project_type', 'Borrow') }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <ul style="padding-left: 15px; margin: 0;">
-                                                {% for item in requests %}
-                                                    <li>{{ item.component_name }} (Qty: {{ item.quantity }})</li>
-                                                {% endfor %}
-                                            </ul>
-                                        </td>
-                                        <td>{{ req.project_description }}</td>
-                                        <td>
-                                            <small>{{ req.mentor_approval_timestamp }}</small>
-                                        </td>
-                                        <td><small>{{ req.get('mentor_remarks', '-') }}</small></td>
-                                        <td>
-                                        <form action="{{ url_for('admin_update_request') }}" method="POST" class="admin-action-form" style="flex-direction: column; align-items: flex-start;">
-                                            <input type="hidden" name="batch_id" value="{{ batch_id }}">
-                                            <div class="form-group" style="width: 100%; margin-bottom: 5px;">
-                                                <textarea name="incharge_remarks" rows="2" placeholder="Add remarks (optional)..." style="width: 100%; font-size: 0.9rem; padding: 0.4rem;"></textarea>
-                                            </div>
-                                            <div style="display: flex; gap: 5px;">
-                                                <button type="submit" name="new_status" value="Approved" class="admin-btn approve">Approve (Partial)</button>
-                                                <button type="submit" name="new_status" value="Rejected" class="admin-btn reject">Reject All</button>
-                                            </div>
-                                        </form>
-                                    </td>
-                                    </tr>
-                                {% endfor %}
-                            {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-                <hr style="margin: 2.5rem 0;">
+                    <!-- Card 2: Faculty Borrow -->
+                    <div class="request-option-card">
+                        <div class="request-option-card-icon" style="background-color: #e0e7ff; color: #3730a3;">
+                            <!-- Icon: Briefcase -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.075c0 .621-.504 1.125-1.125 1.125H4.875c-.621 0-1.125-.504-1.125-1.125V14.15M21 13.5v-1.5c0-.621-.504-1.125-1.125-1.125H4.125C3.504 10.875 3 11.379 3 12v1.5m18 0v-1.5a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 12v1.5m18 0v-1.5A2.25 2.25 0 0 0 18.75 9.75h-1.5A2.25 2.25 0 0 0 15 12v1.5m-6 0v-1.5A2.25 2.25 0 0 0 6.75 9.75H5.25A2.25 2.25 0 0 0 3 12v1.5m18-3.35v.001c0 .621-.504 1.125-1.125 1.125H4.125c-.621 0-1.125-.504-1.125-1.125v-.001M15 9.75v-4.5a3 3 0 0 0-3-3h-3a3 3 0 0 0-3 3v4.5" /></svg>
+                        </div>
+                        <h4>Faculty Borrow</h4>
+                        <div class="card-count">{{ grouped_faculty_borrow|length }}</div>
+                        <p class="request-option-card-desc">Faculty requests to borrow existing lab components.</p>
+                        <button class="start-request-btn" onclick="showTable('table-faculty-borrow')">View Requests</button>
+                    </div>
 
+                    <!-- Card 3: Student Project -->
+                    <div class="request-option-card">
+                        <div class="request-option-card-icon" style="background-color: #dbeafe; color: #1e40af;">
+                            <!-- Icon: Trophy -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-6.75c-.622 0-1.125.504-1.125 1.125v3.375m9 0h-9m9 0h1.125m-11.25 0H4.875M16.5 18.75v-3.375a3.375 3.375 0 0 0-3.375-3.375h-3.75a3.375 3.375 0 0 0-3.375 3.375v3.375m9 0h-9" /></svg>
+                        </div>
+                        <h4>Student Project</h4>
+                        <div class="card-count">{{ grouped_student_project|length }}</div>
+                        <p class="request-option-card-desc">Student (Project/Competition) requests. Mentor Approved.</p>
+                        <button class="start-request-btn" onclick="showTable('table-student-project')">View Requests</button>
+                    </div>
+
+                    <!-- Card 4: Student Intra-Day (REMOVED) -->
+                </div>
+
+                <!-- STEP 2: Hidden Tables -->
+
+                <!-- Purchase Table -->
+                <div id="table-purchase" class="table-wrapper">
+                    <h3>Purchase Requests</h3>
+                    <button class="admin-btn reject" onclick="hideAllTables()" style="margin-bottom: 1rem;">&larr; Back to Categories</button>
+                    <div class="table-container wide-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Faculty</th>
+                                    <th>Component</th>
+                                    <th>Qty</th>
+                                    <th>Est. Price</th>
+                                    <th>Justification</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if not pending_purchases %}
+                                    <tr><td colspan="7">No purchase requests are awaiting your action.</td></tr>
+                                {% else %}
+                                    {% for req in pending_purchases %}
+                                        <tr>
+                                            <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
+                                            <td>{{ req.component_name }}<br>
+                                                {% if req.purchase_link %}
+                                                    <small><a href="{{ req.purchase_link }}" target="_blank">View Link</a></small>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ req.quantity }}</td>
+                                            <td>₹ {{ req.get('est_price_per_unit', 'N/A') }}</td>
+                                            <td>{{ req.project_description }}</td>
+                                            <td><small>{{ req.get('hod_remarks', '-') }}</small></td>
+                                            <td>
+                                                <form action="{{ url_for('admin_update_purchase_request') }}" method="POST" class="admin-action-form" style="flex-direction: column; align-items: flex-start;">
+                                                    <input type="hidden" name="request_id" value="{{ req.id }}">
+                                                    <div class="form-group" style="width: 100%; margin-bottom: 5px;">
+                                                        <textarea name="incharge_remarks" rows="2" placeholder="Add remarks (optional)..." style="width: 100%; font-size: 0.9rem; padding: 0.4rem;"></textarea>
+                                                    </div>
+                                                    <div style="display: flex; gap: 5px;">
+                                                        <button type="submit" name="new_status" value="Purchased" class="admin-btn approve">Mark as Purchased</button>
+                                                        <button type="submit" name="new_status" value="Rejected" class="admin-btn reject">Reject</button>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Faculty Borrow Table -->
+                <div id="table-faculty-borrow" class="table-wrapper">
+                    <h3>Faculty Borrow Requests</h3>
+                    <button class="admin-btn reject" onclick="hideAllTables()" style="margin-bottom: 1rem;">&larr; Back to Categories</button>
+                    <!-- Call the macro -->
+                    {{ render_borrow_table(grouped_faculty_borrow, 'No pending faculty borrow requests.') }}
+                </div>
+
+                <!-- Student Project Table -->
+                <div id="table-student-project" class="table-wrapper">
+                    <h3>Student Project Requests</h3>
+                    <button class="admin-btn reject" onclick="hideAllTables()" style="margin-bottom: 1rem;">&larr; Back to Categories</button>
+                    <!-- Call the macro -->
+                    {{ render_borrow_table(grouped_student_project, 'No pending student project requests.') }}
+                </div>
+
+                <!-- Student Intra-Day Table (REMOVED) -->
+
+
+                <!-- *** HISTORY TABLE REMOVED FROM HERE *** -->
+
+            </div> <!-- End #requests tab -->
+
+            <!-- *** NEW HISTORY TAB CONTENT *** -->
+            <div id="history" class="tab-content">
                 <h3>Request History (All Other Requests)</h3>
+                <p>This table shows a complete log of all requests that are not currently pending your approval (e.g., already approved, rejected, issued, or returned).</p>
                 <div class="table-container wide-table">
                     <table>
                         <thead>
                             <tr>
                                 <th>Req ID</th>
-                                <th>Project Type</th> <!-- NEW COLUMN -->
+                                <th>Project Type</th>
                                 <th>User</th>
                                 <th>Component</th>
                                 <th>Qty</th>
@@ -168,7 +363,7 @@
                                 {% for req in other_requests %}
                                 <tr>
                                     <td>{{ req.id }}</td>
-                                    <td> <!-- NEW COLUMN -->
+                                    <td>
                                         <span class="status status-issued" style="background-color: #eee; color: #555; font-size: 0.75rem; padding: 0.2rem 0.4rem;">
                                             {{ req.get('project_type', 'N/A') }}
                                         </span>
@@ -204,7 +399,7 @@
                         </tbody>
                     </table>
                 </div>
-                </div>
+            </div> <!-- End #history tab -->
 
             <div id="availability" class="tab-content">
                 <h3>Component Availability</h3>
@@ -278,6 +473,50 @@
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
         }
+
+        // --- NEW SCRIPT for showing/hiding tables ---
+        const allTables = document.querySelectorAll('.table-wrapper');
+        const cardContainer = document.getElementById('card-container');
+
+        function showTable(tableId) {
+            // Hide all tables
+            allTables.forEach(t => {
+                t.style.display = 'none';
+            });
+            // Show the specific table
+            const tableToShow = document.getElementById(tableId);
+            if (tableToShow) {
+                tableToShow.style.display = 'block';
+            }
+            // Hide the card container
+            if (cardContainer) {
+                cardContainer.style.display = 'none';
+            }
+        }
+
+        function hideAllTables() {
+            // Hide all tables
+            allTables.forEach(t => {
+                t.style.display = 'none';
+            });
+            // Show the card container
+            if (cardContainer) {
+                cardContainer.style.display = 'grid'; // Use grid to match original style
+            }
+        }
+
+        // Default state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if there's a hash in the URL (e.g., from a form submission redirect)
+            // If not, hide tables. This prevents the tables from being hidden on a POST redirect.
+            if (!window.location.hash) {
+                 hideAllTables(); // Ensures all tables are hidden and cards are shown on load
+            }
+
+            // If we want to force hide on every load, remove the if wrapper:
+            // hideAllTables();
+        });
+
     </script>
 </body>
 </html>

@@ -3602,3 +3602,436 @@
 2025-11-12 19:07:26,232 - INFO - 127.0.0.1 - - [12/Nov/2025 19:07:26] "GET / HTTP/1.1" 200 -
 2025-11-12 19:07:26,279 - INFO - 127.0.0.1 - - [12/Nov/2025 19:07:26] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
 2025-11-12 19:07:26,574 - INFO - 127.0.0.1 - - [12/Nov/2025 19:07:26] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:14:39,606 - INFO - LOGIN SUCCESS (Faculty Pattern): Parsed user "faculty_member@ch.amrita.edu"
+2025-11-12 21:14:39,607 - INFO - 127.0.0.1 - - [12/Nov/2025 21:14:39] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 21:14:39,868 - INFO - 127.0.0.1 - - [12/Nov/2025 21:14:39] "GET /faculty_dashboard HTTP/1.1" 200 -
+2025-11-12 21:14:39,930 - INFO - 127.0.0.1 - - [12/Nov/2025 21:14:39] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:14:40,206 - INFO - 127.0.0.1 - - [12/Nov/2025 21:14:40] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:25:28,336 - INFO - 127.0.0.1 - - [12/Nov/2025 21:25:28] "GET /faculty_dashboard HTTP/1.1" 200 -
+2025-11-12 21:25:28,562 - INFO - 127.0.0.1 - - [12/Nov/2025 21:25:28] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:25:28,702 - INFO - 127.0.0.1 - - [12/Nov/2025 21:25:28] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:25:28,734 - INFO - 127.0.0.1 - - [12/Nov/2025 21:25:28] "[36mGET /static/icons/favicon.ico HTTP/1.1[0m" 304 -
+2025-11-12 21:40:47,478 - INFO -  * Detected change in 'C:\\Users\\Hirthik Balaji C\\Desktop\\RACELAB\\Race-v2\\app.py', reloading
+2025-11-12 21:40:47,709 - INFO -  * Restarting with stat
+2025-11-12 21:40:48,779 - WARNING -  * Debugger is active!
+2025-11-12 21:40:48,797 - INFO -  * Debugger PIN: 280-237-840
+2025-11-12 21:40:54,946 - INFO -  * Detected change in 'C:\\Users\\Hirthik Balaji C\\Desktop\\RACELAB\\Race-v2\\app.py', reloading
+2025-11-12 21:40:55,018 - INFO -  * Restarting with stat
+2025-11-12 21:40:55,704 - WARNING -  * Debugger is active!
+2025-11-12 21:40:55,721 - INFO -  * Debugger PIN: 280-237-840
+2025-11-12 21:41:20,166 - INFO -  * Detected change in 'C:\\Users\\Hirthik Balaji C\\Desktop\\RACELAB\\Race-v2\\app.py', reloading
+2025-11-12 21:41:20,230 - INFO -  * Restarting with stat
+2025-11-12 21:41:20,869 - WARNING -  * Debugger is active!
+2025-11-12 21:41:20,880 - INFO -  * Debugger PIN: 280-237-840
+2025-11-12 21:41:39,234 - INFO -  * Detected change in 'C:\\Users\\Hirthik Balaji C\\Desktop\\RACELAB\\Race-v2\\app.py', reloading
+2025-11-12 21:41:39,313 - INFO -  * Restarting with stat
+2025-11-12 21:41:39,921 - WARNING -  * Debugger is active!
+2025-11-12 21:41:39,934 - INFO -  * Debugger PIN: 280-237-840
+2025-11-12 21:43:37,466 - INFO - 127.0.0.1 - - [12/Nov/2025 21:43:37] "GET /faculty_dashboard HTTP/1.1" 200 -
+2025-11-12 21:43:37,804 - INFO - 127.0.0.1 - - [12/Nov/2025 21:43:37] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:43:37,820 - INFO - 127.0.0.1 - - [12/Nov/2025 21:43:37] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:43:40,611 - INFO - 127.0.0.1 - - [12/Nov/2025 21:43:40] "[36mGET /static/icons/favicon.ico HTTP/1.1[0m" 304 -
+2025-11-12 21:50:53,516 - INFO -  * Detected change in 'C:\\Users\\Hirthik Balaji C\\Desktop\\RACELAB\\Race-v2\\app.py', reloading
+2025-11-12 21:50:53,595 - INFO -  * Restarting with stat
+2025-11-12 21:52:52,371 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.35:10000
+2025-11-12 21:52:52,371 - INFO - [33mPress CTRL+C to quit[0m
+2025-11-12 21:52:52,373 - INFO -  * Restarting with stat
+2025-11-12 21:52:52,813 - WARNING -  * Debugger is active!
+2025-11-12 21:52:52,823 - INFO -  * Debugger PIN: 280-237-840
+2025-11-12 21:52:58,253 - INFO - LOGOUT: User "faculty_member@ch.amrita.edu" logged out.
+2025-11-12 21:52:58,254 - INFO - 127.0.0.1 - - [12/Nov/2025 21:52:58] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 21:52:58,530 - INFO - 127.0.0.1 - - [12/Nov/2025 21:52:58] "GET / HTTP/1.1" 200 -
+2025-11-12 21:52:58,709 - INFO - 127.0.0.1 - - [12/Nov/2025 21:52:58] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:52:58,909 - INFO - 127.0.0.1 - - [12/Nov/2025 21:52:58] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:52:59,330 - INFO - 127.0.0.1 - - [12/Nov/2025 21:52:59] "[36mGET /static/icons/favicon.ico HTTP/1.1[0m" 304 -
+2025-11-12 21:53:06,077 - INFO - LOGIN SUCCESS (Staff): User "lab_incharge@ch.amrita.edu" (admin) logged in.
+2025-11-12 21:53:06,079 - INFO - 127.0.0.1 - - [12/Nov/2025 21:53:06] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 21:53:06,446 - INFO - 127.0.0.1 - - [12/Nov/2025 21:53:06] "GET /admin HTTP/1.1" 200 -
+2025-11-12 21:53:06,658 - INFO - 127.0.0.1 - - [12/Nov/2025 21:53:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:53:06,812 - INFO - 127.0.0.1 - - [12/Nov/2025 21:53:06] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:56:08,624 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:08] "GET /admin HTTP/1.1" 200 -
+2025-11-12 21:56:08,860 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:08] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:56:08,986 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:08] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:56:09,008 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:09] "[36mGET /static/icons/favicon.ico HTTP/1.1[0m" 304 -
+2025-11-12 21:56:33,395 - INFO - LOGOUT: User "lab_incharge@ch.amrita.edu" logged out.
+2025-11-12 21:56:33,396 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:33] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 21:56:33,664 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:33] "GET / HTTP/1.1" 200 -
+2025-11-12 21:56:33,725 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:33] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:56:34,034 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:34] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:56:42,917 - INFO - LOGIN SUCCESS (Student): Parsed user "ch.en.u4rai24056@ch.students.amrita.edu"
+2025-11-12 21:56:42,919 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:42] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 21:56:43,213 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:43] "GET /student_dashboard HTTP/1.1" 200 -
+2025-11-12 21:56:43,271 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:43] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:56:43,586 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:43] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:56:58,637 - INFO - INTRA-DAY BATCH SUBMITTED: User "ch.en.u4rai24056@ch.students.amrita.edu" batch B-20251112215658. Auto-approved for Technician.
+2025-11-12 21:56:58,638 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:58] "[32mPOST /request_component HTTP/1.1[0m" 302 -
+2025-11-12 21:56:58,876 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:58] "GET /student_dashboard HTTP/1.1" 200 -
+2025-11-12 21:56:58,966 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:58] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:56:59,248 - INFO - 127.0.0.1 - - [12/Nov/2025 21:56:59] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:57:05,138 - INFO - LOGOUT: User "ch.en.u4rai24056@ch.students.amrita.edu" logged out.
+2025-11-12 21:57:05,139 - INFO - 127.0.0.1 - - [12/Nov/2025 21:57:05] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 21:57:05,465 - INFO - 127.0.0.1 - - [12/Nov/2025 21:57:05] "GET / HTTP/1.1" 200 -
+2025-11-12 21:57:05,724 - INFO - 127.0.0.1 - - [12/Nov/2025 21:57:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:57:05,835 - INFO - 127.0.0.1 - - [12/Nov/2025 21:57:05] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:57:10,874 - INFO - LOGIN SUCCESS (Staff): User "lab_incharge@ch.amrita.edu" (admin) logged in.
+2025-11-12 21:57:10,875 - INFO - 127.0.0.1 - - [12/Nov/2025 21:57:10] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 21:57:11,204 - INFO - 127.0.0.1 - - [12/Nov/2025 21:57:11] "GET /admin HTTP/1.1" 200 -
+2025-11-12 21:57:11,470 - INFO - 127.0.0.1 - - [12/Nov/2025 21:57:11] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:57:11,562 - INFO - 127.0.0.1 - - [12/Nov/2025 21:57:11] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:58:32,940 - INFO - 127.0.0.1 - - [12/Nov/2025 21:58:32] "GET /admin HTTP/1.1" 200 -
+2025-11-12 21:58:33,171 - INFO - 127.0.0.1 - - [12/Nov/2025 21:58:33] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:58:33,328 - INFO - 127.0.0.1 - - [12/Nov/2025 21:58:33] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:58:33,355 - INFO - 127.0.0.1 - - [12/Nov/2025 21:58:33] "[36mGET /static/icons/favicon.ico HTTP/1.1[0m" 304 -
+2025-11-12 21:58:57,419 - INFO - LOGOUT: User "lab_incharge@ch.amrita.edu" logged out.
+2025-11-12 21:58:57,420 - INFO - 127.0.0.1 - - [12/Nov/2025 21:58:57] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 21:58:57,688 - INFO - 127.0.0.1 - - [12/Nov/2025 21:58:57] "GET / HTTP/1.1" 200 -
+2025-11-12 21:58:57,763 - INFO - 127.0.0.1 - - [12/Nov/2025 21:58:57] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:58:58,078 - INFO - 127.0.0.1 - - [12/Nov/2025 21:58:58] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:59:08,883 - INFO - LOGIN SUCCESS (Staff): User "hod@ch.amrita.edu" (hod) logged in.
+2025-11-12 21:59:08,884 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:08] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 21:59:09,167 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:09] "GET /hod_dashboard HTTP/1.1" 200 -
+2025-11-12 21:59:09,227 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:09] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:59:09,534 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:09] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:59:27,705 - INFO - LOGOUT: User "hod@ch.amrita.edu" logged out.
+2025-11-12 21:59:27,705 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:27] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 21:59:27,971 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:27] "GET / HTTP/1.1" 200 -
+2025-11-12 21:59:28,029 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:28] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:59:28,343 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:28] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:59:32,652 - INFO - LOGIN SUCCESS (Staff): User "lab_incharge@ch.amrita.edu" (admin) logged in.
+2025-11-12 21:59:32,654 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:32] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 21:59:32,901 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:32] "GET /admin HTTP/1.1" 200 -
+2025-11-12 21:59:32,973 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:32] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:59:33,289 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:33] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:59:37,666 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #3. Item Raspberry Pi 4 approved for issue.
+2025-11-12 21:59:37,667 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #4. Item Ultrasonic Sensor approved for issue.
+2025-11-12 21:59:37,667 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #5. Item Breadboard approved for issue.
+2025-11-12 21:59:37,671 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:37] "[32mPOST /admin/update_request HTTP/1.1[0m" 302 -
+2025-11-12 21:59:37,932 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:37] "GET /admin HTTP/1.1" 200 -
+2025-11-12 21:59:38,000 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:38] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:59:38,322 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:38] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:59:42,446 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #6. Item Ultrasonic Sensor approved for issue.
+2025-11-12 21:59:42,446 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #7. Item Servo Motor (SG90) approved for issue.
+2025-11-12 21:59:42,446 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #8. Item ESP32 -S3 approved for issue.
+2025-11-12 21:59:42,446 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #9. Item Breadboard approved for issue.
+2025-11-12 21:59:42,450 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:42] "[32mPOST /admin/update_request HTTP/1.1[0m" 302 -
+2025-11-12 21:59:42,714 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:42] "GET /admin HTTP/1.1" 200 -
+2025-11-12 21:59:42,781 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:42] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:59:43,087 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:43] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:59:46,141 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #10. Item Raspberry Pi 4 approved for issue.
+2025-11-12 21:59:46,141 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #11. Item Arduino Uno approved for issue.
+2025-11-12 21:59:46,145 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:46] "[32mPOST /admin/update_request HTTP/1.1[0m" 302 -
+2025-11-12 21:59:46,410 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:46] "GET /admin HTTP/1.1" 200 -
+2025-11-12 21:59:46,483 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:46] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:59:46,795 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:46] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:59:49,452 - INFO - LOGOUT: User "lab_incharge@ch.amrita.edu" logged out.
+2025-11-12 21:59:49,452 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:49] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 21:59:49,713 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:49] "GET / HTTP/1.1" 200 -
+2025-11-12 21:59:49,774 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:49] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:59:50,069 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:50] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 21:59:53,790 - INFO - LOGIN SUCCESS (Staff): User "lab_tecnician@ch.amrita.edu" (technician) logged in.
+2025-11-12 21:59:53,791 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:53] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 21:59:54,138 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:54] "GET /tech HTTP/1.1" 200 -
+2025-11-12 21:59:54,381 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:54] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 21:59:54,507 - INFO - 127.0.0.1 - - [12/Nov/2025 21:59:54] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:03:41,632 - INFO - 127.0.0.1 - - [12/Nov/2025 22:03:41] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:03:41,877 - INFO - 127.0.0.1 - - [12/Nov/2025 22:03:41] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:03:41,984 - INFO - 127.0.0.1 - - [12/Nov/2025 22:03:41] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:03:42,012 - INFO - 127.0.0.1 - - [12/Nov/2025 22:03:42] "[36mGET /static/icons/favicon.ico HTTP/1.1[0m" 304 -
+2025-11-12 22:04:23,693 - INFO - LOGOUT: User "lab_tecnician@ch.amrita.edu" logged out.
+2025-11-12 22:04:23,693 - INFO - 127.0.0.1 - - [12/Nov/2025 22:04:23] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 22:04:23,958 - INFO - 127.0.0.1 - - [12/Nov/2025 22:04:23] "GET / HTTP/1.1" 200 -
+2025-11-12 22:04:24,012 - INFO - 127.0.0.1 - - [12/Nov/2025 22:04:24] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:04:24,331 - INFO - 127.0.0.1 - - [12/Nov/2025 22:04:24] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:04:31,390 - INFO - LOGIN SUCCESS (Student): Parsed user "ch.en.u4rai24056@ch.students.amrita.edu"
+2025-11-12 22:04:31,391 - INFO - 127.0.0.1 - - [12/Nov/2025 22:04:31] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 22:04:31,657 - INFO - 127.0.0.1 - - [12/Nov/2025 22:04:31] "GET /student_dashboard HTTP/1.1" 200 -
+2025-11-12 22:04:31,711 - INFO - 127.0.0.1 - - [12/Nov/2025 22:04:31] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:04:32,030 - INFO - 127.0.0.1 - - [12/Nov/2025 22:04:32] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:05:36,230 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:36] "GET /student_dashboard HTTP/1.1" 200 -
+2025-11-12 22:05:36,490 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:36] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:05:36,588 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:36] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:05:36,611 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:36] "[36mGET /static/icons/favicon.ico HTTP/1.1[0m" 304 -
+2025-11-12 22:05:43,362 - INFO - LOGOUT: User "ch.en.u4rai24056@ch.students.amrita.edu" logged out.
+2025-11-12 22:05:43,363 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:43] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 22:05:43,627 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:43] "GET / HTTP/1.1" 200 -
+2025-11-12 22:05:43,687 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:43] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:05:44,001 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:44] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:05:50,155 - INFO - LOGIN SUCCESS (Student): Parsed user "ch.en.u4rai24056@ch.students.amrita.edu"
+2025-11-12 22:05:50,156 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:50] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 22:05:50,408 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:50] "GET /student_dashboard HTTP/1.1" 200 -
+2025-11-12 22:05:50,472 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:50] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:05:50,780 - INFO - 127.0.0.1 - - [12/Nov/2025 22:05:50] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:06:54,251 - INFO - INTRA-DAY BATCH SUBMITTED: User "ch.en.u4rai24056@ch.students.amrita.edu" batch B-20251112220654. Auto-approved for Technician.
+2025-11-12 22:06:54,251 - INFO - 127.0.0.1 - - [12/Nov/2025 22:06:54] "[32mPOST /request_component HTTP/1.1[0m" 302 -
+2025-11-12 22:06:54,509 - INFO - 127.0.0.1 - - [12/Nov/2025 22:06:54] "GET /student_dashboard HTTP/1.1" 200 -
+2025-11-12 22:06:54,577 - INFO - 127.0.0.1 - - [12/Nov/2025 22:06:54] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:06:54,885 - INFO - 127.0.0.1 - - [12/Nov/2025 22:06:54] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:08:05,719 - INFO - PROJECT WORK BATCH SUBMITTED: User "ch.en.u4rai24056@ch.students.amrita.edu" batch B-20251112220805. Awaiting Incharge.
+2025-11-12 22:08:05,720 - INFO - 127.0.0.1 - - [12/Nov/2025 22:08:05] "[32mPOST /request_component HTTP/1.1[0m" 302 -
+2025-11-12 22:08:05,982 - INFO - 127.0.0.1 - - [12/Nov/2025 22:08:05] "GET /student_dashboard HTTP/1.1" 200 -
+2025-11-12 22:08:06,069 - INFO - 127.0.0.1 - - [12/Nov/2025 22:08:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:08:06,386 - INFO - 127.0.0.1 - - [12/Nov/2025 22:08:06] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:09:29,790 - INFO - REQUEST BATCH SUBMITTED: User "ch.en.u4rai24056@ch.students.amrita.edu" batch B-20251112220929 (Competition). Awaiting Mentor.
+2025-11-12 22:09:29,790 - INFO - 127.0.0.1 - - [12/Nov/2025 22:09:29] "[32mPOST /request_component HTTP/1.1[0m" 302 -
+2025-11-12 22:09:30,057 - INFO - 127.0.0.1 - - [12/Nov/2025 22:09:30] "GET /student_dashboard HTTP/1.1" 200 -
+2025-11-12 22:09:30,130 - INFO - 127.0.0.1 - - [12/Nov/2025 22:09:30] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:09:30,439 - INFO - 127.0.0.1 - - [12/Nov/2025 22:09:30] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:09:43,975 - INFO - 127.0.0.1 - - [12/Nov/2025 22:09:43] "GET /approve/mentor/IkItMjAyNTExMTIyMjA5Mjki.aRS4QQ.2RQebpv4VE6wg73_BOL3Nfs2ytU HTTP/1.1" 200 -
+2025-11-12 22:09:44,211 - INFO - 127.0.0.1 - - [12/Nov/2025 22:09:44] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:09:44,335 - INFO - 127.0.0.1 - - [12/Nov/2025 22:09:44] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:10:00,936 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:00] "POST /approve/mentor/IkItMjAyNTExMTIyMjA5Mjki.aRS4QQ.2RQebpv4VE6wg73_BOL3Nfs2ytU HTTP/1.1" 200 -
+2025-11-12 22:10:01,306 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:01] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:10:01,307 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:01] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:10:07,316 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:07] "GET /student_dashboard HTTP/1.1" 200 -
+2025-11-12 22:10:07,671 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:07] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:10:07,672 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:07] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:10:07,933 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:07] "[36mGET /static/icons/favicon.ico HTTP/1.1[0m" 304 -
+2025-11-12 22:10:15,082 - INFO - LOGOUT: User "ch.en.u4rai24056@ch.students.amrita.edu" logged out.
+2025-11-12 22:10:15,083 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:15] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 22:10:15,401 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:15] "GET / HTTP/1.1" 200 -
+2025-11-12 22:10:15,666 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:15] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:10:15,776 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:15] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:10:23,282 - INFO - LOGIN SUCCESS (Staff): User "lab_incharge@ch.amrita.edu" (admin) logged in.
+2025-11-12 22:10:23,283 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:23] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 22:10:23,600 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:23] "GET /admin HTTP/1.1" 200 -
+2025-11-12 22:10:23,860 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:23] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:10:23,968 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:23] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:10:37,347 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #5. Item Raspberry Pi 4 approved for issue.
+2025-11-12 22:10:37,347 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #6. Item Breadboard approved for issue.
+2025-11-12 22:10:37,347 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #7. Item Arduino Uno approved for issue.
+2025-11-12 22:10:37,347 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #8. Item Servo Motor (SG90) approved for issue.
+2025-11-12 22:10:37,347 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #9. Item Ultrasonic Sensor approved for issue.
+2025-11-12 22:10:37,350 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:37] "[32mPOST /admin/update_request HTTP/1.1[0m" 302 -
+2025-11-12 22:10:37,679 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:37] "GET /admin HTTP/1.1" 200 -
+2025-11-12 22:10:37,946 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:37] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:10:38,065 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:38] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:10:53,428 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #10. Item Raspberry Pi 4 approved for issue.
+2025-11-12 22:10:53,428 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #11. Item Servo Motor (SG90) approved for issue.
+2025-11-12 22:10:53,428 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #12. Item Ultrasonic Sensor approved for issue.
+2025-11-12 22:10:53,428 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #13. Item Breadboard approved for issue.
+2025-11-12 22:10:53,429 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #14. Item ESP32 -S3 approved for issue.
+2025-11-12 22:10:53,429 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #15. Item Arduino Uno approved for issue.
+2025-11-12 22:10:53,433 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:53] "[32mPOST /admin/update_request HTTP/1.1[0m" 302 -
+2025-11-12 22:10:53,757 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:53] "GET /admin HTTP/1.1" 200 -
+2025-11-12 22:10:54,020 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:54] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:10:54,144 - INFO - 127.0.0.1 - - [12/Nov/2025 22:10:54] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:05,929 - INFO - LOGOUT: User "lab_incharge@ch.amrita.edu" logged out.
+2025-11-12 22:11:05,930 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:05] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 22:11:06,252 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:06] "GET / HTTP/1.1" 200 -
+2025-11-12 22:11:06,509 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:06,618 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:06] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:10,016 - INFO - LOGIN SUCCESS (Staff): User "lab_tecnician@ch.amrita.edu" (technician) logged in.
+2025-11-12 22:11:10,017 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:10] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 22:11:10,347 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:10] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:10,594 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:10] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:10,716 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:10] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:14,802 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #1
+2025-11-12 22:11:14,802 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #1. Stock ESP32 -S3 issued 0 -> 1
+2025-11-12 22:11:14,803 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:14] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:15,122 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:15] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:15,384 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:15] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:15,507 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:15] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:19,811 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #2
+2025-11-12 22:11:19,811 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #2. Stock Breadboard issued 0 -> 1
+2025-11-12 22:11:19,812 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:19] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:20,137 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:20] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:20,398 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:20] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:20,507 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:20] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:23,464 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #3
+2025-11-12 22:11:23,464 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #3. Stock Servo Motor (SG90) issued 0 -> 4
+2025-11-12 22:11:23,465 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:23] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:23,797 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:23] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:24,040 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:24] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:24,165 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:24] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:27,006 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #4
+2025-11-12 22:11:27,006 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #4. Stock Ultrasonic Sensor issued 0 -> 4
+2025-11-12 22:11:27,007 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:27] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:27,327 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:27] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:27,588 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:27] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:27,698 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:27] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:31,454 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #5
+2025-11-12 22:11:31,454 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #5. Stock Raspberry Pi 4 issued 0 -> 1
+2025-11-12 22:11:31,455 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:31] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:31,777 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:31] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:32,037 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:32] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:32,175 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:32] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:35,544 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #6
+2025-11-12 22:11:35,544 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #6. Stock Breadboard issued 1 -> 2
+2025-11-12 22:11:35,545 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:35] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:35,872 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:35] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:36,117 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:36] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:36,242 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:36] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:40,141 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #7
+2025-11-12 22:11:40,141 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #7. Stock Arduino Uno issued 0 -> 4
+2025-11-12 22:11:40,141 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:40] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:40,462 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:40] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:40,728 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:40] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:40,848 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:40] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:43,616 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #8
+2025-11-12 22:11:43,616 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #8. Stock Servo Motor (SG90) issued 4 -> 9
+2025-11-12 22:11:43,617 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:43] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:43,939 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:43] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:44,198 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:44] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:44,322 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:44] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:47,300 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #9
+2025-11-12 22:11:47,301 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #9. Stock Ultrasonic Sensor issued 4 -> 8
+2025-11-12 22:11:47,302 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:47] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:47,622 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:47] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:47,885 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:47] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:48,008 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:48] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:50,895 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #10
+2025-11-12 22:11:50,895 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #10. Stock Raspberry Pi 4 issued 1 -> 3
+2025-11-12 22:11:50,897 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:50] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:51,217 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:51] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:51,482 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:51] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:51,590 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:51] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:54,725 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #11
+2025-11-12 22:11:54,725 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #11. Stock Servo Motor (SG90) issued 9 -> 19
+2025-11-12 22:11:54,727 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:54] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:55,058 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:55] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:11:55,321 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:55] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:11:55,446 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:55] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:11:59,549 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #12
+2025-11-12 22:11:59,549 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #12. Stock Ultrasonic Sensor issued 8 -> 15
+2025-11-12 22:11:59,550 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:59] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:11:59,872 - INFO - 127.0.0.1 - - [12/Nov/2025 22:11:59] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:12:00,129 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:00] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:12:00,254 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:00] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:12:03,275 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #13
+2025-11-12 22:12:03,276 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #13. Stock Breadboard issued 2 -> 4
+2025-11-12 22:12:03,276 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:03] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:12:03,613 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:03] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:12:03,855 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:03] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:12:04,013 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:04] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:12:06,966 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #14
+2025-11-12 22:12:06,966 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #14. Stock ESP32 -S3 issued 1 -> 4
+2025-11-12 22:12:06,967 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:06] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:12:07,302 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:07] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:12:07,542 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:07] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:12:07,667 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:07] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:12:10,815 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #15
+2025-11-12 22:12:10,816 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #15. Stock Arduino Uno issued 4 -> 8
+2025-11-12 22:12:10,817 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:10] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:12:11,134 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:11] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:12:11,399 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:11] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:12:11,539 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:11] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:12:31,911 - INFO - LOGOUT: User "lab_tecnician@ch.amrita.edu" logged out.
+2025-11-12 22:12:31,911 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:31] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 22:12:32,231 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:32] "GET / HTTP/1.1" 200 -
+2025-11-12 22:12:32,498 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:32] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:12:32,606 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:32] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:12:39,791 - INFO - LOGIN SUCCESS (Faculty Pattern): Parsed user "faculty_member@ch.amrita.edu"
+2025-11-12 22:12:39,793 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:39] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 22:12:40,145 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:40] "GET /faculty_dashboard HTTP/1.1" 200 -
+2025-11-12 22:12:40,373 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:40] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:12:40,531 - INFO - 127.0.0.1 - - [12/Nov/2025 22:12:40] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:13:20,475 - INFO - FACULTY BORROW REQUEST: User "faculty_member@ch.amrita.edu" submitted batch B-20251112221320. Bypassed to Incharge.
+2025-11-12 22:13:20,477 - INFO - 127.0.0.1 - - [12/Nov/2025 22:13:20] "[32mPOST /faculty_request HTTP/1.1[0m" 302 -
+2025-11-12 22:13:20,807 - INFO - 127.0.0.1 - - [12/Nov/2025 22:13:20] "GET /faculty_dashboard HTTP/1.1" 200 -
+2025-11-12 22:13:21,067 - INFO - 127.0.0.1 - - [12/Nov/2025 22:13:21] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:13:21,209 - INFO - 127.0.0.1 - - [12/Nov/2025 22:13:21] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:14:22,747 - INFO - FACULTY PURCHASE REQUEST: User "faculty_member@ch.amrita.edu" submitted batch B-20251112221422 for "Raspberry Pico". Awaiting Incharge.
+2025-11-12 22:14:22,748 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:22] "[32mPOST /faculty_request HTTP/1.1[0m" 302 -
+2025-11-12 22:14:23,009 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:23] "GET /faculty_dashboard HTTP/1.1" 200 -
+2025-11-12 22:14:23,072 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:23] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:14:23,389 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:23] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:14:29,606 - INFO - LOGOUT: User "faculty_member@ch.amrita.edu" logged out.
+2025-11-12 22:14:29,607 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:29] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 22:14:29,854 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:29] "GET / HTTP/1.1" 200 -
+2025-11-12 22:14:29,933 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:29] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:14:30,212 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:30] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:14:35,939 - INFO - LOGIN SUCCESS (Student): Parsed user "ch.en.u4rai24056@ch.students.amrita.edu"
+2025-11-12 22:14:35,940 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:35] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 22:14:36,270 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:36] "GET /student_dashboard HTTP/1.1" 200 -
+2025-11-12 22:14:36,512 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:36] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:14:36,650 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:36] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:14:53,987 - INFO - LOGOUT: User "ch.en.u4rai24056@ch.students.amrita.edu" logged out.
+2025-11-12 22:14:53,987 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:53] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 22:14:54,309 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:54] "GET / HTTP/1.1" 200 -
+2025-11-12 22:14:54,573 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:54] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:14:54,682 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:54] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:14:58,541 - INFO - LOGIN SUCCESS (Staff): User "lab_incharge@ch.amrita.edu" (admin) logged in.
+2025-11-12 22:14:58,542 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:58] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 22:14:58,856 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:58] "GET /admin HTTP/1.1" 200 -
+2025-11-12 22:14:59,117 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:59] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:14:59,210 - INFO - 127.0.0.1 - - [12/Nov/2025 22:14:59] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:15:13,486 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #16. Item Raspberry Pi 4 approved for issue.
+2025-11-12 22:15:13,486 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #17. Item Breadboard approved for issue.
+2025-11-12 22:15:13,486 - INFO - APPROVAL by lab_incharge@ch.amrita.edu: Req #18. Item Ultrasonic Sensor approved for issue.
+2025-11-12 22:15:13,490 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:13] "[32mPOST /admin/update_request HTTP/1.1[0m" 302 -
+2025-11-12 22:15:13,820 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:13] "GET /admin HTTP/1.1" 200 -
+2025-11-12 22:15:14,075 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:14] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:15:14,199 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:14] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:15:29,820 - INFO - PURCHASE by lab_incharge@ch.amrita.edu: Req #19 (Raspberry Pico) marked as Purchased.
+2025-11-12 22:15:29,826 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:29] "[32mPOST /admin/update_purchase_request HTTP/1.1[0m" 302 -
+2025-11-12 22:15:30,151 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:30] "GET /admin HTTP/1.1" 200 -
+2025-11-12 22:15:30,414 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:30] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:15:30,535 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:30] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:15:43,709 - INFO - LOGOUT: User "lab_incharge@ch.amrita.edu" logged out.
+2025-11-12 22:15:43,710 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:43] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 22:15:44,036 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:44] "GET / HTTP/1.1" 200 -
+2025-11-12 22:15:44,298 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:44] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:15:44,410 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:44] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:15:55,527 - INFO - LOGIN SUCCESS (Staff): User "lab_tecnician@ch.amrita.edu" (technician) logged in.
+2025-11-12 22:15:55,528 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:55] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 22:15:55,854 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:55] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:15:56,116 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:56] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:15:56,225 - INFO - 127.0.0.1 - - [12/Nov/2025 22:15:56] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:16:00,576 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #16
+2025-11-12 22:16:00,576 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #16. Stock Raspberry Pi 4 issued 3 -> 4
+2025-11-12 22:16:00,577 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:00] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:16:00,899 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:00] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:16:01,167 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:01] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:16:01,272 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:01] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:16:04,841 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #17
+2025-11-12 22:16:04,841 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #17. Stock Breadboard issued 4 -> 6
+2025-11-12 22:16:04,842 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:04] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:16:05,169 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:05] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:16:05,428 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:16:05,552 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:05] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:16:08,697 - INFO - ITEM ISSUED: Tech "lab_tecnician@ch.amrita.edu" ISSUED req #18
+2025-11-12 22:16:08,697 - INFO - ISSUE by lab_tecnician@ch.amrita.edu: Req #18. Stock Ultrasonic Sensor issued 15 -> 20
+2025-11-12 22:16:08,698 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:08] "[32mPOST /tech/dispatch HTTP/1.1[0m" 302 -
+2025-11-12 22:16:09,031 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:09] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:16:09,276 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:09] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:16:09,416 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:09] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:16:14,251 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:14] "GET /tech/collect_form/3 HTTP/1.1" 200 -
+2025-11-12 22:16:14,623 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:14] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:16:14,624 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:14] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:16:26,491 - INFO - COLLECTION by lab_tecnician@ch.amrita.edu: Req #3. 2 working, 2 not working.
+2025-11-12 22:16:26,501 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:26] "[32mPOST /tech/collect_form/3 HTTP/1.1[0m" 302 -
+2025-11-12 22:16:26,835 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:26] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:16:27,086 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:27] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:16:27,220 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:27] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:16:32,333 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:32] "GET /tech/collect_form/4 HTTP/1.1" 200 -
+2025-11-12 22:16:32,710 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:32] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:16:32,715 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:32] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:16:48,833 - INFO - COLLECTION by lab_tecnician@ch.amrita.edu: Req #4. 3 working, 1 not working.
+2025-11-12 22:16:48,842 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:48] "[32mPOST /tech/collect_form/4 HTTP/1.1[0m" 302 -
+2025-11-12 22:16:49,173 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:49] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:16:49,420 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:49] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:16:49,545 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:49] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:16:55,036 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:55] "GET /tech/collect_form/7 HTTP/1.1" 200 -
+2025-11-12 22:16:55,412 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:55] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:16:55,415 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:55] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:16:59,965 - INFO - COLLECTION by lab_tecnician@ch.amrita.edu: Req #7. 4 working, 0 not working.
+2025-11-12 22:16:59,975 - INFO - 127.0.0.1 - - [12/Nov/2025 22:16:59] "[32mPOST /tech/collect_form/7 HTTP/1.1[0m" 302 -
+2025-11-12 22:17:00,301 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:00] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:17:00,563 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:00] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:17:00,671 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:00] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:17:05,310 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:05] "GET /tech/collect_form/10 HTTP/1.1" 200 -
+2025-11-12 22:17:05,680 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:17:05,682 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:05] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:17:09,690 - INFO - COLLECTION by lab_tecnician@ch.amrita.edu: Req #10. 2 working, 0 not working.
+2025-11-12 22:17:09,696 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:09] "[32mPOST /tech/collect_form/10 HTTP/1.1[0m" 302 -
+2025-11-12 22:17:10,023 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:10] "GET /tech HTTP/1.1" 200 -
+2025-11-12 22:17:10,285 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:10] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:17:10,409 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:10] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
+2025-11-12 22:17:20,584 - INFO - LOGOUT: User "lab_tecnician@ch.amrita.edu" logged out.
+2025-11-12 22:17:20,585 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:20] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-11-12 22:17:20,908 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:20] "GET / HTTP/1.1" 200 -
+2025-11-12 22:17:21,171 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:21] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:17:21,266 - INFO - 127.0.0.1 - - [12/Nov/2025 22:17:21] "[36mGET /static/bannerlogo.jpg HTTP/1.1[0m" 304 -
