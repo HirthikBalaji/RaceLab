@@ -41,43 +41,18 @@ audit_logger.setLevel(logging.INFO)
 audit_logger.addHandler(audit_handler)
 
 
-# --- JSON Helper Functions (Unchanged) ---
-
-# ... (in main.py, near the other helper functions) ...
-
-def get_augmented_components():
-    """
-    Loads components and augments them with calculated working/not working counts.
-    """
-    components = load_components()
-    requests = load_requests()
-
-    # Create a map to store not_working counts
-    not_working_map = {}
-    for req in requests:
-        if req['status'] == 'Returned' and req.get('not_working_count', 0) > 0:
-            comp_name = req['component_name']
-            count = req['not_working_count']
-            not_working_map[comp_name] = not_working_map.get(comp_name, 0) + count
-
-    # Augment the components list with new data
-    augmented_components = []
-    for comp in components:
-        not_working_count = not_working_map.get(comp['name'], 0)
-        working_count = comp['total'] - not_working_count
-
-        # Add the new calculated fields
-        comp['not_working_count'] = not_working_count
-        comp['working_count'] = working_count
-
-        # 'available' field from components.json already represents (working - issued)
-
-        augmented_components.append(comp)
-
-    return augmented_components
+# --- JSON Helper Functions (CORRECTED) ---
 
 def load_components():
-    with open(COMPONENTS_DB, 'r') as f: return json.load(f)
+    """Loads components.json safely."""
+    if not os.path.exists(COMPONENTS_DB) or os.path.getsize(COMPONENTS_DB) == 0:
+        return []
+    try:
+        with open(COMPONENTS_DB, 'r') as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        app.logger.error(f"Failed to decode {COMPONENTS_DB}. Returning empty list.")
+        return []
 
 
 def save_components(data):
@@ -85,8 +60,14 @@ def save_components(data):
 
 
 def load_requests():
+    """Loads requests.json safely."""
     if not os.path.exists(REQUESTS_DB) or os.path.getsize(REQUESTS_DB) == 0: return []
-    with open(REQUESTS_DB, 'r') as f: return json.load(f)
+    try:
+        with open(REQUESTS_DB, 'r') as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        app.logger.error(f"Failed to decode {REQUESTS_DB}. Returning empty list.")
+        return []
 
 
 def save_requests(data):
@@ -94,7 +75,15 @@ def save_requests(data):
 
 
 def load_staff_users():
-    with open(USERS_DB, 'r') as f: return json.load(f)
+    """Loads users.json safely."""
+    if not os.path.exists(USERS_DB) or os.path.getsize(USERS_DB) == 0:
+        return []
+    try:
+        with open(USERS_DB, 'r') as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        app.logger.error(f"Failed to decode {USERS_DB}. Returning empty list.")
+        return []
 
 
 def get_staff_by_email(email):
@@ -102,6 +91,43 @@ def get_staff_by_email(email):
         if user['email'] == email:
             return user
     return None
+
+
+# --- CORRECTED AUGMENTED COMPONENTS FUNCTION ---
+def get_augmented_components():
+    """
+    Loads components from JSON and calculates the 'available' count.
+    It trusts the 'working_quantity' and 'issued_quantity'
+    fields which are correctly managed by the technician routes.
+    """
+    components = load_components()
+    augmented_components = []
+
+    for comp in components:
+        # Get quantities, using .get() with a default of 0 for safety
+        working_qty = comp.get('working_quantity', 0)
+        issued_qty = comp.get('issued_quantity', 0)
+
+        # Set default values for any missing keys in the component object
+        # This prevents errors in the templates if a component is missing data
+        comp.setdefault('name', 'Unknown Component')
+        comp.setdefault('total_quantity', 0)
+        comp.setdefault('working_quantity', working_qty)
+        comp.setdefault('not_working_quantity', 0)
+        comp.setdefault('issued_quantity', issued_qty)
+
+        # Calculate the 'available' count
+        comp['available'] = working_qty - issued_qty
+
+        # Ensure 'available' is not negative
+        if comp['available'] < 0:
+            comp['available'] = 0
+            app.logger.warning(
+                f"Component {comp['name']} has negative availability. {working_qty} working, {issued_qty} issued.")
+
+        augmented_components.append(comp)
+
+    return augmented_components
 
 
 # --- Email Parsing Logic (Unchanged) ---
@@ -114,6 +140,7 @@ YEAR_MAP = {
     '25': '1st Year', '24': '2nd Year', '23': '3rd Year', '22': '4th Year'
 }
 STUDENT_DOMAIN = 'ch.students.amrita.edu'
+FACULTY_DOMAIN = 'ch.amrita.edu'
 
 
 def parse_student_email(email):
@@ -141,6 +168,28 @@ def parse_student_email(email):
         return None
 
 
+def parse_faculty_email(email):
+    try:
+        username, domain = email.split('@')
+        if domain != FACULTY_DOMAIN:
+            return None
+
+        name_parts = username.split('.')
+        name = ' '.join([part.capitalize() for part in name_parts])
+
+        user_data = {
+            'email': email,
+            'role': 'faculty',
+            'name': f"Faculty {name}",
+            'department': "Faculty",
+            'year': None
+        }
+        return user_data
+    except Exception as e:
+        app.logger.error(f"Failed to parse faculty email {email}: {e}")
+        return None
+
+
 # --- Routes ---
 
 @app.route('/')
@@ -149,33 +198,44 @@ def home():
     return render_template('index.html', error=error)
 
 
-# --- Login Route (Unchanged) ---
 @app.route('/login', methods=['POST'])
 def login():
     email = request.form.get('email')
     password = request.form.get('password')
+
     staff_user = get_staff_by_email(email)
     if staff_user:
         if staff_user['password'] == password:
             app.logger.info(f'LOGIN SUCCESS (Staff): User "{email}" ({staff_user["role"]}) logged in.')
             session['user'] = staff_user
+
             if staff_user['role'] == 'admin':
                 return redirect(url_for('admin_dashboard'))
             elif staff_user['role'] == 'hod':
                 return redirect(url_for('hod_dashboard'))
-            elif staff_user['role'] == 'mentor':
-                return redirect(url_for('mentor_dashboard'))
-            else:
+            elif staff_user['role'] == 'faculty':
+                return redirect(url_for('faculty_dashboard'))
+            elif staff_user['role'] == 'technician':
                 return redirect(url_for('tech_dashboard'))
+            else:
+                return redirect(url_for('home'))
         else:
             app.logger.warning(f'LOGIN FAILED (Staff): Bad password for user "{email}"')
             session['error'] = 'Invalid email or password.'
             return redirect(url_for('home'))
+
+    faculty_user = parse_faculty_email(email)
+    if faculty_user:
+        app.logger.info(f'LOGIN SUCCESS (Faculty Pattern): Parsed user "{email}"')
+        session['user'] = faculty_user
+        return redirect(url_for('faculty_dashboard'))
+
     student_user = parse_student_email(email)
     if student_user:
         app.logger.info(f'LOGIN SUCCESS (Student): Parsed user "{email}"')
         session['user'] = student_user
         return redirect(url_for('student_dashboard'))
+
     app.logger.warning(f'LOGIN FAILED: Unknown user or invalid email format "{email}"')
     session['error'] = 'Invalid email or password.'
     return redirect(url_for('home'))
@@ -190,7 +250,6 @@ def logout():
 
 # --- Security Wrapper (Unchanged) ---
 def role_required(roles):
-    # Make sure roles is a list, even if a single string is passed
     if isinstance(roles, str):
         roles = [roles]
 
@@ -201,9 +260,10 @@ def role_required(roles):
                 flash('You do not have permission to access this page.', 'error')
                 return redirect(url_for('home'))
             return f(*args, **kwargs)
+
         return decorated_function
+
     return decorator
-# --- END: MODIFIED Security Wrapper ---
 
 
 # --- Student Routes ---
@@ -211,41 +271,99 @@ def role_required(roles):
 @role_required('student')
 def student_dashboard():
     user = session['user']
-
-    # --- START MODIFICATION ---
-    # Use the new helper function to get all component data
-    all_components = load_components()
-    # --- END MODIFICATION ---
-
+    all_components = get_augmented_components()
     all_requests = load_requests()
     my_requests = [req for req in all_requests if req['student_email'] == user['email']]
     today = datetime.date.today().strftime("%Y-%m-%d")
     max_date = (datetime.date.today() + datetime.timedelta(days=30)).strftime("%Y-%m-%d")
 
-    # Filter components for the *request form*
-    for comp in all_components:
-        comp['available'] = comp['working_quantity'] - comp['issued_quantity']
-    # --- END MODIFICATION ---
     available_components_for_form = [c for c in all_components if c['available'] > 0]
 
     return render_template('student_dashboard.html',
                            user=user,
-                           components=all_components,  # Pass augmented list to availability table
-                           available_components=available_components_for_form,  # Pass filtered list to form
+                           components=all_components,
+                           available_components=available_components_for_form,
                            my_requests=my_requests,
                            today=today,
                            max_date=max_date)
 
 
-# ... (in main.py, replace the old /request_component) ...
+@app.route('/cancel_request/<int:request_id>', methods=['POST'])
+def cancel_request(request_id):
+    if 'user' not in session:
+        flash('You must be logged in to perform this action.', 'error')
+        return redirect(url_for('home'))
 
-# --- START: HEAVILY MODIFIED REQUEST ROUTE (with Pre-flight Validation) ---
+    user_email = session['user']['email']
+    user_role = session['user']['role']
+
+    all_requests = load_requests()
+    target_request = next((req for req in all_requests if req['id'] == request_id), None)
+
+    if not target_request:
+        flash('Request not found.', 'error')
+        return redirect(request.referrer or url_for('home'))
+
+    cancel_remarks = request.form.get('cancel_remarks', '').strip()
+    if not cancel_remarks:
+        flash('Cancellation remarks are mandatory.', 'error')
+        return redirect(request.referrer or url_for('home'))
+
+    is_owner = target_request['student_email'] == user_email
+    is_technician = user_role == 'technician'
+
+    if not is_owner and not is_technician:
+        flash('You are not authorized to cancel this request.', 'error')
+        return redirect(request.referrer or url_for('home'))
+
+    cancellable_statuses = []
+    if is_owner:
+        cancellable_statuses.extend(['Pending Mentor', 'Pending Incharge', 'Approved', 'Pending Purchase'])
+    if is_technician:
+        cancellable_statuses.append('Approved')
+
+    if target_request['status'] in set(cancellable_statuses):
+        original_status = target_request['status']
+        target_request['status'] = 'Cancelled'
+        cancellation_remark = f"Cancelled by {user_role} ({user_email}): {cancel_remarks}"
+
+        # Store remark in a logical place
+        if original_status == 'Approved' and is_technician:
+            target_request['tech_remarks'] = cancellation_remark
+        else:
+            target_request['incharge_remarks'] = cancellation_remark
+
+        save_requests(all_requests)
+        audit_logger.info(
+            f'CANCELLED by {user_email}: Req #{request_id} (was {original_status}). Remarks: {cancel_remarks}')
+        flash(f'Request #{request_id} has been successfully cancelled.', 'success')
+    else:
+        flash(f'Request #{request_id} cannot be cancelled (Status: {target_request["status"]}).', 'error')
+
+    # Redirect back to the dashboard they came from
+    if user_role == 'student':
+        return redirect(url_for('student_dashboard'))
+    elif user_role == 'faculty':
+        return redirect(url_for('faculty_dashboard'))
+    elif user_role == 'technician':
+        return redirect(url_for('tech_dashboard'))
+    else:
+        return redirect(url_for('home'))
+
+
+# --- START: HEAVILY MODIFIED REQUEST ROUTE (Handles Project Types) ---
 @app.route('/request_component', methods=['POST'])
 @role_required('student')
 def request_component():
     user = session['user']
     all_requests = load_requests()
-    all_components = load_components()
+    all_components = get_augmented_components()
+
+    # --- NEW: Get the project type from the hidden input ---
+    project_type = request.form.get('project_type')
+    if not project_type:
+        flash('Error: Invalid request type. Please select a project type.', 'error')
+        return redirect(url_for('student_dashboard'))
 
     mentor_name = request.form.get('mentor_name')
     mentor_email = request.form.get('mentor_email')
@@ -253,43 +371,39 @@ def request_component():
     return_date_str = request.form.get('return_date')
     component_names = request.form.getlist('component[]')
     quantities = request.form.getlist('quantity[]')
-    for comp in all_components:
-        comp['available'] = comp['working_quantity'] - comp['issued_quantity']
+
     if not component_names or not quantities or len(component_names) != len(quantities):
         flash('Error: Mismatched component or quantity data. Please try again.', 'error')
         return redirect(url_for('student_dashboard'))
-    # --- START MODIFICATION: Server-side date check ---
+
     request_date_dt = datetime.datetime.now()
     return_date_dt = datetime.datetime.strptime(return_date_str, '%Y-%m-%d')
-
-    # --- THIS IS THE FIXED LINE ---
-    # We must compare .date() to .date()
     duration = (return_date_dt.date() - request_date_dt.date()).days + 1
+    approval_time = request_date_dt.strftime("%Y-%m-%d %H:%M")
 
-    if duration > 30:
-        flash(
-            f"Error: The selected return date is more than 30 days away. The maximum borrowing period is 30 days.",
-            'error')
-        return redirect(url_for('student_dashboard'))
-    if duration < 1:
-        flash(f"Error: The return date must be today or in the future.", 'error')
-        return redirect(url_for('student_dashboard'))
-    # --- END MODIFICATION ---
-    # --- START: NEW PRE-FLIGHT VALIDATION LOGIC ---
+    # --- Date validation based on project type ---
+    if project_type == 'Intra-Day':
+        if return_date_dt.date() != request_date_dt.date():
+            flash(f"Error: Intra-Day requests must be returned on the same day.", 'error')
+            return redirect(url_for('student_dashboard'))
+    else:  # Project Work & Competition
+        if duration > 30:
+            flash(f"Error: Return date is more than 30 days away. Max is 30 days.", 'error')
+            return redirect(url_for('student_dashboard'))
+        if duration < 1:
+            flash(f"Error: The return date must be today or in the future.", 'error')
+            return redirect(url_for('student_dashboard'))
 
-    # 1. Aggregate all requested items in the batch
+    # --- START: Pre-flight Validation (Same as before) ---
     batch_requirements = {}
     for i in range(len(component_names)):
-        comp_name = component_names[i].strip()  # Clean whitespace
+        comp_name = component_names[i].strip()
         try:
             quantity = int(quantities[i])
             if quantity <= 0:
                 flash(f"Error: Invalid quantity for '{comp_name}'. Must be 1 or more.", 'error')
                 return redirect(url_for('student_dashboard'))
-
-            # Add to the total needed for this batch
             batch_requirements[comp_name] = batch_requirements.get(comp_name, 0) + quantity
-
         except ValueError:
             flash(f"Error: Invalid quantity for '{comp_name}'.", 'error')
             return redirect(url_for('student_dashboard'))
@@ -298,54 +412,93 @@ def request_component():
         flash('Error: No valid components submitted.', 'error')
         return redirect(url_for('student_dashboard'))
 
-    # 2. Check aggregated requirements against the database
     for comp_name, total_needed in batch_requirements.items():
         component_obj = next((c for c in all_components if c['name'] == comp_name), None)
-
         if not component_obj:
-            flash(f"Error: Component name mismatch. Item '{comp_name}' does not exist.", 'error')
+            flash(f"Error: Component '{comp_name}' does not exist.", 'error')
             return redirect(url_for('student_dashboard'))
-
-        # --- MODIFICATION: Check new calculated availability ---
-        available_stock = component_obj['working_quantity'] - component_obj['issued_quantity']
-        if total_needed > available_stock:
-            flash(
-                f"Error: Insufficient stock for '{comp_name}'. You requested {total_needed}, but only {available_stock} are available.",
-                'error')
-            return redirect(url_for('student_dashboard'))
-
-        # Check 2: Insufficient Quantity
         if total_needed > component_obj['available']:
             flash(
-                f"Error: Insufficient stock for '{comp_name}'. You requested {total_needed}, but only {component_obj['available']} are available.",
+                f"Error: Insufficient stock for '{comp_name}'. Requested {total_needed}, only {component_obj['available']} available.",
                 'error')
             return redirect(url_for('student_dashboard'))
+    # --- END: Pre-flight Validation ---
 
-    # --- END: NEW PRE-FLIGHT VALIDATION LOGIC ---
-    # If we get here, all items are valid and in stock.
+    # --- START: Workflow Logic based on Project Type ---
+    batch_id = f"B-{request_date_dt.strftime('%Y%m%d%H%M%S')}"
+    log_message = ""
 
-    batch_id = f"B-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}"
-    batch_token = s.dumps(batch_id)
+    # Variables for the new_request object
+    new_status = ""
+    req_mentor_name = ""
+    req_mentor_email = ""
+    mentor_app_time = None
+    hod_app_time = None
+    incharge_app_email = None
+    incharge_app_time = None
+    mentor_remarks = None
+    incharge_remarks = None
+    batch_token = None
 
-    request_date = datetime.datetime.now()
-    return_date = datetime.datetime.strptime(return_date_str, '%Y-%m-%d')
-    duration = (return_date - request_date).days + 1
-    current_request_id = len(all_requests) + 1
+    if project_type == 'Intra-Day':
+        # Auto-approve and send straight to technician
+        new_status = "Approved"
+        req_mentor_name = "N/A (Intra-Day)"
+        req_mentor_email = "N/A"
+        mentor_app_time = approval_time
+        hod_app_time = approval_time  # Bypass HOD
+        incharge_app_email = "System (Intra-Day)"
+        incharge_app_time = approval_time  # Bypass Incharge approval
+        mentor_remarks = "Intra-Day Activity"
+        incharge_remarks = "Auto-approved for Technician Issue."
+        batch_token = None  # No mentor link needed
+        log_message = f'INTRA-DAY BATCH SUBMITTED: User "{user["email"]}" batch {batch_id}. Auto-approved for Technician.'
+
+    elif project_type == 'Project Work':
+        # NEW: Project Work flow (Bypass Mentor, goes to Incharge)
+        new_status = "Pending Incharge"
+        req_mentor_name = "N/A (Project Work)"
+        req_mentor_email = "N/A"
+        mentor_app_time = approval_time  # Auto-bypass mentor
+        hod_app_time = approval_time  # Auto-bypass HOD
+        incharge_app_email = None  # Needs Incharge approval
+        incharge_app_time = None  # Needs Incharge approval
+        mentor_remarks = "Project Work (Mentor Bypassed)"
+        incharge_remarks = None
+        batch_token = None  # No mentor link needed
+        log_message = f'PROJECT WORK BATCH SUBMITTED: User "{user["email"]}" batch {batch_id}. Awaiting Incharge.'
+
+    else:  # Competition (or any other type)
+        # Standard Mentor -> Incharge workflow
+        new_status = "Pending Mentor"
+        req_mentor_name = mentor_name
+        req_mentor_email = mentor_email
+        mentor_app_time = None
+        hod_app_time = None
+        incharge_app_email = None
+        incharge_app_time = None
+        mentor_remarks = None
+        incharge_remarks = None
+        batch_token = s.dumps(batch_id)  # Needs mentor approval
+        log_message = f'REQUEST BATCH SUBMITTED: User "{user["email"]}" batch {batch_id} ({project_type}). Awaiting Mentor.'
+
+    # --- END: Workflow Logic ---
+
+    current_request_id = (max(req['id'] for req in all_requests) if all_requests else 0) + 1
     new_requests_list = []
 
-    # Create the individual request objects (now that we know they are valid)
     for comp_name, quantity in batch_requirements.items():
         component_obj = next((c for c in all_components if c['name'] == comp_name), None)
 
         new_request = {
             "id": current_request_id,
             "batch_id": batch_id,
-            "status": "Pending Mentor",
-            "request_timestamp": request_date.strftime("%Y-%m-%d %H:%M"),
-            # --- START MODIFICATION: Add new remark fields ---
+            "request_type": "borrow",
+            "project_type": project_type,  # --- NEW FIELD ---
+            "status": new_status,
+            "request_timestamp": request_date_dt.strftime("%Y-%m-%d %H:%M"),
             "hod_remarks": None,
-            "incharge_remarks": None,
-            # --- END MODIFICATION ---
+            "incharge_remarks": incharge_remarks,
             "student_email": user['email'],
             "student_name": user['name'],
             "student_dept": user['department'],
@@ -356,45 +509,39 @@ def request_component():
             "project_description": project_description,
             "due_date": return_date_str,
             "duration_days": duration,
-            "mentor_name": mentor_name,
-            "mentor_email": mentor_email,
+            "mentor_name": req_mentor_name,
+            "mentor_email": req_mentor_email,
             "mentor_approval_token": batch_token,
-            "mentor_remarks": None,
-            "mentor_approval_timestamp": None,
-            "hod_approval_timestamp": None,
-            "approver_email": None,
-            "approval_timestamp": None,
+            "mentor_remarks": mentor_remarks,
+            "mentor_approval_timestamp": mentor_app_time,
+            "hod_approval_timestamp": hod_app_time,
+            "approver_email": incharge_app_email,
+            "approval_timestamp": incharge_app_time,
             "issue_timestamp": None,
             "actual_return_timestamp": None,
-            # --- START: ADD THESE NEW FIELDS ---
             "working_count": None,
             "not_working_count": None,
-            "tech_remarks": None
-            # --- END: ADD THESE NEW FIELDS ---
+            "tech_remarks": None,
+            "purchase_link": None
         }
-
         new_requests_list.append(new_request)
         current_request_id += 1
 
     all_requests.extend(new_requests_list)
     save_requests(all_requests)
 
-    app.logger.info(
-        f'REQUEST BATCH SUBMITTED: User "{user["email"]}" submitted batch {batch_id} with {len(new_requests_list)} items. Awaiting Mentor.')
-    flash(f'{len(new_requests_list)} component request(s) have been validated and submitted as a batch.', 'success')
+    app.logger.info(log_message)
+    flash(f'{len(new_requests_list)} component request(s) for {project_type} have been submitted.', 'success')
     return redirect(url_for('student_dashboard'))
 
 
-# --- END: HEAVILY MODIFIED REQUEST ROUTE ---
-
 # --- END: MODIFIED /request_component ---
 
-# --- START: MODIFIED /approve/mentor/<token> ---
+
 @app.route('/approve/mentor/<token>', methods=['GET', 'POST'])
 def mentor_approval(token):
     try:
-        # --- MODIFICATION: Token now contains the batch_id ---
-        batch_id = s.loads(token, max_age=259200)
+        batch_id = s.loads(token, max_age=259200)  # 72 hours
     except SignatureExpired:
         return render_template('mentor_response.html', title="Expired",
                                message="This approval link has expired (older than 72 hours). Please ask the student to resubmit their request."), 400
@@ -403,13 +550,10 @@ def mentor_approval(token):
                                message="This approval link is invalid or has already been used."), 400
 
     all_requests = load_requests()
-
-    # --- MODIFICATION: Find *all* requests in the batch that are pending ---
     batch_requests = [req for req in all_requests if
                       req.get('batch_id') == batch_id and req['status'] == 'Pending Mentor']
 
     if not batch_requests:
-        # Check if they were *already* processed
         already_processed = any(req.get('batch_id') == batch_id for req in all_requests)
         if already_processed:
             return render_template('mentor_response.html', title="Already Processed",
@@ -418,27 +562,18 @@ def mentor_approval(token):
             return render_template('mentor_response.html', title="Not Found",
                                    message="This request batch could not be found."), 404
 
-        # ... in main.py, inside @app.route('/approve/mentor/<token>', methods=['GET', 'POST']) ...
-
     if request.method == 'POST':
-        new_status = request.form.get('new_status')  # "Approved" or "Rejected"
+        new_status = request.form.get('new_status')
         mentor_remarks = request.form.get('mentor_remarks', '').strip()
-
-        # --- START: MODIFIED BACKEND VALIDATION ---
-
-
-        # This logic now runs only if:
-        # 1. The status is "Rejected"
-        # 2. The status is "Approved" AND the disclaimer was checked
-
         approval_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
         for req in batch_requests:
             req['mentor_approval_timestamp'] = approval_time
             req['mentor_approval_token'] = None
             req['mentor_remarks'] = mentor_remarks if mentor_remarks else None
 
             if new_status == 'Approved':
-                req['status'] = 'Pending HOD'
+                req['status'] = 'Pending Incharge'  # Skip HOD
             elif new_status == 'Rejected':
                 req['status'] = 'Rejected'
 
@@ -446,7 +581,7 @@ def mentor_approval(token):
 
         if new_status == 'Approved':
             return render_template('mentor_response.html', title="Approved",
-                                   message="Thank you. The request batch has been approved and forwarded to the HOD.")
+                                   message="Thank you. The request batch has been approved and forwarded to the Lab Incharge.")
         else:
             return render_template('mentor_response.html', title="Rejected",
                                    message="The request batch has been marked as rejected.")
@@ -458,217 +593,237 @@ def mentor_approval(token):
                            token=token)
 
 
-# --- START: MODIFIED MENTOR DASHBOARD ROUTES ---
-@app.route('/mentor_dashboard')
-@role_required('mentor')
-def mentor_dashboard():
-    all_requests = load_requests()
-    pending_mentor_requests = [req for req in all_requests if req['status'] == 'Pending Mentor']
-    pending_mentor_requests.sort(key=lambda x: x['request_timestamp'], reverse=True)
-
-    # --- MODIFICATION: Group requests by batch_id for the template ---
-    grouped_requests = {}
-    for req in pending_mentor_requests:
-        batch_id = req.get('batch_id')
-        if not batch_id:
-            # Handle old requests without a batch_id as individual batches
-            batch_id = f"req-{req['id']}"
-
-        if batch_id not in grouped_requests:
-            grouped_requests[batch_id] = []
-        grouped_requests[batch_id].append(req)
-
-    return render_template('mentor_dashboard.html',
-                           user=session['user'],
-                           grouped_requests=grouped_requests)  # Pass grouped data
-
-
-@app.route('/mentor/update_request', methods=['POST'])
-@role_required('mentor')
-def mentor_update_request():
-    # --- MODIFICATION: We now receive batch_id instead of request_id ---
-    batch_id = request.form.get('batch_id')
-    new_status = request.form.get('new_status')
-
-    if not batch_id:
-        flash('Error: No Batch ID provided.', 'error')
-        return redirect(url_for('mentor_dashboard'))
-
+# --- Faculty Routes (Unchanged) ---
+@app.route('/faculty_dashboard')
+@role_required('faculty')
+def faculty_dashboard():
+    user = session['user']
+    all_components = get_augmented_components()
     all_requests = load_requests()
 
-    # Find all requests in this batch
-    if batch_id.startswith('req-'):
-        # Handle single, non-batch request
-        req_id = int(batch_id.split('-')[1])
-        batch_requests = [req for req in all_requests if req['id'] == req_id and req['status'] == 'Pending Mentor']
-    else:
-        # Handle normal batch
-        batch_requests = [req for req in all_requests if
-                          req.get('batch_id') == batch_id and req['status'] == 'Pending Mentor']
+    my_requests = [req for req in all_requests if req['student_email'] == user['email']]
+    my_requests.sort(key=lambda x: x['request_timestamp'], reverse=True)
 
-    if not batch_requests:
-        flash('Error: Request batch not found or already processed.', 'error')
-        return redirect(url_for('mentor_dashboard'))
+    available_components_for_form = [c for c in all_components if c['available'] > 0]
+    today = datetime.date.today().strftime("%Y-%m-%d")
 
-    approval_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-
-    # --- MODIFICATION: Update all requests in the batch ---
-    for req in batch_requests:
-        req['mentor_approval_timestamp'] = approval_time
-        req['mentor_approval_token'] = None  # Invalidate token
-        # Note: No remarks from dashboard
-        if new_status == 'Approved':
-            req['status'] = 'Pending HOD'
-        elif new_status == 'Rejected':
-            req['status'] = 'Rejected'
-
-    save_requests(all_requests)
-
-    if new_status == 'Approved':
-        flash(f'Request batch {batch_id} approved and forwarded to HOD.', 'success')
-    elif new_status == 'Rejected':
-        flash(f'Request batch {batch_id} has been rejected.', 'success')
-
-    return redirect(url_for('mentor_dashboard'))
+    return render_template('faculty_dashboard.html',
+                           user=user,
+                           components=all_components,
+                           available_components=available_components_for_form,
+                           my_requests=my_requests,
+                           today=today)
 
 
-# --- END: MODIFIED MENTOR DASHBOARD ROUTES ---
+@app.route('/faculty_request', methods=['POST'])
+@role_required('faculty')
+def faculty_request():
+    user = session['user']
+    all_requests = load_requests()
+    all_components = get_augmented_components()
+    request_type = request.form.get('request_type')
 
-# ... (in main.py, HOD Routes section) ...
+    batch_id = f"B-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}"
+    request_date = datetime.datetime.now()
+    current_request_id = (max(req['id'] for req in all_requests) if all_requests else 0) + 1
+    approval_time = request_date.strftime("%Y-%m-%d %H:%M")
 
-# --- START: MODIFIED HOD ROUTES (for Batch Approval) ---
+    if request_type == 'borrow':
+        project_description = request.form.get('project_description')
+        return_date_str = request.form.get('return_date')
+        component_names = request.form.getlist('component[]')
+        quantities = request.form.getlist('quantity[]')
+
+        if not component_names or not quantities or len(component_names) != len(quantities):
+            flash('Error: Mismatched component or quantity data.', 'error')
+            return redirect(url_for('faculty_dashboard'))
+
+        return_date_dt = datetime.datetime.strptime(return_date_str, '%Y-%m-%d')
+        duration = (return_date_dt.date() - request_date.date()).days + 1
+
+        if duration < 1:
+            flash(f"Error: The return date must be today or in the future.", 'error')
+            return redirect(url_for('faculty_dashboard'))
+
+        batch_requirements = {}
+        for i in range(len(component_names)):
+            comp_name = component_names[i].strip()
+            try:
+                quantity = int(quantities[i])
+                if quantity <= 0:
+                    flash(f"Error: Invalid quantity for '{comp_name}'.", 'error')
+                    return redirect(url_for('faculty_dashboard'))
+                batch_requirements[comp_name] = batch_requirements.get(comp_name, 0) + quantity
+            except ValueError:
+                flash(f"Error: Invalid quantity for '{comp_name}'.", 'error')
+                return redirect(url_for('faculty_dashboard'))
+
+        if not batch_requirements:
+            flash('Error: No valid components submitted.', 'error')
+            return redirect(url_for('faculty_dashboard'))
+
+        for comp_name, total_needed in batch_requirements.items():
+            component_obj = next((c for c in all_components if c['name'] == comp_name), None)
+            if not component_obj:
+                flash(f"Error: Item '{comp_name}' does not exist.", 'error')
+                return redirect(url_for('faculty_dashboard'))
+            if total_needed > component_obj['available']:
+                flash(
+                    f"Error: Insufficient stock for '{comp_name}'. Requested {total_needed}, available {component_obj['available']}.",
+                    'error')
+                return redirect(url_for('faculty_dashboard'))
+
+        new_requests_list = []
+        for comp_name, quantity in batch_requirements.items():
+            component_obj = next((c for c in all_components if c['name'] == comp_name), None)
+            new_request = {
+                "id": current_request_id,
+                "batch_id": batch_id,
+                "request_type": "borrow",
+                "project_type": "Faculty Project",  # --- NEW FIELD ---
+                "status": "Pending Incharge",
+                "request_timestamp": request_date.strftime("%Y-%m-%d %H:%M"),
+                "hod_remarks": None,
+                "incharge_remarks": None,
+                "student_email": user['email'],
+                "student_name": user['name'],
+                "student_dept": user['department'],
+                "student_year": None,
+                "component_id": component_obj['id'],
+                "component_name": component_obj['name'],
+                "quantity": quantity,
+                "project_description": project_description,
+                "due_date": return_date_str,
+                "duration_days": duration,
+                "mentor_name": "Faculty (Self-Approved)",
+                "mentor_email": user['email'],
+                "mentor_approval_token": None,
+                "mentor_remarks": "Faculty Request",
+                "mentor_approval_timestamp": approval_time,
+                "hod_approval_timestamp": approval_time,
+                "approver_email": None,
+                "approval_timestamp": None,
+                "issue_timestamp": None,
+                "actual_return_timestamp": None,
+                "working_count": None,
+                "not_working_count": None,
+                "tech_remarks": None,
+                "purchase_link": None
+            }
+            new_requests_list.append(new_request)
+            current_request_id += 1
+
+        all_requests.extend(new_requests_list)
+        save_requests(all_requests)
+        app.logger.info(
+            f'FACULTY BORROW REQUEST: User "{user["email"]}" submitted batch {batch_id}. Bypassed to Incharge.')
+        flash(f'{len(new_requests_list)} component request(s) submitted and sent to Lab Incharge.', 'success')
+
+    elif request_type == 'purchase':
+        purchase_comp_name = request.form.get('purchase_component_name').strip()
+        purchase_quantity = int(request.form.get('purchase_quantity'))
+        purchase_project = request.form.get('purchase_project').strip()
+        purchase_link = request.form.get('purchase_link', '').strip()
+
+        if not purchase_comp_name or purchase_quantity <= 0 or not purchase_project:
+            flash('Error: All fields are required for a purchase request.', 'error')
+            return redirect(url_for('faculty_dashboard'))
+
+        new_purchase_request = {
+            "id": current_request_id,
+            "batch_id": batch_id,
+            "request_type": "purchase",
+            "project_type": "Faculty Purchase",  # --- NEW FIELD ---
+            "status": "Pending Incharge",
+            "request_timestamp": request_date.strftime("%Y-%m-%d %H:%M"),
+            "hod_remarks": None,
+            "incharge_remarks": None,
+            "student_email": user['email'],
+            "student_name": user['name'],
+            "student_dept": user['department'],
+            "student_year": None,
+            "component_id": "PURCHASE",
+            "component_name": purchase_comp_name,
+            "quantity": purchase_quantity,
+            "project_description": purchase_project,
+            "due_date": None,
+            "duration_days": None,
+            "mentor_name": "Faculty (Self-Approved)",
+            "mentor_email": user['email'],
+            "mentor_approval_token": None,
+            "mentor_remarks": "Faculty Purchase Request",
+            "mentor_approval_timestamp": approval_time,
+            "hod_approval_timestamp": approval_time,
+            "approver_email": None,
+            "approval_timestamp": None,
+            "issue_timestamp": None,
+            "actual_return_timestamp": None,
+            "working_count": None,
+            "not_working_count": None,
+            "tech_remarks": None,
+            "purchase_link": purchase_link if purchase_link else None
+        }
+
+        all_requests.append(new_purchase_request)
+        save_requests(all_requests)
+        app.logger.info(
+            f'FACULTY PURCHASE REQUEST: User "{user["email"]}" submitted batch {batch_id} for "{purchase_comp_name}". Awaiting Incharge.')
+        flash('New component purchase request submitted and sent to Incharge for approval.', 'success')
+
+    return redirect(url_for('faculty_dashboard'))
+
+
+# --- HOD Routes (Unchanged) ---
 @app.route('/hod_dashboard')
 @role_required('hod')
 def hod_dashboard():
-    # --- START MODIFICATION ---
     all_requests = load_requests()
-    components = all_components = load_components()
-    for comp in all_components:
-        comp['available_for_issue'] = comp['working_quantity'] - comp['issued_quantity']
-    # --- END MODIFICATION ---
-    available_components_for_form = [c for c in all_components if c['available_for_issue'] > 0]
-    # Load components
-
-    # 1. Get requests for the 'Pending' tab
-    pending_hod_requests = []
-    # 2. Get requests for the 'History' tab
-    other_requests = []
-
-    for req in all_requests:
-        if req['status'] == 'Pending HOD':
-            pending_hod_requests.append(req)
-        else:
-            other_requests.append(req)  # All other requests go to history
-
-    pending_hod_requests.sort(key=lambda x: x['request_timestamp'], reverse=True)
-    other_requests.sort(key=lambda x: x['request_timestamp'], reverse=True)
-
-    # Group the pending ones by batch_id
-    grouped_requests = {}
-    for req in pending_hod_requests:
-        batch_id = req.get('batch_id', f"req-{req['id']}")
-        if batch_id not in grouped_requests:
-            grouped_requests[batch_id] = []
-        grouped_requests[batch_id].append(req)
+    components = get_augmented_components()
+    other_requests = sorted(all_requests, key=lambda x: x['request_timestamp'], reverse=True)
 
     return render_template('hod_dashboard.html',
                            user=session['user'],
-                           grouped_requests=grouped_requests,
-                           other_requests=other_requests,  # Pass history
-                           components=components)  # Pass components
-
-# ... in main.py, replace the entire @app.route('/hod/update_request') function ...
-
-@app.route('/hod/update_request', methods=['POST'])
-@role_required('hod')
-def hod_update_request():
-    batch_id = request.form.get('batch_id')
-    new_status = request.form.get('new_status')
-
-    # --- START MODIFICATION: Get remarks from form ---
-    hod_remarks = request.form.get('hod_remarks', '').strip()
-    # --- END MODIFICATION ---
-
-    if not batch_id:
-        flash('Error: No Batch ID provided.', 'error')
-        return redirect(url_for('hod_dashboard'))
-
-    all_requests = load_requests()
-
-    if batch_id.startswith('req-'):
-        req_id = int(batch_id.split('-')[1])
-        batch_requests = [req for req in all_requests if req['id'] == req_id and req['status'] == 'Pending HOD']
-    else:
-        batch_requests = [req for req in all_requests if
-                          req.get('batch_id') == batch_id and req['status'] == 'Pending HOD']
-
-    if not batch_requests:
-        flash('Error: Request batch not found or already processed.', 'error')
-        return redirect(url_for('hod_dashboard'))
-
-    approval_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-
-    for req in batch_requests:
-        req['hod_approval_timestamp'] = approval_time
-
-        # --- START MODIFICATION: Save remarks ---
-        req['hod_remarks'] = hod_remarks if hod_remarks else None
-        # --- END MODIFICATION ---
-
-        if new_status == 'Approved':
-            req['status'] = 'Pending Incharge'
-        elif new_status == 'Rejected':
-            req['status'] = 'Rejected'
-
-    save_requests(all_requests)
-
-    if new_status == 'Approved':
-        flash(f'Request batch {batch_id} approved and forwarded to Lab Incharge.', 'success')
-    elif new_status == 'Rejected':
-        flash(f'Request batch {batch_id} has been rejected (Remarks saved).', 'success')
-
-    return redirect(url_for('hod_dashboard'))
-# --- END: MODIFIED HOD ROUTES ---
-@app.route('/admin')
-@role_required('admin')
-def admin_dashboard():
-    all_requests = load_requests()
-
-    components = all_components = load_components()
-    for comp in all_components:
-        comp['available_for_issue'] = comp['working_quantity'] - comp['issued_quantity']
-    # --- END MODIFICATION ---
-    # available_components_for_form = [c for c in all_components if c['available'] > 0]
-    # --- MODIFICATION: Split requests into pending batches and history ---
-    pending_incharge_requests = []
-    other_requests = []
-    for req in all_requests:
-        if req['status'] == 'Pending Incharge':
-            pending_incharge_requests.append(req)
-        else:
-            other_requests.append(req)
-
-    # Group the pending ones by batch_id
-    grouped_pending_requests = {}
-    for req in pending_incharge_requests:
-        # Use batch_id, or treat single legacy requests as their own batch
-        batch_id = req.get('batch_id', f"req-{req['id']}")
-        if batch_id not in grouped_pending_requests:
-            grouped_pending_requests[batch_id] = []
-        grouped_pending_requests[batch_id].append(req)
-
-    # Sort the history
-    other_requests.sort(key=lambda x: x['request_timestamp'], reverse=True)
-
-    return render_template('admin_dashboard.html',
-                           user=session['user'],
-                           # Pass the new grouped data
-                           grouped_pending_requests=grouped_pending_requests,
                            other_requests=other_requests,
                            components=components)
 
 
-# ... in main.py, replace the entire @app.route('/admin/update_request') function ...
+# --- Admin (Incharge) Routes ---
+@app.route('/admin')
+@role_required('admin')
+def admin_dashboard():
+    all_requests = load_requests()
+    components = get_augmented_components()
+
+    pending_incharge_borrow = []
+    pending_incharge_purchases = []
+    other_requests = []
+
+    for req in all_requests:
+        if req['status'] == 'Pending Incharge':
+            if req.get('request_type') == 'purchase':
+                pending_incharge_purchases.append(req)
+            else:
+                pending_incharge_borrow.append(req)
+        else:
+            other_requests.append(req)
+
+    grouped_pending_borrow = {}
+    for req in pending_incharge_borrow:
+        batch_id = req.get('batch_id', f"req-{req['id']}")
+        if batch_id not in grouped_pending_borrow:
+            grouped_pending_borrow[batch_id] = []
+        grouped_pending_borrow[batch_id].append(req)
+
+    other_requests.sort(key=lambda x: x['request_timestamp'], reverse=True)
+    pending_incharge_purchases.sort(key=lambda x: x['request_timestamp'], reverse=True)
+
+    return render_template('admin_dashboard.html',
+                           user=session['user'],
+                           grouped_pending_requests=grouped_pending_borrow,
+                           pending_purchases=pending_incharge_purchases,
+                           other_requests=other_requests,
+                           components=components)
+
 
 @app.route('/admin/update_request', methods=['POST'])
 @role_required('admin')
@@ -676,13 +831,10 @@ def admin_update_request():
     batch_id = request.form.get('batch_id')
     new_status = request.form.get('new_status')  # "Approved" or "Rejected"
     admin_user = session['user']
-
-    # --- START MODIFICATION: Get remarks from form ---
     incharge_remarks = request.form.get('incharge_remarks', '').strip()
-    # --- END MODIFICATION ---
 
     all_requests = load_requests()
-    all_components = load_components()
+    all_components = get_augmented_components()
 
     if not batch_id:
         flash('Error: No Batch ID provided.', 'error')
@@ -700,63 +852,40 @@ def admin_update_request():
         return redirect(url_for('admin_dashboard'))
 
     approval_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-
     approved_count = 0
     rejected_count = 0
 
-    # --- START: NEW PARTIAL APPROVAL LOGIC ---
     for req in batch_requests:
         req['approval_timestamp'] = approval_time
         req['approver_email'] = admin_user['email']
 
         if new_status == 'Approved':
-            # --- START: NEW PARTIAL APPROVAL LOGIC ---
-            for req in batch_requests:
-                req['approval_timestamp'] = approval_time
-                req['approver_email'] = admin_user['email']
-
-                target_component = next((comp for comp in all_components if comp['name'] == req['component_name']),
-                                        None)
-
-                # Check stock for *this specific item*
-                if target_component:
-                    available_stock = target_component['working_quantity'] - target_component['issued_quantity']
-
-                    if available_stock >= req['quantity']:
-                        # Stock is OK! Approve and update issued_quantity.
-                        target_component['issued_quantity'] += req['quantity']
-
-                        req['status'] = 'Approved'
-                        req['incharge_remarks'] = incharge_remarks if incharge_remarks else "Approved."
-                        approved_count += 1
-
-                        audit_logger.info(
-                            f'APPROVAL by {admin_user["email"]}: Req #{req["id"]}. Item {req["component_name"]} issued.')
-                    else:
-                        # Stock is NOT OK! Auto-reject this item.
-                        req['status'] = 'Rejected'
-                        rejection_note = f"Auto-rejected: Insufficient stock (Only {available_stock} available)."
-                        req['incharge_remarks'] = f"{rejection_note} {incharge_remarks}".strip()
-                        rejected_count += 1
+            target_component = next((comp for comp in all_components if comp['name'] == req['component_name']), None)
+            if target_component:
+                available_stock = target_component['available']
+                if available_stock >= req['quantity']:
+                    req['status'] = 'Approved'
+                    req['incharge_remarks'] = incharge_remarks if incharge_remarks else "Approved."
+                    approved_count += 1
+                    audit_logger.info(
+                        f'APPROVAL by {admin_user["email"]}: Req #{req["id"]}. Item {req["component_name"]} approved for issue.')
                 else:
-                    # Component not found in DB
                     req['status'] = 'Rejected'
-                    req[
-                        'incharge_remarks'] = f"Auto-rejected: Component not found in database. {incharge_remarks}".strip()
+                    rejection_note = f"Auto-rejected: Insufficient stock (Only {available_stock} available.)"
+                    req['incharge_remarks'] = f"{rejection_note} {incharge_remarks}".strip()
                     rejected_count += 1
-            # --- END: NEW PARTIAL APPROVAL LOGIC ---
+            else:
+                req['status'] = 'Rejected'
+                req['incharge_remarks'] = f"Auto-rejected: Component not found in database. {incharge_remarks}".strip()
+                rejected_count += 1
 
         elif new_status == 'Rejected':
-            # Admin is manually rejecting the whole batch
             req['status'] = 'Rejected'
             req['incharge_remarks'] = incharge_remarks if incharge_remarks else "Manually Rejected."
             rejected_count += 1
-    # --- END: NEW PARTIAL APPROVAL LOGIC ---
 
-    save_components(all_components)  # Save stock changes
-    save_requests(all_requests)  # Save request status changes
+    save_requests(all_requests)
 
-    # Flash a summary message
     if approved_count > 0 and rejected_count > 0:
         flash(
             f'Batch {batch_id} partially approved: {approved_count} item(s) approved, {rejected_count} item(s) rejected (insufficient stock).',
@@ -767,7 +896,40 @@ def admin_update_request():
         flash(f'Batch {batch_id} fully rejected ({rejected_count} item(s)).', 'success')
 
     return redirect(url_for('admin_dashboard'))
-# --- END: MODIFIED Admin (Incharge) Routes ---
+
+
+@app.route('/admin/update_purchase_request', methods=['POST'])
+@role_required('admin')
+def admin_update_purchase_request():
+    request_id = int(request.form.get('request_id'))
+    new_status = request.form.get('new_status')
+    incharge_remarks = request.form.get('incharge_remarks', '').strip()
+    admin_user = session['user']
+
+    all_requests = load_requests()
+    target_request = next(
+        (req for req in all_requests if req['id'] == request_id and req['status'] == 'Pending Incharge'), None)
+
+    if not target_request:
+        flash('Error: Purchase request not found or already processed.', 'error')
+        return redirect(url_for('admin_dashboard'))
+
+    approval_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    target_request['approval_timestamp'] = approval_time
+    target_request['approver_email'] = admin_user['email']
+    target_request['incharge_remarks'] = incharge_remarks if incharge_remarks else None
+
+    if new_status == 'Purchased':
+        target_request['status'] = 'Purchased'
+        flash(f'Purchase request #{request_id} marked as PURCHASED.', 'success')
+        audit_logger.info(
+            f'PURCHASE by {admin_user["email"]}: Req #{request_id} ({target_request["component_name"]}) marked as Purchased.')
+    else:
+        target_request['status'] = 'Rejected'
+        flash(f'Purchase request #{request_id} rejected by Incharge.', 'success')
+
+    save_requests(all_requests)
+    return redirect(url_for('admin_dashboard'))
 
 
 @app.route('/admin/download_report')
@@ -779,34 +941,37 @@ def admin_download_report():
         return redirect(url_for('admin_dashboard'))
     output = io.StringIO()
     writer = csv.writer(output)
+
+    # --- ADDED 'Project Type' to headers ---
     headers = [
-        'Request ID', 'Batch ID', 'Student ID', 'Student name', 'Department', 'Year of study',
-        'Component ID', 'Component Name', 'Quantity', 'Purpose', 'Duration (Days)', 'Status',
-        'Mentor Name', 'Mentor Approval',
-        # --- START MODIFICATION ---
-        'Mentor Remarks', 'HOD Approval', 'HOD Remarks',
+        'Request ID', 'Batch ID', 'Request Type', 'Project Type', 'Student ID', 'Student name', 'Department',
+        'Year of study',
+        'Component ID', 'Component Name', 'Quantity', 'Purpose', 'Purchase Link', 'Duration (Days)', 'Status',
+        'Mentor Name', 'Mentor Approval', 'Mentor Remarks',
+        'HOD Approval', 'HOD Remarks',
         'Incharge Approval', 'Incharge Remarks',
-        # --- END MODIFICATION ---
-        'Component Issue Time', 'Due date', 'Date of return','Working Returned', 'Not Working Returned', 'Technician Remarks'
+        'Component Issue Time', 'Due date', 'Date of return',
+        'Working Returned', 'Not Working Returned', 'Technician Remarks'
     ]
     writer.writerow(headers)
     for req in all_requests:
         writer.writerow([
-            req.get('id', 'N/A'), req.get('batch_id', 'N/A'), req.get('student_email', 'N/A'),
+            req.get('id', 'N/A'), req.get('batch_id', 'N/A'), req.get('request_type', 'borrow'),
+            req.get('project_type', 'N/A'),  # --- ADDED 'project_type' field ---
+            req.get('student_email', 'N/A'),
             req.get('student_name', 'N/A'), req.get('student_dept', 'N/A'),
             req.get('student_year', 'N/A'), req.get('component_id', 'N/A'),
             req.get('component_name', 'N/A'), req.get('quantity', 'N/A'),
             req.get('project_description', 'N/A'),
+            req.get('purchase_link', 'N/A'),
             req.get('duration_days', 'N/A'), req.get('status', 'N/A'),
             req.get('mentor_name', 'N/A'),
             req.get('mentor_approval_timestamp', 'N/A'),
-            # --- START MODIFICATION ---
             req.get('mentor_remarks', 'N/A'),
             req.get('hod_approval_timestamp', 'N/A'),
             req.get('hod_remarks', 'N/A'),
-            req.get('approver_email', 'N/A'),  # This is Incharge Approval
+            req.get('approver_email', 'N/A'),
             req.get('incharge_remarks', 'N/A'),
-            # --- END MODIFICATION ---
             req.get('issue_timestamp', 'N/A'),
             req.get('due_date', 'N/A'), req.get('actual_return_timestamp', 'N/A'),
             req.get('working_count', 'N/A'),
@@ -824,13 +989,19 @@ def admin_download_report():
 @app.route('/admin/download_audit_log')
 @role_required(['admin', 'hod'])
 def admin_download_audit_log():
-    approval_pattern = re.compile(r"APPROVAL by (.*?): Req #(\d+). Stock (.*?) (\d+) -> (\d+)")
-    collection_pattern = re.compile(r"COLLECTION by (.*?): Req #(\d+). Stock (.*?) (\d+) -> (\d+)")
-    manual_pattern = re.compile(r'MANUAL UPDATE by (.*?): "(.*?)".*?Avail: (\d+) -> (\d+)')
+    approval_pattern = re.compile(r"APPROVAL by (.*?): Req #(\d+). Item (.*?) approved for issue.")
+    issue_pattern = re.compile(r"ISSUE by (.*?): Req #(\d+). Stock (.*?) issued (\d+) -> (\d+)")
+    collection_pattern = re.compile(r"COLLECTION by (.*?): Req #(\d+). (\d+) working, (\d+) not working.")
+    manual_pattern = re.compile(r'MANUAL UPDATE by (.*?): "(.*?)".*?Total: (\d+)->(\d+), Working: (\d+)->(\d+)')
+    new_comp_pattern = re.compile(r'NEW COMPONENT by (.*?): "(.*?)".*?Total: (\d+), Working: (\d+)')
+    purchase_pattern = re.compile(r'PURCHASE by (.*?): Req #(\d+) \((.*?)\) marked as Purchased.')
+    cancel_pattern = re.compile(r'CANCELLED by (.*?): Req #(\d+)')  # Added cancel
+
     output = io.StringIO()
     writer = csv.writer(output)
-    headers = ['Time (IST)', 'Action', 'Performed By', 'Req ID', 'Item', 'From(quantity)', 'To(quantity)']
+    headers = ['Time (IST)', 'Action', 'Performed By', 'Req ID', 'Item', 'Details']
     writer.writerow(headers)
+
     try:
         with open('audit.log', 'r') as f:
             for line in f:
@@ -838,24 +1009,57 @@ def admin_download_audit_log():
                     timestamp, message = line.strip().split(' - ', 1)
                 except ValueError:
                     continue
-                action, performed_by, req_id, item, qty_from, qty_to = ('UNKNOWN', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A')
+
+                action, performed_by, req_id, item, details = ('UNKNOWN', 'N/A', 'N/A', 'N/A', 'N/A')
+
                 match_approval = approval_pattern.search(message)
+                match_issue = issue_pattern.search(message)
                 match_collection = collection_pattern.search(message)
                 match_manual = manual_pattern.search(message)
+                match_new_comp = new_comp_pattern.search(message)
+                match_purchase = purchase_pattern.search(message)
+                match_cancel = cancel_pattern.search(message)  # Added cancel
+
                 if match_approval:
-                    action = 'APPROVAL'
-                    performed_by, req_id, item, qty_from, qty_to = match_approval.groups()
+                    action = 'APPROVAL (INCHARGE)'
+                    performed_by, req_id, item = match_approval.groups()
+                    details = "Approved for issue"
+                elif match_issue:
+                    action = 'ISSUE (TECHNICIAN)'
+                    performed_by, req_id, item, qty_from, qty_to = match_issue.groups()
+                    details = f"Issued quantity {qty_from} -> {qty_to}"
                 elif match_collection:
-                    action = 'COLLECTION'
-                    performed_by, req_id, item, qty_from, qty_to = match_collection.groups()
+                    action = 'COLLECTION (RETURN)'
+                    performed_by, req_id, working, not_working = match_collection.groups()
+                    item = "N/A (See Req ID)"
+                    details = f"{working} working, {not_working} not working"
                 elif match_manual:
                     action = 'MANUAL UPDATE'
-                    performed_by, item, qty_from, qty_to = match_manual.groups()
+                    performed_by, item, t_from, t_to, w_from, w_to = match_manual.groups()
                     req_id = 'N/A'
-                writer.writerow([timestamp, action, performed_by, req_id, item, qty_from, qty_to])
+                    details = f"Total: {t_from}->{t_to}, Working: {w_from}->{w_to}"
+                elif match_new_comp:
+                    action = 'NEW COMPONENT'
+                    performed_by, item, total, working = match_new_comp.groups()
+                    req_id = 'N/A'
+                    details = f"Added with Total: {total}, Working: {working}"
+                elif match_purchase:
+                    action = 'PURCHASE'
+                    performed_by, req_id, item = match_purchase.groups()
+                    details = "Purchase request marked as complete."
+                elif match_cancel:  # Added cancel
+                    action = 'CANCELLED'
+                    performed_by, req_id = match_cancel.groups()
+                    item = "N/A (See Req ID)"
+                    details = f"Request cancelled. {message.split('Remarks: ')[-1]}"
+                else:
+                    details = message
+
+                writer.writerow([timestamp, action, performed_by, req_id, item, details])
     except FileNotFoundError:
         flash('The audit log file was not found.', 'error')
         return redirect(url_for('admin_dashboard'))
+
     output.seek(0)
     return Response(
         output,
@@ -864,12 +1068,12 @@ def admin_download_audit_log():
     )
 
 
-# --- Lab Technician (Lab Assistant) Routes (All Unchanged) ---
+# --- Lab Technician (Lab Assistant) Routes ---
 @app.route('/tech')
 @role_required('technician')
 def tech_dashboard():
     all_requests = load_requests()
-    components = load_components()
+    components = get_augmented_components()
     approved_requests = [req for req in all_requests if req['status'] == 'Approved']
     dispatched_requests = [req for req in all_requests if req['status'] == 'ISSUED']
     return render_template('tech_dashboard.html', user=session['user'],
@@ -878,25 +1082,54 @@ def tech_dashboard():
                            components=components)
 
 
-
 @app.route('/tech/dispatch', methods=['POST'])
 @role_required('technician')
 def tech_dispatch_item():
     request_id = int(request.form.get('request_id'))
     all_requests = load_requests()
+    all_components = load_components()
+    tech_user_email = session["user"]["email"]
+
     target_request = next((req for req in all_requests if req['id'] == request_id), None)
+
     if target_request and target_request['status'] == 'Approved':
+        target_component = next((comp for comp in all_components if comp['name'] == target_request['component_name']),
+                                None)
+
+        if not target_component:
+            flash(f'Error: Component "{target_request["component_name"]}" not found in database. Cannot issue.',
+                  'error')
+            return redirect(url_for('tech_dashboard'))
+
+        # Re-calculate available stock from the source of truth
+        available_stock = target_component['working_quantity'] - target_component['issued_quantity']
+        if available_stock < target_request['quantity']:
+            flash(
+                f'Error: Insufficient stock for "{target_component["name"]}". Only {available_stock} available. Cannot issue.',
+                'error')
+            return redirect(url_for('tech_dashboard'))
+
+        old_issued = target_component['issued_quantity']
+        target_component['issued_quantity'] += target_request['quantity']
+        new_issued = target_component['issued_quantity']
+
         target_request['status'] = 'ISSUED'
         target_request['issue_timestamp'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+        save_components(all_components)
         save_requests(all_requests)
-        app.logger.info(f'ITEM ISSUED: Tech "{session["user"]["email"]}" ISSUED req #{request_id}')
-        flash(f'Request #{request_id} marked as ISSUED.', 'success')
+
+        app.logger.info(f'ITEM ISSUED: Tech "{tech_user_email}" ISSUED req #{request_id}')
+        audit_logger.info(
+            f'ISSUE by {tech_user_email}: Req #{request_id}. Stock {target_component["name"]} issued {old_issued} -> {new_issued}')
+
+        flash(f'Request #{request_id} marked as ISSUED. Inventory updated.', 'success')
     else:
-        flash('Error: Could not Issue request.', 'error')
+        flash('Error: Could not Issue request. Not found or not in "Approved" state.', 'error')
+
     return redirect(url_for('tech_dashboard'))
 
 
-# --- START: MODIFIED COLLECTION ROUTE (Handles GET and POST) ---
 @app.route('/tech/collect_form/<int:request_id>', methods=['GET', 'POST'])
 @role_required('technician')
 def tech_collect_item_form(request_id):
@@ -906,53 +1139,48 @@ def tech_collect_item_form(request_id):
 
     target_request = next((req for req in all_requests if req['id'] == request_id), None)
 
-    # Check if request is valid for collection
     if not target_request:
-        abort(404)  # Not found
-    print(target_request['status'])
+        abort(404)
+
     if target_request['status'].lower() != 'issued':
-        flash('Error: This item is not in "Dispatched" state. Cannot collect.', 'error')
+        flash('Error: This item is not in "ISSUED" state. Cannot collect.', 'error')
         return redirect(url_for('tech_dashboard'))
 
     target_component = next((comp for comp in all_components if comp['name'] == target_request['component_name']), None)
 
     if request.method == 'POST':
-        # --- This is the POST logic (submitting the form) ---
         try:
             working_count = int(request.form.get('working_count'))
             not_working_count = int(request.form.get('not_working_count'))
             tech_remarks = request.form.get('tech_remarks', '').strip()
             total_returned = working_count + not_working_count
 
-            # ... (Validation is unchanged) ...
             if total_returned != target_request['quantity']:
                 flash(f"Error: Total items ({total_returned}) does not match issued ({target_request['quantity']}).",
                       'error')
                 return redirect(url_for('tech_collect_item_form', request_id=request_id))
 
-            # --- START: MODIFIED JSON UPDATE LOGIC ---
             if target_component:
-                # 1. Decrease issued quantity by total returned
+                # 1. Decrease issued quantity
                 target_component['issued_quantity'] -= total_returned
-                # 2. Decrease working quantity by items that broke
-                target_component['working_quantity'] -= not_working_count
-                # 3. Increase not working quantity
+
+                # 2. Add to not_working_quantity
                 target_component['not_working_quantity'] += not_working_count
 
-                # Sanity check to prevent negative numbers
+                # 3. Recalculate working_quantity based on total
+                target_component['working_quantity'] = target_component['total_quantity'] - target_component[
+                    'not_working_quantity']
+
                 if target_component['issued_quantity'] < 0: target_component['issued_quantity'] = 0
-                if target_component['working_quantity'] < 0: target_component['working_quantity'] = 0
 
                 audit_logger.info(
                     f'COLLECTION by {tech_user["email"]}: Req #{request_id}. {working_count} working, {not_working_count} not working.')
                 save_components(all_components)
-            # --- END: MODIFIED JSON UPDATE LOGIC ---
 
             else:
                 audit_logger.warning(
                     f'COLLECTION (No Stock Update): Tech {tech_user["email"]} collected Req #{request_id} but component "{target_request["component_name"]}" not in DB.')
 
-            # Update the request object with new data
             target_request['status'] = 'Returned'
             target_request['actual_return_timestamp'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
             target_request['working_count'] = working_count
@@ -960,7 +1188,7 @@ def tech_collect_item_form(request_id):
             target_request['tech_remarks'] = tech_remarks if tech_remarks else "N/A"
 
             save_requests(all_requests)
-            flash(f'Request #{request_id} marked as Returned. {working_count} item(s) added back to stock.', 'success')
+            flash(f'Request #{request_id} marked as Returned. Inventory updated.', 'success')
             return redirect(url_for('tech_dashboard'))
 
         except ValueError:
@@ -970,24 +1198,17 @@ def tech_collect_item_form(request_id):
             flash(f'An error occurred: {e}', 'error')
             return redirect(url_for('tech_collect_item_form', request_id=request_id))
 
-    # --- This is the GET logic (showing the form) ---
     return render_template('tech_collect_form.html',
                            user=tech_user,
                            request=target_request)
 
 
-# --- END: MODIFIED COLLECTION ROUTE ---
-
-
 @app.route('/tech/add_inventory', methods=['POST'])
 @role_required('technician')
 def tech_add_inventory():
-    """Adds a completely new component to the components.json database."""
     tech_user = session['user']
-
     new_id = request.form.get('new_component_id').upper()
     new_name = request.form.get('new_component_name')
-    # --- MODIFICATION: New fields from form ---
     new_total = int(request.form.get('new_total'))
     new_working = int(request.form.get('new_working'))
 
@@ -997,7 +1218,6 @@ def tech_add_inventory():
 
     all_components = load_components()
 
-    # ... (Duplicate checks are unchanged) ...
     for comp in all_components:
         if comp['id'] == new_id:
             flash(f'Error: Component ID "{new_id}" already exists.', 'error')
@@ -1006,14 +1226,13 @@ def tech_add_inventory():
             flash(f'Error: Component Name "{new_name}" already exists.', 'error')
             return redirect(url_for('tech_dashboard'))
 
-    # --- MODIFICATION: New component structure ---
     new_component = {
         "id": new_id,
         "name": new_name,
         "total_quantity": new_total,
         "working_quantity": new_working,
-        "not_working_quantity": new_total - new_working,  # Calculated
-        "issued_quantity": 0  # Starts at 0
+        "not_working_quantity": new_total - new_working,
+        "issued_quantity": 0
     }
     all_components.append(new_component)
     save_components(all_components)
@@ -1028,7 +1247,6 @@ def tech_add_inventory():
 @role_required('technician')
 def tech_update_inventory():
     component_name = request.form.get('component_name')
-    # --- MODIFICATION: New fields from form ---
     new_total = int(request.form.get('new_total'))
     new_working = int(request.form.get('new_working'))
     tech_user = session['user']
@@ -1037,39 +1255,22 @@ def tech_update_inventory():
     target_component = next((comp for comp in all_components if comp['name'] == component_name), None)
 
     if target_component:
-        # Get old values for logging
         old_total = target_component['total_quantity']
         old_working = target_component['working_quantity']
 
-        # --- MODIFICATION: Update logic ---
-        # Set new totals
-        target_component['total_quantity'] = new_total
-        target_component['working_quantity'] = new_working
-        # Recalculate not_working based on new total and working
-        # (This assumes 'issued' items are a subset of 'working')
-        # A more complex calc is needed if issued items can be non-working
-
-        # Simpler: just update the two fields provided.
-        # We must respect the 'not_working' and 'issued' counts.
-        # This update is complex. Let's simplify:
-        # The technician update *sets* the new total and working counts.
-        # We must calculate the *new* not_working count.
-
-        # Example: Total 30, Working 25, Issued 10, NotWorking 5
-        # Tech says: New Total is 40, New Working is 35
-        # This implies 10 new items were added, all working.
-        # New NotWorking = 5 (unchanged)
-        # New Issued = 10 (unchanged)
-
-        # Let's assume the tech is ONLY updating total and working counts,
-        # and not_working_quantity will be derived.
-
-        current_not_working = target_component['not_working_quantity']
-        if new_total < (new_working + current_not_working):
-            flash('Error: New total is less than the sum of new working and existing not-working items.', 'error')
+        if new_working > new_total:
+            flash(f'Error: New working count ({new_working}) cannot be greater than new total ({new_total}).', 'error')
             return redirect(url_for('tech_dashboard'))
 
-        # Update the component
+        current_issued = target_component['issued_quantity']
+
+        # This is the key check
+        if (new_working - current_issued) < 0:
+            flash(
+                f'Error: New working count ({new_working}) is less than current issued count ({current_issued}). Please collect items first.',
+                'error')
+            return redirect(url_for('tech_dashboard'))
+
         target_component['total_quantity'] = new_total
         target_component['working_quantity'] = new_working
         target_component['not_working_quantity'] = new_total - new_working
@@ -1082,7 +1283,7 @@ def tech_update_inventory():
         flash('Error: Component not found.', 'error')
     return redirect(url_for('tech_dashboard'))
 
-import os
+
 # --- Run App ---
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))

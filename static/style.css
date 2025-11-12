@@ -347,7 +347,7 @@ table td small { display: block; color: #9ca3af; }
 .status.low-stock, .status.status-pending {
     background-color: #fef3c7; color: #92400e;
 }
-.status.out-of-stock, .status.status-rejected {
+.status.out-of-stock, .status.status-rejected, .status.status-cancelled {
     background-color: #fee2e2; color: #991b1b;
 }
 .status.status-issued {
@@ -400,4 +400,15 @@ ul.item-list li:last-child {
 .status.status-pending-incharge {
     background-color: #fef3c7;
     color: #92400e;
+}
+
+/* --- NEW STATUSES FOR FACULTY --- */
+.status.status-pending-purchase,
+.status.status-pending-purchase-approval {
+    background-color: #e0e7ff; /* Light indigo */
+    color: #3730a3; /* Dark indigo */
+}
+.status.status-purchased {
+    background-color: #d1fae5; /* Light green */
+    color: #065f46; /* Dark green */
 }

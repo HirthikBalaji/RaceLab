@@ -29,6 +29,7 @@
                 <button class="tab-link active" onclick="openTab(event, 'dispatch')">Pending ISSUE ({{ approved_requests|length }})</button>
                 <button class="tab-link" onclick="openTab(event, 'collect')">Pending Collection ({{ dispatched_requests|length }})</button>
                 <button class="tab-link" onclick="openTab(event, 'inventory')">Modify Inventory</button>
+                <button class="tab-link" onclick="openTab(event, 'availability')">Availability</button>
             </div>
 
             <div id="dispatch" class="tab-content" style="display: block;">
@@ -38,6 +39,7 @@
                         <thead>
                             <tr>
                                 <th>Student</th>
+                                <th>Project Type</th> <!-- NEW COLUMN -->
                                 <th>Component</th>
                                 <th>Qty</th>
                                 <th>Due Date</th>
@@ -47,20 +49,35 @@
                         </thead>
                         <tbody>
                             {% if not approved_requests %}
-                                <tr><td colspan="6">No items are pending Issue.</td></tr>
+                                <tr><td colspan="7">No items are pending Issue.</td></tr>
                             {% endif %}
                             {% for req in approved_requests %}
                                 <tr>
                                     <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
+                                    <td> <!-- NEW COLUMN -->
+                                        <span class="status status-issued" style="background-color: #eee; color: #555; font-size: 0.75rem; padding: 0.2rem 0.4rem;">
+                                            {{ req.get('project_type', 'N/A') }}
+                                        </span>
+                                    </td>
                                     <td>{{ req.component_id }} ({{ req.component_name }})</td>
                                     <td>{{ req.quantity }}</td>
                                     <td>{{ req.due_date }}</td>
                                     <td><small>{{ req.approver_email }} at {{ req.approval_timestamp }}</small></td>
                                     <td>
-                                        <form action="{{ url_for('tech_dispatch_item') }}" method="POST">
-                                            <input type="hidden" name="request_id" value="{{ req.id }}">
-                                            <button type="submit" class="admin-btn approve">ISSUE Item</button>
-                                        </form>
+                                        <div style="display: flex; gap: 5px;">
+                                            <form action="{{ url_for('tech_dispatch_item') }}" method="POST" style="margin: 0;">
+                                                <input type="hidden" name="request_id" value="{{ req.id }}">
+                                                <button type="submit" class="admin-btn approve">ISSUE</button>
+                                            </form>
+                                            <!-- Button to trigger modal -->
+                                            <button type="button"
+                                                    class="admin-btn reject cancel-btn-modal"
+                                                    style="padding: 0.2rem 0.5rem; font-size: 0.75rem;"
+                                                    data-request-id="{{ req.id }}"
+                                                    data-request-name="{{ req.component_name }}">
+                                                Cancel
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -76,6 +93,7 @@
                         <thead>
                             <tr>
                                 <th>Student</th>
+                                <th>Project Type</th> <!-- NEW COLUMN -->
                                 <th>Component</th>
                                 <th>Qty</th>
                                 <th>Due Date</th>
@@ -85,16 +103,21 @@
                         </thead>
                         <tbody>
                             {% if not dispatched_requests %}
-                                <tr><td colspan="6">No items are pending collection.</td></tr>
+                                <tr><td colspan="7">No items are pending collection.</td></tr>
                             {% endif %}
 
                             {% for req in dispatched_requests %}
                                 <tr>
                                     <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
+                                    <td> <!-- NEW COLUMN -->
+                                        <span class="status status-issued" style="background-color: #eee; color: #555; font-size: 0.75rem; padding: 0.2rem 0.4rem;">
+                                            {{ req.get('project_type', 'N/A') }}
+                                        </span>
+                                    </td>
                                     <td>{{ req.component_id }} ({{ req.component_name }})</td>
                                     <td>{{ req.quantity }}</td>
                                     <td>{{ req.due_date }}</td>
-                                    <td><small>{{ req.dispatch_timestamp }}</small></td>
+                                    <td><small>{{ req.issue_timestamp }}</small></td>
                                     <td>
                                         <a href="{{ url_for('tech_collect_item_form', request_id=req.id) }}" class="admin-btn collect" style="text-decoration: none;">
                                             Collect Item
@@ -163,6 +186,69 @@
                     <button type="submit" class="admin-btn approve">Add New Component</button>
                 </form>
             </div>
+            <div id="availability" class="tab-content">
+                <h3>Component Availability</h3>
+                <p>This table shows the current live stock. This is the same view seen by Admins and HODs.</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Total Qty</th>
+                                <th>Working Qty</th>
+                                <th>Not Working Qty</th>
+                                <th>Issued Qty</th>
+                                <th>Available for Issue</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for component in components %}
+                            <tr>
+                                <td>{{ component.name }}</td>
+                                <td>{{ component.total_quantity }}</td>
+                                <td>{{ component.working_quantity }}</td>
+                                <td>{{ component.not_working_quantity }}</td>
+                                <td>{{ component.issued_quantity }}</td>
+                                <td><strong>{{ component.available }}</strong></td>
+                                <td>
+                                    {% if component.available <= 0 %}
+                                        <span class="status out-of-stock">Out of Stock</span>
+                                    {% elif component.available < 10 %}
+                                        <span class="status low-stock">Low Stock</span>
+                                    {% else %}
+                                        <span class="status in-stock">In Stock</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- START: Cancellation Modal -->
+            <div id="cancel-modal" class="modal-backdrop" hidden>
+                <div class="modal-content">
+                    <form id="cancel-modal-form" method="POST">
+                        <div class="modal-header">
+                            <h3 id="cancel-modal-title">Cancel Request</h3>
+                            <button type="button" class="modal-close-btn" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Please provide a mandatory reason for cancelling the request for <strong id="cancel-modal-component-name"></strong>.</p>
+                            <div class="form-group">
+                                <label for="cancel_remarks_tech">Cancellation Remarks:</label>
+                                <textarea id="cancel_remarks_tech" name="cancel_remarks" rows="3" placeholder="e.g., Student did not show up..." required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="admin-btn" data-dismiss="modal" style="background-color: var(--color-grey);">Close</button>
+                            <button type="submit" class="admin-btn reject">Submit Cancellation</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END: Cancellation Modal -->
         </div>
     </div>
     <script>
@@ -175,6 +261,38 @@
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
         }
+
+        // --- START: New Modal Script (from previous step) ---
+        const cancelModal = document.getElementById('cancel-modal');
+        const cancelModalForm = document.getElementById('cancel-modal-form');
+        const cancelModalComponentName = document.getElementById('cancel-modal-component-name');
+        const cancelModalTitle = document.getElementById('cancel-modal-title');
+
+        // Open modal
+        document.querySelectorAll('.cancel-btn-modal').forEach(button => {
+            button.addEventListener('click', function() {
+                const reqId = this.getAttribute('data-request-id');
+                const reqName = this.getAttribute('data-request-name');
+                cancelModalForm.action = `/cancel_request/${reqId}`;
+                cancelModalComponentName.textContent = reqName;
+                cancelModalTitle.textContent = `Cancel Request #${reqId}`;
+                cancelModalForm.querySelector('textarea').value = '';
+                cancelModal.hidden = false;
+            });
+        });
+
+        // Close modal
+        cancelModal.querySelectorAll('[data-dismiss="modal"]').forEach(button => {
+            button.addEventListener('click', function() {
+                cancelModal.hidden = true;
+            });
+        });
+        cancelModal.addEventListener('click', function(e) {
+            if (e.target === cancelModal) {
+                cancelModal.hidden = true;
+            }
+        });
+        // --- END: New Modal Script ---
     </script>
 </body>
 </html>

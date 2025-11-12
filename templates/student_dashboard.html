@@ -7,6 +7,52 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
+        /* --- START: New Request Form Styles --- */
+        .request-type-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #d1d5db;
+            padding-bottom: 1.5rem;
+        }
+        .request-type-selector button {
+            flex: 1;
+            padding: 1rem;
+            font-size: 1.1rem;
+            background-color: #f9fafb;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--color-text-light);
+            transition: all 0.2s ease;
+        }
+        .request-type-selector button:hover {
+            background-color: #f3f4f6;
+            border-color: #9ca3af;
+        }
+        .request-type-selector button.active {
+            background-color: #eef2ff;
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(0, 82, 212, 0.2);
+        }
+        .request-form-container {
+            display: none; /* Hidden by default */
+        }
+        .request-form-container.active {
+            display: block; /* Shown when active */
+        }
+        .form-info-box {
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        .form-info-box h4 { margin-top: 0; }
+        /* --- END: New Request Form Styles --- */
+
         .component-row {
             display: flex;
             gap: 1rem;
@@ -27,7 +73,7 @@
             margin-top: 1.1rem;
         }
         .remove-row-btn:hover { background-color: var(--color-red-hover); }
-        #add-component-btn {
+        #add-component-btn, #add-component-btn-intra, #add-component-btn-comp {
             background-color: var(--color-grey);
             color: white;
             border: none;
@@ -57,133 +103,321 @@
             {% endfor %}{% endif %}
         {% endwith %}
 
-        <h3>Component Availability</h3>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Component</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for component in components %}
-                    <tr>
-                        <td>{{ component.name }}</td>
-                        <td>
-                            {% if component.available == 0 %}<span class="status out-of-stock">Out of Stock</span>
-                            {% elif component.available < 10 %}<span class="status low-stock">Low Stock</span>
-                            {% else %}<span class="status in-stock">In Stock</span>
-                            {% endif %}
-                        </td>
-                    </tr>
+        <!-- --- START: Main Tab Navigation --- -->
+        <div class="tab-container">
+            <div class="tab-nav">
+                <button class="tab-link active" onclick="openMainTab(event, 'request')">Request Components</button>
+                <button class="tab-link" onclick="openMainTab(event, 'history')">My Request History</button>
+                <button class="tab-link" onclick="openMainTab(event, 'availability')">Component Availability</button>
+            </div>
+            <!-- --- END: Main Tab Navigation --- -->
+
+            <!-- --- START: Tab 1 - Component Availability --- -->
+            <div id="availability" class="main-tab-content">
+                <h3>Component Availability</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Total Qty</th>
+                                <th>Working Qty</th>
+                                <th>Not Working Qty</th>
+                                <th>Issued Qty</th>
+                                <th>Available for Issue</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for component in components %}
+                            <tr>
+                                <td>{{ component.name }}</td>
+                                <td>{{ component.total_quantity }}</td>
+                                <td>{{ component.working_quantity }}</td>
+                                <td>{{ component.not_working_quantity }}</td>
+                                <td>{{ component.issued_quantity }}</td>
+                                <td><strong>{{ component.available }}</strong></td>
+                                <td>
+                                    {% if component.available <= 0 %}<span class="status out-of-stock">Out of Stock</span>
+                                    {% elif component.available < 10 %}<span class="status low-stock">Low Stock</span>
+                                    {% else %}<span class="status in-stock">In Stock</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- --- END: Tab 1 --- -->
+
+            <!-- --- START: Tab 2 - Request Components (NEW STRUCTURE) --- -->
+            <div id="request" class="main-tab-content" style="display: block;">
+                <h3>New Component Request</h3>
+                <p>Please select the purpose of your request to see the correct form.</p>
+
+                <!-- Request Type Buttons -->
+                <div class="request-type-selector">
+                    <button id="btn-intra-day" class="request-type-btn active" onclick="openRequestForm(event, 'form-intra-day')">1. Intra-Day Activities</button>
+                    <button id="btn-project" class="request-type-btn" onclick="openRequestForm(event, 'form-project')">2. Project Work (Inside Lab)</button>
+                    <button id="btn-comp" class="request-type-btn" onclick="openRequestForm(event, 'form-competition')">3. Competitions</button>
+                </div>
+
+                <datalist id="component-datalist">
+                    {% for component in available_components %}
+                    <option value="{{ component.name }}"></option>
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                </datalist>
 
-        <h3>Request Components</h3>
-        <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
-
-            <datalist id="component-datalist">
-                {% for component in available_components %}
-                <option value="{{ component.name }}"></option>
-                {% endfor %}
-            </datalist>
-
-            <h4>Components</h4>
-            <div id="component-list">
-                <div class="component-row">
-                    <div class="form-group">
-                        <label for="component_1">Component Name:</label>
-                        <input type="text" list="component-datalist" id="component_1" name="component[]" class="component-search" placeholder="Type or select component" required>
+                <!-- Form 1: Intra-Day Activities -->
+                <div id="form-intra-day" class="request-form-container active">
+                    <div class="form-info-box">
+                        <h4>Intra-Day Activity Request</h4>
+                        <p style="margin: 0;">For short-term lab work. Requests are sent directly to the **Lab Technician** for issue. No mentor approval is needed.</p>
                     </div>
+                    <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
+                        <input type="hidden" name="project_type" value="Intra-Day">
+
+                        <h4>Components</h4>
+                        <div id="component-list-intra">
+                            <div class="component-row">
+                                <div class="form-group">
+                                    <label for="component_1_intra">Component Name:</label>
+                                    <input type="text" list="component-datalist" id="component_1_intra" name="component[]" class="component-search" placeholder="Type or select component" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quantity_1_intra">Quantity:</label>
+                                    <input type="number" id="quantity_1_intra" name="quantity[]" min="1" max="10" value="1" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="add-component-btn-intra" class="add-component-btn">+ Add Another Component</button>
+
+                        <hr style="margin: 1.5rem 0;">
+                        <h4>Request Details</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="return_date_intra">Expected Return Date (Must be today)</label>
+                                <input type="date" id="return_date_intra" name="return_date" value="{{ today }}" readonly required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="project_description_intra">Activity / Purpose:</label>
+                            <textarea id="project_description_intra" name="project_description" rows="3" placeholder="e.g., Testing sensor for mini-project..." required></textarea>
+                        </div>
+                        <!-- Hidden/Not-required mentor fields for this form -->
+                        <input type="hidden" name="mentor_name" value="N/A (Intra-Day)">
+                        <input type="hidden" name="mentor_email" value="N/A">
+
+                        <button type="submit" class="submit-button">Submit Intra-Day Request</button>
+                    </form>
+                </div>
+
+                <!-- Form 2: Project Work (Inside Lab) -->
+                <div id="form-project" class="request-form-container">
+                    <div class="form-info-box">
+                        <h4>Project Work Request</h4>
+                        <!-- MODIFIED TEXT -->
+                        <p style="margin: 0;">For long-term approved projects. This request is sent directly to the **Lab Incharge** for approval (mentor approval is bypassed).</p>
+                        <p style="margin-top: 0.5rem; margin-bottom: 0;">Students working on approved projects will have an assigned **cabin** for storing their components and materials. Drawer allocation and management are handled by the **Lab Incharge** and **Technician**.</p>
+                    </div>
+                    <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
+                        <input type="hidden" name="project_type" value="Project Work">
+
+                        <h4>Components</h4>
+                        <div id="component-list-project">
+                            <div class="component-row">
+                                <div class="form-group">
+                                    <label for="component_1_proj">Component Name:</label>
+                                    <input type="text" list="component-datalist" id="component_1_proj" name="component[]" class="component-search" placeholder="Type or select component" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quantity_1_proj">Quantity:</label>
+                                    <input type="number" id="quantity_1_proj" name="quantity[]" min="1" max="10" value="1" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="add-component-btn-project" class="add-component-btn">+ Add Another Component</button>
+
+                        <hr style="margin: 1.5rem 0;">
+                        <h4>Request Details</h4>
+
+                        <!-- REMOVED MENTOR FIELDS -->
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="return_date">Expected Return Date (Max 30 days):</label>
+                                <input type="date" id="return_date" name="return_date" min="{{ today }}" max="{{ max_date }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="project_description">Project Title / Description:</label>
+                            <textarea id="project_description" name="project_description" rows="3" placeholder="Briefly describe your project..." required></textarea>
+                        </div>
+
+                        <!-- ADDED HIDDEN MENTOR FIELDS -->
+                        <input type="hidden" name="mentor_name" value="N/A (Project Work)">
+                        <input type="hidden" name="mentor_email" value="N/A">
+
+                        <button type="submit" class="submit-button">Submit Project Request</button>
+                    </form>
+                </div>
+
+                <!-- Form 3: Competitions -->
+                <div id="form-competition" class="request-form-container">
+                    <div class="form-info-box">
+                        <h4>Competition Request</h4>
+                        <p style="margin: 0;">For official competitions. This request follows the standard workflow: **Mentor Approval** → **Incharge Approval**.</p>
+                    </div>
+                    <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
+                        <input type="hidden" name="project_type" value="Competition">
+
+                        <h4>Components</h4>
+                        <div id="component-list-comp">
+                            <div class="component-row">
+                                <div class="form-group">
+                                    <label for="component_1_comp">Component Name:</label>
+                                    <input type="text" list="component-datalist" id="component_1_comp" name="component[]" class="component-search" placeholder="Type or select component" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quantity_1_comp">Quantity:</label>
+                                    <input type="number" id="quantity_1_comp" name="quantity[]" min="1" max="10" value="1" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="add-component-btn-comp" class="add-component-btn">+ Add Another Component</button>
+
+                        <hr style="margin: 1.5rem 0;">
+                        <h4>Request Details</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="mentor_name_comp">Mentor Name:</label>
+                                <input type="text" id="mentor_name_comp" name="mentor_name" placeholder="Full name of your mentor" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="mentor_email_comp">Mentor Email:</label>
+                                <input type="email" id="mentor_email_comp" name="mentor_email" placeholder="Mentor's official email" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="return_date_comp">Expected Return Date (Max 30 days):</label>
+                                <input type="date" id="return_date_comp" name="return_date" min="{{ today }}" max="{{ max_date }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="project_description_comp">Competition Name & Description:</label>
+                            <textarea id="project_description_comp" name="project_description" rows="3" placeholder="e.g., e-Yantra 2025 - Theme..." required></textarea>
+                        </div>
+                        <button type="submit" class="submit-button">Submit Competition Request</button>
+                    </form>
+                </div>
+            </div>
+            <!-- --- END: Tab 2 --- -->
+
+            <!-- --- START: Tab 3 - My Request History --- -->
+            <div id="history" class="main-tab-content">
+                <h3>My Request History</h3>
+                <div class="table-container wide-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Req ID</th>
+                                <th>Project Type</th>
+                                <th>Component</th>
+                                <th>Qty</th>
+                                <th>Status</th>
+                                <th>Mentor / Batch</th>
+                                <th>Incharge Remarks</th>
+                                <th>Mentor Link</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set rendered_batches = [] %}
+
+                            {% if not my_requests %}
+                                <tr><td colspan="9">You have not made any requests.</td></tr>
+                            {% else %}
+                                {% for req in my_requests | reverse %}
+                                <tr>
+                                    <td>{{ req.id }}</td>
+                                    <td>
+                                        <span class="status status-issued" style="background-color: #eee; color: #555;">
+                                            {{ req.get('project_type', 'N/A') }}
+                                        </span>
+                                    </td>
+                                    <td>{{ req.component_name }}</td>
+                                    <td>{{ req.quantity }}</td>
+                                    <td>
+                                        {% set status_text = req.status | replace('-', ' ') | title %}
+                                        <span class="status status-{{ req.status | lower | replace(' ', '-') }}">{{ status_text }}</span>
+                                    </td>
+                                    <td>
+                                        <small>B: {{ req.get('batch_id', 'N/A') }}</small><br>
+                                        {{ req.get('mentor_name', '-') }}
+                                    </td>
+                                    <td><small>{{ req.get('incharge_remarks', '-') }}</small></td>
+                                    <td>
+                                        {% set batch_id = req.get('batch_id') %}
+                                        {% if batch_id and req.status == 'Pending Mentor' and req.mentor_approval_token and batch_id not in rendered_batches %}
+                                            <a href="{{ url_for('mentor_approval', token=req.mentor_approval_token) }}" target="_blank">Get Link</a>
+                                            {% if rendered_batches.append(batch_id) %}{% endif %}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <!-- This button now launches the modal -->
+                                        {% set cancellable_statuses = ['Pending Mentor', 'Pending Incharge', 'Approved'] %}
+                                        {% if req.status in cancellable_statuses %}
+                                        <button type="button"
+                                                class="admin-btn reject cancel-btn-modal"
+                                                style="padding: 0.2rem 0.5rem; font-size: 0.75rem;"
+                                                data-request-id="{{ req.id }}"
+                                                data-request-name="{{ req.component_name }}">
+                                            Cancel
+                                        </button>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- --- END: Tab 3 --- -->
+        </div><!-- End Tab Container -->
+    </div><!-- End Student Container -->
+
+    <!-- START: Cancellation Modal (from previous step) -->
+    <div id="cancel-modal" class="modal-backdrop" hidden>
+        <div class="modal-content">
+            <form id="cancel-modal-form" method="POST">
+                <div class="modal-header">
+                    <h3 id="cancel-modal-title">Cancel Request</h3>
+                    <button type="button" class="modal-close-btn" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Please provide a mandatory reason for cancelling the request for <strong id="cancel-modal-component-name"></strong>.</p>
                     <div class="form-group">
-                        <label for="quantity_1">Quantity:</label>
-                        <input type="number" id="quantity_1" name="quantity[]" min="1" max="10" value="1" required>
+                        <label for="cancel_remarks_student">Cancellation Remarks:</label>
+                        <textarea id="cancel_remarks_student" name="cancel_remarks" rows="3" placeholder="e.g., No longer required..." required></textarea>
                     </div>
                 </div>
-            </div>
-
-            <button type="button" id="add-component-btn">+ Add Another Component</button>
-            <hr style="margin: 1.5rem 0;">
-            <h4>Request Details</h4>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="mentor_name">Mentor Name:</label>
-                    <input type="text" id="mentor_name" name="mentor_name" placeholder="Full name of your mentor" required>
+                <div class="modal-footer">
+                    <button type="button" class="admin-btn" data-dismiss="modal" style="background-color: var(--color-grey);">Close</button>
+                    <button type="submit" class="admin-btn reject">Submit Cancellation</button>
                 </div>
-                <div class="form-group">
-                    <label for="mentor_email">Mentor Email:</label>
-                    <input type="email" id="mentor_email" name="mentor_email" placeholder="Mentor's official email" required>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="return_date">Expected Return Date (for all items):</label>
-                    <input type="date" id="return_date" name="return_date" min="{{ today }}" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="project_description">Project / Curricular Activity:</label>
-                <textarea id="project_description" name="project_description" rows="3" placeholder="Briefly describe your project..." required></textarea>
-            </div>
-            <button type="submit" class="submit-button">Submit Batch Request</button>
-        </form>
-        <h3>My Request History</h3>
-        <div class="table-container wide-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Req ID</th>
-                        <th>Component</th>
-                        <th>Qty</th>
-                        <th>Status</th>
-                        <th>Batch / Mentor</th>
-                        <th>HOD Remarks</th>
-                        <th>Incharge Remarks</th>
-                        <th>Mentor Link</th>
-                        </tr>
-                </thead>
-                <tbody>
-                    {% set rendered_batches = [] %}
-
-                    {% if not my_requests %}
-                        <tr><td colspan="8">You have not made any requests.</td></tr>
-                    {% else %}
-                        {% for req in my_requests | reverse %}
-                        <tr>
-                            <td>{{ req.id }}</td>
-                            <td>{{ req.component_name }}</td>
-                            <td>{{ req.quantity }}</td>
-                            <td>
-                                {% set status_text = req.status | replace('-', ' ') | title %}
-                                <span class="status status-{{ req.status | lower | replace(' ', '-') }}">{{ status_text }}</span>
-                            </td>
-                            <td>
-                                <small>B: {{ req.get('batch_id', 'N/A') }}</small><br>
-                                {{ req.get('mentor_name', '-') }}
-                            </td>
-
-                            <td><small>{{ req.get('hod_remarks', '-') }}</small></td>
-                            <td><small>{{ req.get('incharge_remarks', '-') }}</small></td>
-                            <td>
-                                {% set batch_id = req.get('batch_id') %}
-                                {% if batch_id and req.status == 'Pending Mentor' and req.mentor_approval_token and batch_id not in rendered_batches %}
-                                    <a href="{{ url_for('mentor_approval', token=req.mentor_approval_token) }}" target="_blank">Get Link</a>
-                                    {% if rendered_batches.append(batch_id) %}{% endif %}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
+            </form>
         </div>
     </div>
+    <!-- END: Cancellation Modal -->
 
+    <!-- Component Row Template (for all forms) -->
     <template id="component-row-template">
         <div class="component-row">
             <div class="form-group">
@@ -199,14 +433,73 @@
     </template>
 
     <script>
-        document.getElementById('add-component-btn').addEventListener('click', function() {
-            const template = document.getElementById('component-row-template');
-            const clone = template.content.cloneNode(true);
-            const componentList = document.getElementById('component-list');
-            clone.querySelector('.remove-row-btn').addEventListener('click', function(e) {
-                e.target.closest('.component-row').remove();
+        // --- Main Tab Switching ---
+        function openMainTab(evt, tabName) {
+            var i, tabContent, tabLinks;
+            tabContent = document.getElementsByClassName("main-tab-content");
+            for (i = 0; i < tabContent.length; i++) tabContent[i].style.display = "none";
+            tabLinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tabLinks.length; i++) tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // --- Request Form Switching ---
+        function openRequestForm(evt, formId) {
+            var i, formContainers, formButtons;
+            formContainers = document.getElementsByClassName("request-form-container");
+            for (i = 0; i < formContainers.length; i++) formContainers[i].style.display = "none";
+            formButtons = document.getElementsByClassName("request-type-btn");
+            for (i = 0; i < formButtons.length; i++) formButtons[i].className = formButtons[i].className.replace(" active", "");
+            document.getElementById(formId).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // --- Dynamic Component Row Logic ---
+        function setupAddButton(buttonId, listId) {
+            document.getElementById(buttonId).addEventListener('click', function() {
+                const template = document.getElementById('component-row-template');
+                const clone = template.content.cloneNode(true);
+                const componentList = document.getElementById(listId);
+                clone.querySelector('.remove-row-btn').addEventListener('click', function(e) {
+                    e.target.closest('.component-row').remove();
+                });
+                componentList.appendChild(clone);
             });
-            componentList.appendChild(clone);
+        }
+        setupAddButton('add-component-btn-intra', 'component-list-intra');
+        setupAddButton('add-component-btn-project', 'component-list-project');
+        setupAddButton('add-component-btn-comp', 'component-list-comp');
+
+        // --- Cancellation Modal JS (from previous step) ---
+        const cancelModal = document.getElementById('cancel-modal');
+        const cancelModalForm = document.getElementById('cancel-modal-form');
+        const cancelModalComponentName = document.getElementById('cancel-modal-component-name');
+        const cancelModalTitle = document.getElementById('cancel-modal-title');
+
+        // Open modal
+        document.querySelectorAll('.cancel-btn-modal').forEach(button => {
+            button.addEventListener('click', function() {
+                const reqId = this.getAttribute('data-request-id');
+                const reqName = this.getAttribute('data-request-name');
+                cancelModalForm.action = `/cancel_request/${reqId}`;
+                cancelModalComponentName.textContent = reqName;
+                cancelModalTitle.textContent = `Cancel Request #${reqId}`;
+                cancelModalForm.querySelector('textarea').value = '';
+                cancelModal.hidden = false;
+            });
+        });
+
+        // Close modal
+        cancelModal.querySelectorAll('[data-dismiss="modal"]').forEach(button => {
+            button.addEventListener('click', function() {
+                cancelModal.hidden = true;
+            });
+        });
+        cancelModal.addEventListener('click', function(e) {
+            if (e.target === cancelModal) {
+                cancelModal.hidden = true;
+            }
         });
     </script>
 </body>

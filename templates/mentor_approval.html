@@ -73,6 +73,11 @@
                     <th>Student</th>
                     <td>{{ shared_request.student_name }} ({{ shared_request.student_dept }})</td>
                 </tr>
+                <!-- NEW ROW -->
+                <tr>
+                    <th>Project Type</th>
+                    <td><strong>{{ shared_request.get('project_type', 'N/A') }}</strong></td>
+                </tr>
                 <tr>
                     <th>Project</th>
                     <td>{{ shared_request.project_description }}</td>

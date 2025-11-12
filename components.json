@@ -3,9 +3,10 @@
         "id": "RPI4",
         "name": "Raspberry Pi 4",
         "total_quantity": 20,
-        "working_quantity": 20,
-        "not_working_quantity": 0,
-        "issued_quantity": 2
+        "working_quantity": 19,
+        "not_working_quantity": 1,
+        "issued_quantity": 0,
+        "available_for_issue": 19
     },
     {
         "id": "UNO",
@@ -13,15 +14,17 @@
         "total_quantity": 30,
         "working_quantity": 30,
         "not_working_quantity": 0,
-        "issued_quantity": 4
+        "issued_quantity": 0,
+        "available_for_issue": 30
     },
     {
         "id": "SG90",
         "name": "Servo Motor (SG90)",
         "total_quantity": 50,
-        "working_quantity": 50,
-        "not_working_quantity": 0,
-        "issued_quantity": 31
+        "working_quantity": 49,
+        "not_working_quantity": 1,
+        "issued_quantity": 0,
+        "available_for_issue": 50
     },
     {
         "id": "HCSR04",
@@ -29,7 +32,8 @@
         "total_quantity": 40,
         "working_quantity": 40,
         "not_working_quantity": 0,
-        "issued_quantity": 0
+        "issued_quantity": 0,
+        "available_for_issue": 40
     },
     {
         "id": "BB830",
@@ -37,7 +41,8 @@
         "total_quantity": 100,
         "working_quantity": 100,
         "not_working_quantity": 0,
-        "issued_quantity": 0
+        "issued_quantity": 0,
+        "available_for_issue": 100
     },
     {
         "id": "ESP32",
@@ -45,6 +50,7 @@
         "total_quantity": 20,
         "working_quantity": 20,
         "not_working_quantity": 0,
-        "issued_quantity": 0
+        "issued_quantity": 0,
+        "available_for_issue": 20
     }
 ]
