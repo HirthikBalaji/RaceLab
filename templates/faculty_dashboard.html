@@ -259,7 +259,7 @@
                             <div class="request-option-card-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.075c0 .621-.504 1.125-1.125 1.125H4.875c-.621 0-1.125-.504-1.125-1.125V14.15M21 13.5v-1.5c0-.621-.504-1.125-1.125-1.125H4.125C3.504 10.875 3 11.379 3 12v1.5m18 0v-1.5a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 12v1.5m18 0v-1.5A2.25 2.25 0 0 0 18.75 9.75h-1.5A2.25 2.25 0 0 0 15 12v1.5m-6 0v-1.5A2.25 2.25 0 0 0 6.75 9.75H5.25A2.25 2.25 0 0 0 3 12v1.5m18-3.35v.001c0 .621-.504 1.125-1.125 1.125H4.125c-.621 0-1.125-.504-1.125-1.125v-.001M15 9.75v-4.5a3 3 0 0 0-3-3h-3a3 3 0 0 0-3 3v4.5" /></svg>
                             </div>
-                            <h4>1. Borrow Existing Component</h4>
+                            <h4>1. Issue request ( Existing Component)</h4>
                             <ul class="request-option-card-rules">
                                 <li>For components that are already available in the lab.</li>
                                 <li>Request will be sent directly to the Lab Incharge for approval.</li>
@@ -274,7 +274,7 @@
                             <h4>2. Request New Purchase</h4>
                             <ul class="request-option-card-rules">
                                 <li>For components that are <strong>not</strong> currently in the lab inventory.</li>
-                                <li>This request will be sent to the HOD for approval.</li>
+                                <li>This request will be sent to the ChairPerson for approval.</li>
                             </ul>
                             <button class="start-request-btn" data-form-id="form-purchase">Start Purchase Request</button>
                         </div>
@@ -289,7 +289,7 @@
 
                     <div id="form-borrow" class="request-form-container">
                         <div class="form-info-box">
-                            <h4>Borrow Existing Component</h4>
+                            <h4>Issue request ( Existing Component)</h4>
                             <p>Request components already in the lab. Sent to Lab Incharge for approval.</p>
                         </div>
                         <form action="{{ url_for('faculty_request') }}" method="POST" class="request-form">
@@ -343,7 +343,7 @@
                     <div id="form-purchase" class="request-form-container">
                         <div class="form-info-box">
                             <h4>Request New Component Purchase</h4>
-                            <p>Request a component not in inventory. Sent to the HOD for approval.</p>
+                            <p>Request a component not in inventory. Sent to the ChairPerson for approval.</p>
                         </div>
                         <form action="{{ url_for('faculty_request') }}" method="POST" class="request-form">
                             <input type="hidden" name="request_type" value="purchase">
@@ -431,7 +431,7 @@
                                 <th>Component</th>
                                 <th>Qty</th>
                                 <th>Status</th>
-                                <th>HOD Remarks</th>
+                                <th>ChairPerson Remarks</th>
                                 <th>Incharge Remarks</th>
                                 <th>Action</th>
                             </tr>

@@ -8,7 +8,8 @@ from functools import wraps
 import re
 from flask import send_file, Flask, request, render_template, redirect, url_for, session, flash, Response
 # ... in main.py, at the top ...
-from flask import send_file, Flask, request, render_template, redirect, url_for, session, flash, Response, abort,send_from_directory
+from flask import send_file, Flask, request, render_template, redirect, url_for, session, flash, Response, abort, \
+    send_from_directory
 # ...
 # --- START: Re-added itsdangerous for secure links ---
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
@@ -199,6 +200,7 @@ def favicon():
         'favicon.ico',
         mimetype='image/vnd.microsoft.icon'
     )
+
 
 @app.route('/')
 def home():
@@ -530,6 +532,7 @@ def request_component():
             "working_count": None,
             "not_working_count": None,
             "tech_remarks": None,
+            "drawer_number": None,  # --- NEW FIELD ---
             "purchase_link": None
         }
         new_requests_list.append(new_request)
@@ -716,6 +719,7 @@ def faculty_request():
                 "working_count": None,
                 "not_working_count": None,
                 "tech_remarks": None,
+                "drawer_number": None,  # --- NEW FIELD ---
                 "purchase_link": None
             }
             new_requests_list.append(new_request)
@@ -745,9 +749,9 @@ def faculty_request():
             "batch_id": batch_id,
             "request_type": "purchase",
             "project_type": "Faculty Purchase",  # --- NEW FIELD ---
-            "status": "Pending Incharge", # MODIFIED: Was "Pending HOD", now "Pending Incharge"
+            "status": "Pending Incharge",  # MODIFIED: Was "Pending HOD", now "Pending Incharge"
             "request_timestamp": request_date.strftime("%Y-%m-%d %H:%M"),
-            "hod_remarks": None, # Was "HOD Approval Required"
+            "hod_remarks": None,  # Was "HOD Approval Required"
             "incharge_remarks": None,
             "student_email": user['email'],
             "student_name": user['name'],
@@ -764,7 +768,7 @@ def faculty_request():
             "mentor_approval_token": None,
             "mentor_remarks": "Faculty Purchase Request",
             "mentor_approval_timestamp": approval_time,
-            "hod_approval_timestamp": approval_time, # Bypassing HOD
+            "hod_approval_timestamp": approval_time,  # Bypassing HOD
             "approver_email": None,
             "approval_timestamp": None,
             "issue_timestamp": None,
@@ -772,6 +776,7 @@ def faculty_request():
             "working_count": None,
             "not_working_count": None,
             "tech_remarks": None,
+            "drawer_number": None,  # --- NEW FIELD ---
             "purchase_link": purchase_link if purchase_link else None,
             "est_price_per_unit": purchase_price_str  # --- MODIFICATION: Save new field ---
         }
@@ -811,7 +816,7 @@ def admin_dashboard():
     pending_purchases = []
     pending_faculty_borrow = []
     pending_student_intra_day = []
-    pending_student_project = [] # Project Work + Competition
+    pending_student_project = []  # Project Work + Competition
     other_requests = []
 
     for req in all_requests:
@@ -849,19 +854,22 @@ def admin_dashboard():
     # --- END: New Sorting Logic ---
 
     other_requests.sort(key=lambda x: x['request_timestamp'], reverse=True)
-    pending_purchases.sort(key=lambda x: x['request_timestamp'], reverse=True) # Keep this one as a list, its table is simple
+    pending_purchases.sort(key=lambda x: x['request_timestamp'],
+                           reverse=True)  # Keep this one as a list, its table is simple
 
     return render_template('admin_dashboard.html',
                            user=session['user'],
 
                            # NEW: Pass the 4 categories
-                           pending_purchases=pending_purchases, # This is a list
-                           grouped_faculty_borrow=grouped_faculty_borrow, # This is a dict
-                           grouped_student_intra_day=grouped_student_intra_day, # This is a dict
-                           grouped_student_project=grouped_student_project, # This is a dict
+                           pending_purchases=pending_purchases,  # This is a list
+                           grouped_faculty_borrow=grouped_faculty_borrow,  # This is a dict
+                           grouped_student_intra_day=grouped_student_intra_day,  # This is a dict
+                           grouped_student_project=grouped_student_project,  # This is a dict
 
                            other_requests=other_requests,
                            components=components)
+
+
 # --- END: MODIFIED ADMIN DASHBOARD ROUTE ---
 
 
@@ -988,10 +996,10 @@ def admin_download_report():
         'Year of study',
         'Component ID', 'Component Name', 'Quantity', 'Purpose', 'Purchase Link', 'Duration (Days)', 'Status',
         'Mentor Name', 'Mentor Approval', 'Mentor Remarks',
-        'HOD Approval', 'HOD Remarks',
+        'ChairPerson Approval', 'ChairPerson Remarks',
         'Incharge Approval', 'Incharge Remarks',
         'Component Issue Time', 'Due date', 'Date of return',
-        'Working Returned', 'Not Working Returned', 'Technician Remarks'
+        'Working Returned', 'Not Working Returned', 'Technician Remarks', 'Drawer Number'
     ]
     writer.writerow(headers)
     for req in all_requests:
@@ -1016,7 +1024,8 @@ def admin_download_report():
             req.get('due_date', 'N/A'), req.get('actual_return_timestamp', 'N/A'),
             req.get('working_count', 'N/A'),
             req.get('not_working_count', 'N/A'),
-            req.get('tech_remarks', 'N/A')
+            req.get('tech_remarks', 'N/A'),
+            req.get('drawer_number', 'N/A')  # --- NEW FIELD ---
         ])
 
     output.seek(0)
@@ -1030,7 +1039,8 @@ def admin_download_report():
 @role_required(['admin', 'hod'])
 def admin_download_audit_log():
     approval_pattern = re.compile(r"APPROVAL by (.*?): Req #(\d+). Item (.*?) approved for issue.")
-    issue_pattern = re.compile(r"ISSUE by (.*?): Req #(\d+). Stock (.*?) issued (\d+) -> (\d+)")
+    issue_pattern = re.compile(
+        r"ISSUE by (.*?): Req #(\d+). Stock (.*?) issued (\d+) -> (\d+). Drawer: (.*)")  # --- MODIFIED ---
     collection_pattern = re.compile(r"COLLECTION by (.*?): Req #(\d+). (\d+) working, (\d+) not working.")
     manual_pattern = re.compile(r'MANUAL UPDATE by (.*?): "(.*?)".*?Total: (\d+)->(\d+), Working: (\d+)->(\d+)')
     new_comp_pattern = re.compile(r'NEW COMPONENT by (.*?): "(.*?)".*?Total: (\d+), Working: (\d+)')
@@ -1064,10 +1074,10 @@ def admin_download_audit_log():
                     action = 'APPROVAL (INCHARGE)'
                     performed_by, req_id, item = match_approval.groups()
                     details = "Approved for issue"
-                elif match_issue:
+                elif match_issue:  # --- MODIFIED ---
                     action = 'ISSUE (TECHNICIAN)'
-                    performed_by, req_id, item, qty_from, qty_to = match_issue.groups()
-                    details = f"Issued quantity {qty_from} -> {qty_to}"
+                    performed_by, req_id, item, qty_from, qty_to, drawer = match_issue.groups()
+                    details = f"Issued quantity {qty_from} -> {qty_to}. Drawer: {drawer}"
                 elif match_collection:
                     action = 'COLLECTION (RETURN)'
                     performed_by, req_id, working, not_working = match_collection.groups()
@@ -1126,6 +1136,7 @@ def tech_dashboard():
 @role_required('technician')
 def tech_dispatch_item():
     request_id = int(request.form.get('request_id'))
+    drawer_number = request.form.get('drawer_number')  # --- NEW FIELD ---
     all_requests = load_requests()
     all_components = load_components()
     tech_user_email = session["user"]["email"]
@@ -1156,12 +1167,19 @@ def tech_dispatch_item():
         target_request['status'] = 'ISSUED'
         target_request['issue_timestamp'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
+        # --- NEW: Save Drawer Number ---
+        if target_request.get('project_type') == 'Project Work' and drawer_number:
+            target_request['drawer_number'] = drawer_number
+        # --- END NEW ---
+
         save_components(all_components)
         save_requests(all_requests)
 
         app.logger.info(f'ITEM ISSUED: Tech "{tech_user_email}" ISSUED req #{request_id}')
+        # --- MODIFIED AUDIT ---
         audit_logger.info(
-            f'ISSUE by {tech_user_email}: Req #{request_id}. Stock {target_component["name"]} issued {old_issued} -> {new_issued}')
+            f'ISSUE by {tech_user_email}: Req #{request_id}. Stock {target_component["name"]} issued {old_issued} -> {new_issued}. Drawer: {drawer_number or "N/A"}')
+        # --- END MODIFIED AUDIT ---
 
         flash(f'Request #{request_id} marked as ISSUED. Inventory updated.', 'success')
     else:

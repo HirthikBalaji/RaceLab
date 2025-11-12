@@ -173,3 +173,7 @@
 2025-11-12 22:16:48,833 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #4. 3 working, 1 not working.
 2025-11-12 22:16:59,965 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #7. 4 working, 0 not working.
 2025-11-12 22:17:09,690 - COLLECTION by lab_tecnician@ch.amrita.edu: Req #10. 2 working, 0 not working.
+2025-11-13 00:54:52,920 - APPROVAL by lab_incharge@ch.amrita.edu: Req #20. Item Arduino Uno approved for issue.
+2025-11-13 00:54:52,920 - APPROVAL by lab_incharge@ch.amrita.edu: Req #21. Item Servo Motor (SG90) approved for issue.
+2025-11-13 00:55:12,389 - ISSUE by lab_tecnician@ch.amrita.edu: Req #20. Stock Arduino Uno issued 4 -> 5. Drawer: 1
+2025-11-13 00:55:18,840 - ISSUE by lab_tecnician@ch.amrita.edu: Req #21. Stock Servo Motor (SG90) issued 15 -> 16. Drawer: 1

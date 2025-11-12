@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HOD Dashboard</title>
+    <title>ChairPerson Dashboard</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -12,7 +12,7 @@
     <nav class="navbar">
         <div class="navbar-brand">
             <img src="{{ url_for('static', filename='bannerlogo.jpg') }}" alt="Logo" class="navbar-logo">
-            RACE Lab - HOD
+            RACE Lab - ChairPerson
         </div>
         <div class="navbar-user">
             Logged in as: <strong>{{ user.name }}</strong>
@@ -29,13 +29,11 @@
 
         <div class="tab-container">
             <div class="tab-nav">
-                <!-- MODIFICATION: Removed Pending Tab, set History to active -->
                 <button class="tab-link active" onclick="openTab(event, 'history')">Request History</button>
                 <button class="tab-link" onclick="openTab(event, 'availability')">Component Availability</button>
                 <button class="tab-link" onclick="openTab(event, 'reports')">Reports</button>
             </div>
 
-            <!-- MODIFICATION: This is now the history tab and is shown by default -->
             <div id="history" class="tab-content" style="display: block;">
                 <h3>Request History (All Requests)</h3>
                 <div class="table-container wide-table">
@@ -47,15 +45,14 @@
                                 <th>User</th>
                                 <th>Component</th>
                                 <th>Qty</th>
-                                <th>Type</th>
+                                <th>Drawer #</th> <th>Type</th>
                                 <th>Status</th>
                                 <th>Timestamps</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% if not other_requests %}
-                                <tr><td colspan="8">There are no requests in the history.</td></tr>
-                            {% else %}
+                                <tr><td colspan="9">There are no requests in the history.</td></tr> {% else %}
                                 {% for req in other_requests %}
                                 <tr>
                                     <td>{{ req.id }}</td>
@@ -63,7 +60,7 @@
                                     <td>{{ req.student_name }}<br><small>{{ req.student_email }}</small></td>
                                     <td>{{ req.component_name }}</td>
                                     <td>{{ req.quantity }}</td>
-                                    <td>
+                                    <td><strong>{{ req.get('drawer_number', '-') }}</strong></td> <td>
                                         {% if req.get('request_type') == 'purchase' %}
                                             <span class="status low-stock">Purchase</span>
                                         {% else %}
@@ -116,12 +113,9 @@
                                 <td>{{ component.working_quantity }}</td>
                                 <td>{{ component.not_working_quantity }}</td>
                                 <td>{{ component.issued_quantity }}</td>
-                                <td><strong>{{ component.available_for_issue }}</strong></td>
-                                <td>
-                                    {% if component.available_for_issue <= 0 %}
-                                        <span class="status out-of-stock">Out of Stock</span>
-                                    {% elif component.available_for_issue < 10 %}
-                                        <span class="status low-stock">Low Stock</span>
+                                <td><strong>{{ component.available }}</strong></td> <td>
+                                    {% if component.available <= 0 %} <span class="status out-of-stock">Out of Stock</span>
+                                    {% elif component.available < 10 %} <span class="status low-stock">Low Stock</span>
                                     {% else %}
                                         <span class="status in-stock">In Stock</span>
                                     {% endif %}

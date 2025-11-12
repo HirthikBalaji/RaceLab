@@ -14,7 +14,7 @@
         "total_quantity": 30,
         "working_quantity": 30,
         "not_working_quantity": 0,
-        "issued_quantity": 4,
+        "issued_quantity": 5,
         "available_for_issue": 30
     },
     {
@@ -23,7 +23,7 @@
         "total_quantity": 50,
         "working_quantity": 48,
         "not_working_quantity": 2,
-        "issued_quantity": 15,
+        "issued_quantity": 16,
         "available_for_issue": 50
     },
     {
