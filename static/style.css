@@ -2,8 +2,11 @@
 :root {
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-    --color-primary: #0052d4;
-    --color-primary-hover: #0041a8;
+     /* -- MODIFIED: Changed primary theme color -- */
+    --color-primary: #BF0C4F;
+    --color-primary-hover: #a90a46; /* Darker shade for hover */
+
+    --color-green: #16a34a;
 
     --color-green: #16a34a;
     --color-green-hover: #15803d;
@@ -15,7 +18,7 @@
     --color-yellow-hover: #b45309;
 
     --color-grey: #6b7280;
-    --color-text-dark: #1f2937;
+--color-text-dark: #B90E50;
     --color-text-light: #4b5563;
 
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -26,7 +29,7 @@
 /* --- 2. Global Styles (The "Fluid" Background) --- */
 body {
     font-family: var(--font-main);
-    background-color: #f8f9fa; /* Fallback */
+    background-color: #EEF0F8; /* Fallback */
 
     /* The magic background */
     background-image: radial-gradient(circle at 10% 20%, rgb(210, 223, 237) 0%, rgb(246, 248, 250) 90%);
@@ -71,10 +74,11 @@ h2, h3 {
 /* --- 4. Navbar Styles --- */
 .navbar {
     width: 100%;
-    background: rgba(255, 255, 255, 0.7);
+    background: #BF0C4F;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-
+    --color-text-dark: #FFFFFF;
+    --color-text-light: #FFFFFF;
     color: var(--color-text-dark);
     padding: 1rem 1.5rem;
     display: flex;
@@ -206,11 +210,82 @@ body:has(.login-container) .navbar {
 
 .submit-button,
 .admin-btn.approve {
-    background-color: var(--color-green);
+    background-color: #8950FC;
 }
+
+/* --- Global Button Styles --- */
+.btn {
+  display: inline-block;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+}
+
+/* --- Primary Button --- */
+.btn-primary {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0069d9, #004999);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 123, 255, 0.4);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* --- Disabled Button --- */
+.btn-primary:disabled {
+  background: #c6c6c6;
+  color: #666;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* --- Disclaimer Section --- */
+.disclaimer-section {
+  margin-top: 20px;
+  background: #f9f9ff;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.disclaimer-section label {
+  font-size: 14px;
+  color: #333;
+  user-select: none;
+}
+
+.disclaimer-section input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #007bff;
+  cursor: pointer;
+}
+
+/* --- Smooth Transition for Enabling Button --- */
+.btn-primary {
+  transition: all 0.3s ease, background 0.4s ease-in-out;
+}
+
+
 .submit-button:hover,
 .admin-btn.approve:hover {
-    background-color: var(--color-green-hover);
+    background-color: #7337EE;
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }

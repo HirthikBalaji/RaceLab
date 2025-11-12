@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RACE Lab Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
@@ -245,8 +246,7 @@
 
                 <!-- STEP 1: Selection Screen (Visible by default) -->
                 <div id="request-selection-screen">
-                    <h3>New Component Request</h3>
-                    <p>First, select the purpose of your request. Each type has different rules.</p>
+                    <h3>Component Request</h3>
 
                     <div class="request-options-container">
                         <!-- Card 1: Intra-Day -->
@@ -256,9 +256,8 @@
                             </div>
                             <h4>1. Intra-Day Activities</h4>
                             <ul class="request-option-card-rules">
-                                <li>for Lab work , Practice , Skill Enhancement</li>
-                                <li>Must be returned same day 3 PM.</li>
-                                <li><strong>Approval:</strong> Lab Technician only.</li>
+                                <li>For lab work, practice, and skill enhancement.</li>
+                                <li>Components must be returned by <strong>3:00 PM on the same day</strong>.</li>
                             </ul>
                             <button class="start-request-btn" data-form-id="form-intra-day">Start Intra-Day Request</button>
                         </div>
@@ -270,9 +269,11 @@
                             </div>
                             <h4>2. Project Work (Inside Lab)</h4>
                             <ul class="request-option-card-rules">
-                                <li>For long-term approved projects.</li>
-                                <li>Max 30-day borrow period.</li>
-                                <li><strong>Approval:</strong> Lab Incharge → Lab Technician.</li>
+                                <li>For long-term, approved project activities.</li>
+                                <li>A dedicated drawer will be allotted in the lab for component storage.</li>
+                                <li>All components must be placed back in the allotted drawer after each work session.</li>
+                                <li>The drawer key must be returned to the Lab Technician before <strong>3:00 PM</strong> every day.</li>
+                                <li>Maximum borrow period: <strong>30 days</strong>.</li>
                             </ul>
                             <button class="start-request-btn" data-form-id="form-project">Start Project Request</button>
                         </div>
@@ -284,9 +285,8 @@
                             </div>
                             <h4>3. Competitions</h4>
                             <ul class="request-option-card-rules">
-                                <li>For official competitions only.</li>
-                                <li>Max 30-day borrow period.</li>
-                                <li><strong>Approval:</strong> Mentor → Lab Incharge.</li>
+                                <li>For official National/International competitions only.</li>
+                                <li>Maximum borrow period: <strong>30 days</strong>.</li>
                             </ul>
                             <button class="start-request-btn" data-form-id="form-competition">Start Competition Request</button>
                         </div>
@@ -348,7 +348,7 @@
                     <div id="form-intra-day" class="request-form-container">
                         <div class="form-info-box">
                             <h4>Intra-Day Activity Request</h4>
-                            <p style="margin: 0;"><strong>Rules:</strong> Technician approval only. Must be returned same day 3 PM.</p>
+                            <p style="margin: 0;"><strong>Rules:</strong> Must be returned same day 3 PM.<br> For lab work, practice, and skill enhancement.</p>
                         </div>
                         <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
                             <input type="hidden" name="project_type" value="Intra-Day">
@@ -380,7 +380,15 @@
                             </div>
                             <input type="hidden" name="mentor_name" value="N/A (Intra-Day)">
                             <input type="hidden" name="mentor_email" value="N/A">
-                            <button type="submit" class="submit-button">Submit Intra-Day Request</button>
+                            <div class="disclaimer-section" style="margin-top: 20px;">
+  <input type="checkbox" id="disclaimer-checkbox-intra_day" class="disclaimer-checkbox">
+  <label for="disclaimer-checkbox-intra_day">
+    <strong>I UNDERSTAND THAT I WILL BE RESPONSIBLE FOR LOSS/DAMAGE OF THE COMPONENT.</strong>
+  </label>
+</div>
+
+<button id="submit-btn-intra_day" type="submit" class="btn btn-primary" disabled>Submit Request</button>
+
                         </form>
                     </div>
 
@@ -388,7 +396,11 @@
                     <div id="form-project" class="request-form-container">
                         <div class="form-info-box">
                             <h4>Project Work Request</h4>
-                            <p style="margin: 0;"><strong>Rules:</strong> Lab Incharge → Lab Technician approval. Max 30-day borrow.</p>
+                            <p style="margin: 0;"><strong>Rules:</strong> For long-term, approved project activities.
+                                A dedicated drawer will be allotted in the lab for component storage.
+                                All components must be placed back in the allotted drawer after each work session.
+                                The drawer key must be returned to the Lab Technician before <strong>3:00 PM</strong> every day.
+                                Maximum borrow period: <strong>30 days</strong>.</p>
                         </div>
                         <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
                             <input type="hidden" name="project_type" value="Project Work">
@@ -420,7 +432,15 @@
                             </div>
                             <input type="hidden" name="mentor_name" value="N/A (Project Work)">
                             <input type="hidden" name="mentor_email" value="N/A">
-                            <button type="submit" class="submit-button">Submit Project Request</button>
+                            <div class="disclaimer-section" style="margin-top: 20px;">
+  <input type="checkbox" id="disclaimer-checkbox-project" class="disclaimer-checkbox">
+  <label for="disclaimer-checkbox-project">
+    <strong>I UNDERSTAND THAT I WILL BE RESPONSIBLE FOR LOSS/DAMAGE OF THE COMPONENT.</strong>
+  </label>
+</div>
+
+<button id="submit-btn-project" type="submit" class="btn btn-primary" disabled>Submit Request</button>
+
                         </form>
                     </div>
 
@@ -428,7 +448,7 @@
                     <div id="form-competition" class="request-form-container">
                         <div class="form-info-box">
                             <h4>Competition Request</h4>
-                            <p style="margin: 0;"><strong>Rules:</strong> Mentor approval → Incharge approval. Max 30-day borrow.</p>
+                            <p style="margin: 0;"><strong>Rules:</strong> Only for National/International Competitions <br> <strong>Max 30-day borrow.</strong></p>
                         </div>
                         <form action="{{ url_for('request_component') }}" method="POST" class="request-form">
                             <input type="hidden" name="project_type" value="Competition">
@@ -468,7 +488,15 @@
                                 <label for="project_description_comp">Competition Name & Description:</label>
                                 <textarea id="project_description_comp" name="project_description" rows="3" placeholder="e.g., e-Yantra 2025 - Theme..." required></textarea>
                             </div>
-                            <button type="submit" class="submit-button">Submit Competition Request</button>
+                            <div class="disclaimer-section" style="margin-top: 20px;">
+  <input type="checkbox" id="disclaimer-checkbox-competition" class="disclaimer-checkbox">
+  <label for="disclaimer-checkbox-competition">
+    <strong>I UNDERSTAND THAT I WILL BE RESPONSIBLE FOR LOSS/DAMAGE OF THE COMPONENT.</strong>
+  </label>
+</div>
+
+<button id="submit-btn-competition" type="submit" class="btn btn-primary" disabled>Submit Request</button>
+
                         </form>
                     </div>
                 </div>
@@ -679,6 +707,13 @@
                 cancelModal.hidden = true;
             }
         });
+        document.querySelectorAll('.disclaimer-checkbox').forEach((checkbox) => {
+  checkbox.addEventListener('change', (e) => {
+    const formId = e.target.id.split('-')[2]; // extract form id part
+    const submitBtn = document.getElementById(`submit-btn-${formId}`);
+    submitBtn.disabled = !e.target.checked;
+  });
+});
     </script>
 </body>
 </html>

@@ -5,7 +5,7 @@
         "total_quantity": 20,
         "working_quantity": 19,
         "not_working_quantity": 1,
-        "issued_quantity": 0,
+        "issued_quantity": 1,
         "available_for_issue": 19
     },
     {

@@ -8,7 +8,7 @@ import re
 from flask import send_file, Flask, request, render_template, redirect, url_for, session, flash, Response
 from functools import wraps
 # ... in main.py, at the top ...
-from flask import send_file, Flask, request, render_template, redirect, url_for, session, flash, Response, abort
+from flask import send_file, Flask, request, render_template, redirect, url_for, session, flash, Response, abort,send_from_directory
 # ...
 # --- START: Re-added itsdangerous for secure links ---
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
@@ -191,6 +191,14 @@ def parse_faculty_email(email):
 
 
 # --- Routes ---
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+        os.path.join(app.root_path, 'static', 'icons'),
+        'favicon.ico',
+        mimetype='image/vnd.microsoft.icon'
+    )
 
 @app.route('/')
 def home():
