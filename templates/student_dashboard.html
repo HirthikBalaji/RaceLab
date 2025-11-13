@@ -308,11 +308,11 @@
                             <thead>
                                 <tr>
                                     <th>Component</th>
-                                    <th>Total Qty</th>
-                                    <th>Working Qty</th>
-                                    <th>Not Working Qty</th>
-                                    <th>Issued Qty</th>
-                                    <th>Available for Issue</th>
+<!--                                    <th>Total Qty</th>-->
+<!--                                    <th>Working Qty</th>-->
+<!--                                    <th>Not Working Qty</th>-->
+<!--                                    <th>Issued Qty</th>-->
+<!--                                    <th>Available for Issue</th>-->
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -320,11 +320,11 @@
                                 {% for component in components %}
                                 <tr>
                                     <td>{{ component.name }}</td>
-                                    <td>{{ component.total_quantity }}</td>
-                                    <td>{{ component.working_quantity }}</td>
-                                    <td>{{ component.not_working_quantity }}</td>
-                                    <td>{{ component.issued_quantity }}</td>
-                                    <td><strong>{{ component.available }}</strong></td>
+<!--                                    <td>{{ component.total_quantity }}</td>-->
+<!--                                    <td>{{ component.working_quantity }}</td>-->
+<!--                                    <td>{{ component.not_working_quantity }}</td>-->
+<!--                                    <td>{{ component.issued_quantity }}</td>-->
+<!--                                    <td><strong>{{ component.available }}</strong></td>-->
                                     <td>
                                         {% if component.available <= 0 %}<span class="status out-of-stock">Out of Stock</span>
                                         {% elif component.available < 10 %}<span class="status low-stock">Low Stock</span>
